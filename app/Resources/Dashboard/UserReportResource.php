@@ -15,7 +15,7 @@ class UserReportResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name ?? null,
-            'email' => $this->email,
+            'email' => $this->work_email,
             'username' => $this->username,
             'branch' => $this?->branch?->name,
             'department' => $this?->department?->dept_name,
