@@ -39,8 +39,15 @@
             Swal.fire({
                 title: '{{ __('index.delete_tada_confirm', ['title' => ':name']) }}'.replace(':name', title),
                 showDenyButton: true,
+                icon:'warning',
                 confirmButtonText: `@lang('index.yes')`,
                 denyButtonText: `@lang('index.no')`,
+                confirmButtonColor: '#057db0', 
+                customClass: {
+                   confirmButton: 'text-white',
+                   denyButton: 'text-white'
+                 },
+                denyButtonColor: '#ff7f0e',    
                 padding:'10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
