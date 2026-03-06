@@ -4,436 +4,347 @@
 
 @section('title', __('index.assets'))
 
-@section('action', __('index.lists'))
-
-@section('button')
-    @can('create_assets')
-        <a href="{{ route('admin.assets.create')}}">
-            <button class="btn btn-primary">
-                <i class="link-icon" data-feather="plus"></i>{{  __('index.add_asset') }}
-            </button>
-        </a>
-    @endcan
-@endsection
-
 @section('main-content')
-    <section class="content">
-        @include('admin.section.flash_message')
+<section class="content" style="padding: 10px 20px;">
+    @include('admin.section.flash_message')
 
-        @include('admin.assetManagement.assetDetail.common.breadcrumb')
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="card-title mb-0">{{  __('index.assets_filter') }}</h6>
-            </div>
-            <form class="forms-sample card-body pb-0" action="{{route('admin.assets.index')}}" method="get">
-
-                <div class="row align-items-center">
-                    @if(!isset(auth()->user()->branch_id))
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <select class="form-select" id="branch_id" name="branch_id">
-                                <option selected disabled>{{ __('index.select_branch') }}
-                                </option>
-                                @if(isset($companyDetail))
-                                    @foreach($companyDetail->branches()->get() as $key => $branch)
-                                        <option value="{{$branch->id}}"
-                                            {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id']  == $branch->id) ? 'selected': '' }}>
-                                            {{ucfirst($branch->name)}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    @endif
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <input type="text" placeholder="Asset name" id="asset" name="name"
-                               value="{{$filterParameters['name']}}" class="form-control">
-                    </div>
-
-                    <div class="col-lg-3  col-md-6 mb-4">
-                        <select class="form-select form-select-lg" name="type_id" id="type">
-                            <option
-                                value="" {{!isset($filterParameters['type']) ? 'selected': ''}} >{{  __('index.all') }} </option>
-
-                        </select>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <select class="form-select form-select-lg" name="is_working" id="is_working">
-                            <option
-                                value="" {{!isset($filterParameters['is_working']) ? 'selected': ''}} > {{  __('index.all') }} </option>
-                            @foreach(Asset::IS_WORKING as $value)
-                                <option
-                                    value="{{$value}}" {{ isset($filterParameters['is_working']) && $filterParameters['is_working'] == $value ? 'selected': '' }}>
-                                    {{ucfirst($value)}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <select class="form-select form-select-lg" name="is_available" id="is_available">
-                            <option
-                                value="" {{!isset($filterParameters['is_available']) ? 'selected': ''}} >{{  __('index.all') }}</option>
-                            <option
-                                value="1" {{isset($filterParameters['is_available']) && $filterParameters['is_available'] == 1 ? 'selected': ''}} >{{  __('index.yes_available') }}</option>
-                            <option
-                                value="0" {{isset($filterParameters['is_available']) && $filterParameters['is_available'] == 0 ? 'selected': ''}} >{{  __('index.notavailable') }}</option>
-                        </select>
-                    </div>
-
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <input type="date" value="{{$filterParameters['purchased_from']}}" name="purchased_from"
-                               class="form-control">
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <input type="date" value="{{$filterParameters['purchased_to']}}" name="purchased_to"
-                               class="form-control">
-                    </div>
-
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="d-flex">
-                            <button type="submit"
-                                    class="btn btn-block btn-success me-2">{{  __('index.filter') }}</button>
-                            <a href="{{route('admin.assets.index')}}"
-                               class="btn btn-block btn-primary">{{  __('index.reset') }}</a>
-                        </div>
-                    </div>
-                </div>
-            </form>
+    {{-- Header Section --}}
+    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+        <div class="page-identity">
+            <h2 style="color: #057db0;">
+                {{ __('index.assets') }}
+            </h2>
+            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
+                <i data-feather="box" style="width: 14px; vertical-align: middle;"></i> Asset Inventory Management
+            </p>
         </div>
+        
+        @can('create_assets')
+            <a href="{{ route('admin.assets.create')}}" style="text-decoration: none;">
+                <button class="btn-premium-add">
+                    <i data-feather="plus" style="width: 20px;"></i>
+                    <span>{{ __('index.add_asset') }}</span>
+                </button>
+            </a>
+        @endcan
+    </div>
 
+    {{-- Grid Section --}}
+    <div class="row g-4 justify-content-start">
+        @forelse($assetLists as $key => $value)
+            <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
+                <div class="branch-master-card">
+                    <div class="card-glossy-header">
+                        <div class="header-overlay"></div>
+                        <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
+                            <div class="branch-icon-square">
+                                <i data-feather="package"></i>
+                            </div>
+                        </div>
+                        <h4 class="branch-name-display">{{ucfirst($value->name)}}</h4>
+                        <span class="branch-ref-pill">Asset ID: #{{$value->id}}</span>
+                    </div>
 
-        <div class="card support-main">
-            <div class="card-header">
-                <h6 class="card-title mb-0">{{ __('index.asset_lists') }}</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="dataTableExample" class="table">
-                        <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th>{{  __('index.name') }}</th>
-                            <th class="text-center">{{  __('index.type') }}</th>
-                            <th class="text-center">{{  __('index.is_working') }}</th>
-                            <th class="text-center">{{  __('index.is_available') }}</th>
-                            @can('assign_asset')
-                                <th class="text-center">{{  __('index.assign_to') }}</th>
-                            @endcan
-                            <th>Assign / Return Asset</th>
-                            @canany(['show_asset','edit_assets','delete_assets','asset_assign_list'])
-                                <th class="text-center">{{  __('index.action') }}</th>
-                            @endcanany
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @forelse($assetLists as $key => $value)
-                            <tr>
-                                <td class="text-center">{{++$key}}</td>
-                                <td>{{ucfirst($value->name)}}</td>
-                                <td class="text-center">
-                                    <a href="{{route('admin.asset-types.show',$value->type_id)}}">{{ucfirst($value->type->name)}}</a>
-                                </td>
+                    <div class="card-white-body">
+                        <div class="info-listing">
+                            
+                            {{-- Availability Field (Aligned with other columns) --}}
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="check-circle"></i></div>
+                                <div class="text-content">
+                                    <small>{{ __('index.is_available') }}</small>
+                                    <p>
+                                                                                    {{($value->is_available) == 1 ? __('index.yes_available'): __('index.notavailable')}}
 
-                                <td class="text-center">{{ucfirst($value->is_working)}}</td>
+                                    </p>
+                                </div>
+                            </div>
 
-                                <td class="text-center">
-                                    {{($value->is_available) == 1 ? __('index.yes'): __('index.no')}}
-                                </td>
-                                @can('assign_asset')
-                                    <td class="text-center">
+                            {{-- Asset Type (With Clickable Link) --}}
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="tag"></i></div>
+                                <div class="text-content">
+                                    <small>{{ __('index.type') }}</small>
+                                    <p>
+                                        <a href="{{ route('admin.asset-types.show', $value->type->id) }}" style="color: #057db0; text-decoration: none; font-weight: 600;">
+                                            {{ucfirst($value->type->name)}}
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
 
-                                        {{-- @if( ($value->is_working == 'yes') && ($value->is_available == 1))
-                                            <a class="assignAsset btn btn-sm btn-info"
-                                               data-id="{{$value->id}}"
-                                               data-branch-id="{{$value->branch_id}}"
-                                               data-href="{{route('admin.asset-assignment.store',$value->id)}}"
-                                               title="{{  __('index.assign') }}">
-                                                Assign to Employee
-                                            </a> --}}
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="activity"></i></div>
+                                <div class="text-content">
+                                    <small>{{ __('index.is_working') }}</small>
+                                    <p>{{ucfirst($value->is_working)}}</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="user"></i></div>
+                                <div class="text-content">
+                                    <small>ASSIGNED TO</small>
+                                    <p>
                                         @if(isset($value->latestAssignment) && is_null($value->latestAssignment->returned_date))
                                             {{ $value?->latestAssignment?->user?->name }}
+                                        @else
+                                            <span class="text-muted">Unassigned</span>
                                         @endif
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                                    </td>
-                                @endcan
-
-                                <td class="text-center">
-                                    @if(isset($value->latestAssignment) && $value->latestAssignment->status === 'returned')
-                                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ $key }}">Assign</button>
-                                    @elseif(isset($value->latestAssignment) && $value->latestAssignment->status === 'assigned')
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#return_{{ $key }}">Return</button>
+                        <div class="stats-footer-box">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="emp-group">
+                                    @if(isset($value->latestAssignment) && $value->latestAssignment->status === 'assigned')
+                                        <button class="btn btn-sm btn-outline-warning py-1 px-3" data-bs-toggle="modal" data-bs-target="#return_{{ $key }}" style="border-radius: 20px; font-size: 12px;">
+                                            Return
+                                        </button>
                                     @else
-                                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ $key }}">Assign</button>
+                                        <button class="btn btn-sm btn-outline-info py-1 px-3" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ $key }}" style="border-radius: 20px; font-size: 12px;">
+                                            Assign
+                                        </button>
                                     @endif
-                                </td>
-                                <td class="text-center">
-                                    <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_assets')
-                                            <li class="me-2">
-                                                <a href="{{route('admin.assets.edit',$value->id)}}"
-                                                   title="{{  __('index.edit') }}">
-                                                    <i class="link-icon" data-feather="edit"></i>
-                                                </a>
-                                            </li>
-                                        @endcan
+                                </div>
 
-                                        {{-- @can('asset_assign_list')
-                                            <li class="me-2">
-                                                <a href="{{route('admin.asset-assignment.index',$value->id)}}"
-                                                   title="{{  __('index.assignment_history_return') }}">
-                                                    <i class="link-icon" data-feather="list"></i>
-                                                </a>
-                                            </li>
-                                        @endcan --}}
-                                        @can('show_asset')
-                                            <li class="me-2">
-                                                <a href="javascript:void(0)" title="{{  __('index.asset_detail') }}"
-                                                   onclick="showAssetDetails('{{ route('admin.assets.show',$value->id) }}')">
-                                                    <i class="link-icon" data-feather="eye"></i>
-                                                </a>
-                                            </li>
-                                        @endcan
+                                <div class="action-dock">
+                                    @can('show_asset')
+                                        <a href="javascript:void(0)" class="btn-action edit" title="{{ __('index.asset_detail') }}"
+                                           onclick="showAssetDetails('{{ route('admin.assets.show',$value->id) }}')">
+                                            <i data-feather="eye" style="width:16px; height:16px;"></i>
+                                        </a>
+                                    @endcan
 
-                                        @can('delete_assets')
-                                            <li>
-                                                <a class="delete"
-                                                   data-title="{{$value->name}} Asset Detail"
-                                                   data-href="{{route('admin.assets.delete',$value->id)}}"
-                                                   title="{{  __('index.delete') }}">
-                                                    <i class="link-icon" data-feather="delete"></i>
-                                                </a>
-                                            </li>
-                                        @endcan
-                                    </ul>
-                                </td>
-                            </tr>
+                                    @can('edit_assets')
+                                        <a href="{{route('admin.assets.edit',$value->id)}}" class="btn-action edit" title="{{ __('index.edit') }}">
+                                            <i data-feather="edit-3"></i>
+                                        </a>
+                                    @endcan
 
-                            <!-- Assign Asset Modal -->
-                            <div class="modal fade" id="exampleModal_{{ $key }}" tabindex="-1" aria-labelledby="exampleModalLabel_{{ $key }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel_{{ $key }}">Assign Asset</h5>
-                                        </div>
-
-                                        <form method="POST" action="{{ route('admin.assign.asset') }}">
-                                            @csrf
-
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label for="">Branch</label>
-                                                        <select class="form-control" name="branch_id">
-                                                            <option value="{{ $value->branch_id }}" selected>{{ $value?->branch?->name }}</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Departments</label>
-                                                        <select class="form-control department-select"
-                                                                data-key="{{ $key }}"
-                                                                data-asset="{{ $value->id }}" name="department_id">
-                                                            <option selected disabled>Select</option>
-                                                            @foreach ($value->branch->departments as $department)
-                                                                <option value="{{ $department->id }}">{{ $department->dept_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Employees</label>
-                                                        <select class="form-control employees-select" name="user_id">
-                                                            <option disabled selected>Select Employee</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Assign Date</label>
-                                                        <input type="date" name="assigned_date" class="form-control" />
-                                                    </div>
-
-                                                    <input type="hidden" name="status" value="assigned" />
-                                                    <input type="hidden" name="asset_id" value="{{ $value?->id }}" />
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Assign</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                    @can('delete_assets')
+                                        <a class="btn-action delete delete cursor-pointer"
+                                           data-title="{{$value->name}} Asset Detail"
+                                           data-href="{{route('admin.assets.delete',$value->id)}}"
+                                           title="{{ __('index.delete') }}">
+                                            <i data-feather="trash-2"></i>
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
-
-                            <!-- Return Asset Modal -->
-                            <div class="modal fade" id="return_{{ $key }}" tabindex="-1" aria-labelledby="returnModalLabel_{{ $key }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="returnModalLabel_{{ $key }}">Return Asset</h5>
-                                        </div>
-
-                                        <form method="POST" action="{{ route('admin.return.asset') }}">
-                                            @csrf
-
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label for="">Branch</label>
-                                                        <select class="form-control">
-                                                            <option value="{{ $value?->latestAssignment?->branch_id }}" selected>{{ $value?->latestAssignment?->branch?->name }}</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Departments</label>
-                                                        <select class="form-control department-select">
-                                                            <option value="{{ $value?->latestAssignment?->department_id }}" selected>{{ $value?->latestAssignment?->department?->dept_name }}</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Employees</label>
-                                                        <select class="form-control employees-select">
-                                                            <option value="{{ $value?->latestAssignment?->user_id }}" selected>{{ $value?->latestAssignment?->user?->name }}</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Assign Date</label>
-                                                        <input type="date" class="form-control" value="{{ \Carbon\Carbon::parse($value?->assigned_date)->format('Y-m-d') }}">
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Return Date</label>
-                                                        <input type="date" name="returned_date" class="form-control" />
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label for="">Return Condition</label>
-                                                        <select class="form-control" name="return_condition">
-                                                            <option selected disabled>Select</option>
-                                                            <option value="working">Working</option>
-                                                            <option value="non-working">Non-Working</option>
-                                                            <option value="maintenance">Maintenance</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <input type="hidden" name="status" value="returned" />
-                                                    <input type="hidden" name="asset_assigned_id" value="{{ $value?->latestAssignment?->id }}" />
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Return</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <tr>
-                                <td colspan="100%">
-                                    <p class="text-center"><b>{{  __('index.no_records_found') }}</b></p>
-                                </td>
-                            </tr>
-                        @endforelse
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{--        <div class="dataTables_paginate mt-3">--}}
-        {{--            {{$assetLists->appends($_GET)->links()}}--}}
-        {{--        </div>--}}
-    </section>
+            {{-- Assign Asset Modal --}}
+            <div class="modal fade" id="exampleModal_{{ $key }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #057db0; color: white;">
+                            <h5 class="modal-title text-white">Assign Asset</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form method="POST" action="{{ route('admin.assign.asset') }}">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label>Branch</label>
+                                        <select class="form-control" name="branch_id">
+                                            <option value="{{ $value->branch_id }}" selected>{{ $value?->branch?->name }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label>Departments</label>
+                                        <select class="form-control department-select" data-key="{{ $key }}" data-asset="{{ $value->id }}" name="department_id">
+                                            <option selected disabled>Select</option>
+                                            @foreach ($value->branch->departments as $department)
+                                                <option value="{{ $department->id }}">{{ $department->dept_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label>Employees</label>
+                                        <select class="form-control employees-select" name="user_id">
+                                            <option disabled selected>Select Employee</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label>Assign Date</label>
+                                        <input type="date" name="assigned_date" class="form-control" />
+                                    </div>
+                                    <input type="hidden" name="status" value="assigned" />
+                                    <input type="hidden" name="asset_id" value="{{ $value?->id }}" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Assign</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
+            {{-- Return Asset Modal (6 Fields: 4 Visible, 2 Hidden) --}}
+            <div class="modal fade" id="return_{{ $key }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #057db0; color: white;">
+                            <h5 class="modal-title text-white">Return Asset</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
 
-    @include('admin.assetManagement.assetDetail.common.assignment')
-    @include('admin.assetManagement.assetDetail.show')
+                        <form method="POST" action="{{ route('admin.return.asset') }}">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label>Branch</label>
+                                        <select class="form-control" readonly>
+                                            <option value="{{ $value?->latestAssignment?->branch_id }}" selected>{{ $value?->latestAssignment?->branch?->name }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Departments</label>
+                                        <select class="form-control" readonly>
+                                            <option value="{{ $value?->latestAssignment?->department_id }}" selected>{{ $value?->latestAssignment?->department?->dept_name }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Employees</label>
+                                        <select class="form-control" readonly>
+                                            <option value="{{ $value?->latestAssignment?->user_id }}" selected>{{ $value?->latestAssignment?->user?->name }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Assign Date</label>
+                                        <input type="date" class="form-control" value="{{ \Carbon\Carbon::parse($value?->latestAssignment?->assigned_date)->format('Y-m-d') }}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Return Date</label>
+                                        <input type="date" name="returned_date" class="form-control" required />
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Return Condition</label>
+                                        <select class="form-control" name="return_condition" required>
+                                            <option selected disabled>Select</option>
+                                            <option value="working">Working</option>
+                                            <option value="non-working">Non-Working</option>
+                                            <option value="maintenance">Maintenance</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Hidden Fields --}}
+                                    <input type="hidden" name="status" value="returned" />
+                                    <input type="hidden" name="asset_assigned_id" value="{{ $value?->latestAssignment?->id }}" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Return</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        @empty
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i data-feather="info" style="width: 50px; color: #cbd5e1;"></i>
+                    <p class="text-muted mt-3">{{ __('index.no_records_found') }}</p>
+                </div>
+            </div>
+        @endforelse
+    </div>
+</section>
+
+@include('admin.assetManagement.assetDetail.common.assignment')
+@include('admin.assetManagement.assetDetail.show')
 @endsection
 
 @section('scripts')
+<style>
+    /* Global style for Asset Detail Modal Header (Loaded via Ajax) */
+    #assetDetail .modal-header {
+        background-color: #057db0 !important;
+        color: white !important;
+        text-align: left !important;
+        display: flex;
+        justify-content: space-between;
+    }
+    #assetDetail .modal-title { color: white !important; }
+    #assetDetail .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+</style>
 
-
-    <script>
-
-        function showAssetDetails(url) {
-            $.get(url, function (response) {
-                if (response && response.data) {
-                    const data = response.data;
-
-                    var daysUsed = data.used_for;
-                    $('.assetTitle').html('Asset Detail');
-                    $('.name').text(data.name);
-                    $('.type').text(data.assetType);
-                    $('.asset_code').text(data.asset_code);
-                    $('.asset_serial_no').text(data.asset_serial_no);
-                    $('.is_working').text(data.is_working);
-                    $('.purchased_date').text(data.purchased_date);
-                    $('.is_available').text(data.is_available);
-                    $('.note').text(data.note);
-                    if (daysUsed > 0) {
-                        $('.used_for').text(daysUsed+ ' days');
-                    } else {
-                        $('.used_for').parent().hide();
-                    }
-
-                    if (data.image) {
-                        $('.image').attr('src', data.image).show();
-                    } else {
-                        $('.image').parent().hide();
-                    }
-
-                    const modal = new bootstrap.Modal(document.getElementById('assetDetail'));
-                    modal.show();
+<script>
+    function showAssetDetails(url) {
+        $.get(url, function (response) {
+            if (response && response.data) {
+                const data = response.data;
+                var daysUsed = data.used_for;
+                $('.assetTitle').html('Asset Detail');
+                $('.name').text(data.name);
+                $('.type').text(data.assetType);
+                $('.asset_code').text(data.asset_code);
+                $('.asset_serial_no').text(data.asset_serial_no);
+                $('.is_working').text(data.is_working);
+                $('.purchased_date').text(data.purchased_date);
+                $('.is_available').text(data.is_available);
+                $('.note').text(data.note);
+                
+                if (daysUsed > 0) {
+                    $('.used_for').text(daysUsed+ ' days');
+                    $('.used_for').parent().show();
+                } else {
+                    $('.used_for').parent().hide();
                 }
-            }).fail(function (xhr, status, error) {
-                // Handle error
-                alert('Error loading asset details. Please try again.');
-                console.error('Error:', error);
-            });
-        }
 
-        // Fetch Employee when department selected on assign asset
-        $(document).ready(function () {
-            $(document).on('change', '.department-select', function () {
+                if (data.image) {
+                    $('.image').attr('src', data.image).parent().show();
+                } else {
+                    $('.image').parent().hide();
+                }
 
-                let departmentId = $(this).val();
-                let modal = $(this).closest('.modal');
-                let employeeSelect = modal.find('.employees-select');
+                const modal = new bootstrap.Modal(document.getElementById('assetDetail'));
+                modal.show();
+            }
+        });
+    }
 
-                employeeSelect.html('<option>Loading...</option>');
-
-                $.ajax({
-                    url: "{{ route('admin.department.users') }}",
-                    type: "GET",
-                    data: { department_id: departmentId },
-                    success: function (response) {
-
-                        employeeSelect.empty();
-                        employeeSelect.append('<option disabled selected>Select Employee</option>');
-
-                        if (response.length > 0) {
-                            $.each(response, function (key, user) {
-                                employeeSelect.append(
-                                    `<option value="${user.id}">${user.name}</option>`
-                                );
-                            });
-                        } else {
-                            employeeSelect.append('<option disabled>No users found</option>');
-                        }
+    $(document).ready(function () {
+        $(document).on('change', '.department-select', function () {
+            let departmentId = $(this).val();
+            let modal = $(this).closest('.modal');
+            let employeeSelect = modal.find('.employees-select');
+            employeeSelect.html('<option>Loading...</option>');
+            $.ajax({
+                url: "{{ route('admin.department.users') }}",
+                type: "GET",
+                data: { department_id: departmentId },
+                success: function (response) {
+                    employeeSelect.empty();
+                    employeeSelect.append('<option disabled selected>Select Employee</option>');
+                    if (response.length > 0) {
+                        $.each(response, function (key, user) {
+                            employeeSelect.append(`<option value="${user.id}">${user.name}</option>`);
+                        });
+                    } else {
+                        employeeSelect.append('<option disabled>No users found</option>');
                     }
-                });
+                }
             });
         });
-
-    </script>
-    @include('admin.assetManagement.assetDetail.common.scripts')
+    });
+</script>
+@include('admin.assetManagement.assetDetail.common.scripts')
 @endsection
-
