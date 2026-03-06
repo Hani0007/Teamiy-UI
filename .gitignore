@@ -1,10 +1,3 @@
-/public/storage
-/public/uploads
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.svg
 /.phpunit.cache
 /node_modules
 /public/build
