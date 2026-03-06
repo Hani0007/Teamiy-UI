@@ -3,95 +3,169 @@
 @section('title', __('auth.register'))
 
 @section('page-styles')
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <style>
-.reg-wrapper{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#057db0,#045a80);padding:20px}.reg-card{width:100%;max-width:560px;padding:45px;border-radius:20px;text-align:center}.glass-effect{background:rgba(255,255,255,.15);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.25);box-shadow:0 25px 55px rgba(0,0,0,.3)}.reg-logo img{max-width:190px;margin-bottom:30px}.reg-title{color:#fff;font-size:20px;margin-bottom:12px}.reg-subtitle{color:#dff3ff;font-size:15px;margin-bottom:30px}.reg-row{display:flex;gap:14px;flex-wrap:wrap}.reg-field{margin-bottom:16px;text-align:left;width:100%}.reg-field.half{width:48%}.reg-field label{color:#e9f7ff;font-size:14px;margin-bottom:6px;display:block}.reg-input,select{width:100%;padding:12px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.22);color:#fff}.reg-input:focus,select:focus{outline:none;box-shadow:0 0 0 2px rgba(251,118,51,.5)}.reg-btn,.reg-btn-outline{padding:12px 80px;border-radius:40px;font-size:16px;font-weight:600;cursor:pointer}.reg-btn{background:#fb7633;border:none;color:#fff}.reg-btn-outline{background:transparent;border:1px solid #fff;color:#fff}.reg-links a{color:#e0f3ff;text-decoration:none}.reg-checkbox{color:#e9f7ff;font-size:14px;margin-bottom:15px}.reg-step{display:none}.reg-step.active{display:block}.password-wrapper{position:relative}.password-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:rgba(255,255,255,.6);stroke-width:1.6;fill:none;cursor:pointer}.password-toggle.active{stroke:#fff}.password-toggle.active line{display:none}.phone-wrap{display:flex;gap:10px}.phone-wrap select{max-width:150px;background-color: #3b89ac; border: 1px solid rgba(255,255,255,0.2);border-radius: 15px;}.reg-checkbox a{color:#e0f3ff;text-decoration:underline}.error-text{color:#ffd2d2;font-size:13px;margin-top:6px}.alert.alert-danger{background-color:#ffffff;color:var(--primary-color);border-color:var(--primary-color);padding:10px 15px;border-radius:8px;margin-bottom:10px;opacity:1;transition:opacity 1s ease}.alert{transition:opacity 1s ease;opacity:1}@media(max-width:768px){.reg-field.half{width:100%}.reg-btn,.reg-btn-outline{width:100%;padding:12px}.reg-card{padding:24px}.phone-wrap{flex-direction:column}}
+    :root {
+        --primary-blue: #057db0;
+        --accent-orange: #fb8233;
+        --text-dark: #1e293b;
+    }
+
+    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%; }
+
+    .split-reg-container { display: flex; min-height: 100vh; background: #fff; }
+
+    /* LEFT SECTION (FORM) */
+    .reg-left {
+        flex: 1; display: flex; flex-direction: column; justify-content: center;
+        padding: 40px 60px; max-width: 650px; overflow-y: auto;
+    }
+
+    .reg-logo { text-align: center; margin-bottom: 20px; }
+    .reg-header { text-align: center; margin-bottom: 25px; }
+    .reg-header h2 { font-weight: 800; color: var(--text-dark); font-size: 26px; margin-bottom: 8px; }
+    .reg-header p { color: #64748b; font-size: 14px; }
+
+    /* Form Styles */
+    .reg-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    .reg-field { margin-bottom: 16px; text-align: left; width: 100%; }
+    .reg-field.half { width: calc(50% - 7px); }
+    
+    .reg-label { font-weight: 600; color: var(--accent-orange); margin-bottom: 6px; display: block; font-size: 13px; }
+    
+    .reg-input, .phone-wrap select {
+        width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
+        background: #f8fafc; color: var(--text-dark); font-size: 14px; transition: 0.3s; box-sizing: border-box;
+    }
+    .reg-input:focus, .phone-wrap select:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
+
+    .password-wrapper { position: relative; }
+    .password-toggle { 
+        position: absolute; right: 14px; top: 50%; transform: translateY(-50%); 
+        width: 18px; cursor: pointer; color: #94a3b8; 
+    }
+    .password-toggle.active { color: var(--primary-blue); }
+
+    .phone-wrap { display: flex; gap: 10px; }
+    .phone-wrap select { max-width: 140px; }
+
+    /* Buttons */
+    .reg-btn, .reg-btn-outline {
+        padding: 12px 30px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s;
+    }
+    .reg-btn { background: var(--primary-blue); border: none; color: #fff; flex: 1; }
+    .reg-btn:hover { background: var(--accent-orange); transform: translateY(-1px); }
+    .reg-btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
+    .reg-btn-outline:hover { background: #f1f5f9; }
+
+    /* Step Display */
+    .reg-step { display: none; }
+    .reg-step.active { display: block; animation: slideIn 0.4s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .error-text { color: #dc2626; font-size: 12px; margin-top: 4px; font-weight: 500; }
+    .reg-links { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
+    .reg-links a { color: var(--primary-blue); text-decoration: none; font-weight: 700; }
+
+    /* RIGHT SECTION (SLIDER) */
+    .reg-right {
+        flex: 1.2; background-color: var(--primary-blue);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        position: relative; color: #fff; padding: 40px;
+    }
+    .slider-container { width: 100%; max-width: 500px; text-align: center; }
+    .slide { display: none; }
+    .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }
+    @keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }
+
+    .lottie-box { height: 300px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
+    .slide-content h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+    .slide-content p { font-size: 15px; opacity: 0.8; line-height: 1.6; }
+
+    .dots-container { margin-top: 30px; display: flex; justify-content: center; gap: 8px; }
+    .dot { height: 8px; width: 8px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+    .dot.active { background-color: #fff; width: 25px; border-radius: 4px; }
+
+    @media (max-width: 992px) { .reg-right { display: none; } .reg-left { max-width: 100%; padding: 40px 20px; } }
 </style>
 @endsection
 
 @section('auth-content')
-<section class="reg-wrapper">
-    <div class="reg-card glass-effect">
-
+<div class="split-reg-container">
+    
+    <div class="reg-left">
         <div class="reg-logo">
             <a href="https://teamiy.com/" target="_blank">
-                <img src="{{ asset('assets/images/teamiy-wh-logo.webp') }}">
+                <img src="{{ asset('assets/images/company-logo.png') }}" style="max-width: 180px;">
             </a>
         </div>
 
-        <h3 class="reg-title">{{ __('signup_free_heading') }}</h3>
-        <p class="reg-subtitle">{{ __('trial_message') }}</p>
+        <div class="reg-header">
+            <h3>{{ __('signup_free_heading') }}</h3>
+            <p>{{ __('trial_message') }}</p>
+        </div>
 
         @include('admin.section.flash_message')
 
         <form method="POST" action="{{ route('admin.company.register.process') }}" id="registerForm">
             @csrf
 
-            <!-- STEP 1 -->
             <div class="reg-step active">
                 <div class="reg-row">
                     <div class="reg-field half">
-                        <label>First Name</label>
+                        <label class="reg-label">First Name</label>
                         <input type="text" name="first_name" class="reg-input" required pattern="[A-Za-z ]{2,}">
                         @error('first_name')<div class="error-text">{{ $message }}</div>@enderror
                     </div>
                     <div class="reg-field half">
-                        <label>Last Name</label>
+                        <label class="reg-label">Last Name</label>
                         <input type="text" name="last_name" class="reg-input" required pattern="[A-Za-z ]{2,}">
                         @error('last_name')<div class="error-text">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
                 <div class="reg-field">
-                    <label>Email</label>
-                    <input type="email" name="email" class="reg-input" required>
-                    @error('email')<div class="text-danger fw-bolder">{{ $message }}</div>@enderror
+                    <label class="reg-label">Email Address</label>
+                    <input type="email" name="email" class="reg-input" required placeholder="name@company.com">
+                    @error('email')<div class="error-text">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="reg-row">
                     <div class="reg-field half">
-                        <label>Password</label>
+                        <label class="reg-label">Password</label>
                         <div class="password-wrapper">
                             <input type="password" name="password" id="password" class="reg-input password-field" required minlength="8">
-                            <svg class="password-toggle" viewBox="0 0 24 24">
-                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <line x1="3" y1="21" x2="21" y2="3"/>
-                            </svg>
+                            <svg class="password-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </div>
                         @error('password')<div class="error-text">{{ $message }}</div>@enderror
                     </div>
 
                     <div class="reg-field half">
-                        <label>Confirm Password</label>
+                        <label class="reg-label">Confirm Password</label>
                         <div class="password-wrapper">
                             <input type="password" name="password_confirmation" id="confirmPassword" class="reg-input password-field" required minlength="8">
-                            <svg class="password-toggle" viewBox="0 0 24 24">
-                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <line x1="3" y1="21" x2="21" y2="3"/>
-                            </svg>
+                            <div class="error-text" id="passMatchError" style="display:none">Passwords do not match</div>
                         </div>
-                        <div class="error-text" id="passMatchError" style="display:none">Passwords do not match</div>
                     </div>
                 </div>
             </div>
 
-            <!-- STEP 2 -->
             <div class="reg-step">
                 <div class="reg-field">
-                    <label>Company Name</label>
-                    <input type="text" name="name" class="reg-input" required>
+                    <label class="reg-label">Company Name</label>
+                    <input type="text" name="name" class="reg-input" required placeholder="e.g. Acme Corp">
                     @error('name')<div class="error-text">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="reg-field">
-                    <label>Number of Employees</label>
-                    <input type="number" name="no_of_employees" class="reg-input" min="1" required>
+                    <label class="reg-label">Number of Employees</label>
+                    <input type="number" name="no_of_employees" class="reg-input" min="1" required placeholder="10">
                     @error('no_of_employees')<div class="error-text">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="reg-field">
-                    <label>Phone Number</label>
+                    <label class="reg-label">Phone Number</label>
                     <div class="phone-wrap">
                         <select name="country_code" required>
                             <option value="" disabled selected>Country Code</option>
@@ -310,115 +384,154 @@
                             <option value="+967">Yemen +967</option>
                             <option value="+260">Zambia +260</option>
                             <option value="+263">Zimbabwe +263</option>
-                            <!-- Full country codes here (as provided earlier) -->
-                            <!-- baki list bilkul same rahegi -->
-                        </select>
-                        <input type="tel" name="contact_number" class="reg-input" required pattern="[0-9]{7,15}">
+                            </select>
+                        <input type="tel" name="contact_number" class="reg-input" required pattern="[0-9]{7,15}" placeholder="3001234567">
                     </div>
-                    @error('country_code')<div class="error-text">{{ $message }}</div>@enderror
                     @error('contact_number')<div class="error-text">{{ $message }}</div>@enderror
                 </div>
             </div>
 
-            <!-- STEP 3 -->
             <div class="reg-step">
-                <div class="reg-checkbox">
-                    <input type="checkbox" name="terms_conditions" required>
-                    <span>I agree to
-                        <a href="https://teamiy.com/privacy-policy/" target="_blank"><b>Privacy Policy</b></a> &
-                        <a href="https://teamiy.com/terms-and-conditions/" target="_blank"><b>Terms</b></a>
-                    </span>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                    <div style="display: flex; gap: 10px; align-items: flex-start;">
+                        <input type="checkbox" name="terms_conditions" id="terms" required style="margin-top: 4px;">
+                        <label for="terms" style="font-size: 14px; color: #475569; line-height: 1.5;">
+                            I agree to the <a href="https://teamiy.com/privacy-policy/" target="_blank" style="color:var(--primary-blue); font-weight:600;">Privacy Policy</a> & <a href="https://teamiy.com/terms-and-conditions/" target="_blank" style="color:var(--primary-blue); font-weight:600;">Terms of Service</a>.
+                        </label>
+                    </div>
                 </div>
                 @error('terms_conditions')<div class="error-text">{{ $message }}</div>@enderror
             </div>
 
-            <!-- NAV -->
-            <div class="reg-row" style="justify-content:center;gap:10px;margin-top:20px">
+            <div class="reg-row" style="margin-top:20px; gap:10px;">
                 <button type="button" class="reg-btn-outline" id="prevBtn">Previous</button>
-                <button type="button" class="reg-btn" id="nextBtn">Next</button>
-                <button type="submit" class="reg-btn" id="submitBtn">Register</button>
+                <button type="button" class="reg-btn" id="nextBtn">Next Step</button>
+                <button type="submit" class="reg-btn" id="submitBtn">Create Account</button>
             </div>
 
-            <div class="reg-links" style="margin-top:15px">
-                <a href="{{ route('admin.login') }}">Already have an account? Sign in</a>
+            <div class="reg-links">
+                Already have an account? <a href="{{ route('admin.login') }}">Sign In</a>
             </div>
-
         </form>
     </div>
-</section>
+
+    <div class="reg-right">
+        <div class="slider-container">
+            <div class="slide active">
+                <div class="lottie-box">
+                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_m6cu9t9c.json" background="transparent" speed="1" style="width: 280px; height: 280px;" loop autoplay></lottie-player>
+                </div>
+                <div class="slide-content">
+                    <h3>Empower Your Team</h3>
+                    <p>Join thousands of companies using Teamiy to automate HR, payroll, and attendance management.</p>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="lottie-box">
+                    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_q5pk6p1k.json" background="transparent" speed="1" style="width: 280px; height: 280px;" loop autoplay></lottie-player>
+                </div>
+                <div class="slide-content">
+                    <h3>Data Driven Insights</h3>
+                    <p>Get real-time reports and analytics to make better decisions for your organization's growth.</p>
+                </div>
+            </div>
+
+            <div class="dots-container">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('page-scripts')
 <script>
-const steps=[...document.querySelectorAll('.reg-step')],
-nextBtn=document.getElementById('nextBtn'),
-prevBtn=document.getElementById('prevBtn'),
-submitBtn=document.getElementById('submitBtn'),
-form=document.getElementById('registerForm');
+    // Form Wizard Logic
+    const steps = [...document.querySelectorAll('.reg-step')],
+          nextBtn = document.getElementById('nextBtn'),
+          prevBtn = document.getElementById('prevBtn'),
+          submitBtn = document.getElementById('submitBtn'),
+          form = document.getElementById('registerForm');
 
-let currentStep=0;
+    let currentStepIndex = 0;
 
-function showStep(){
-    steps.forEach((s,i)=>s.classList.toggle('active',i===currentStep));
-    prevBtn.style.display=currentStep===0?'none':'inline-block';
-    nextBtn.style.display=currentStep===steps.length-1?'none':'inline-block';
-    submitBtn.style.display=currentStep===steps.length-1?'inline-block':'none';
-}
-showStep();
-
-nextBtn.onclick=()=>{
-    const invalid=steps[currentStep].querySelector('input:invalid, select:invalid');
-    if(invalid){invalid.reportValidity();return;}
-    currentStep++;showStep();
-};
-prevBtn.onclick=()=>{currentStep--;showStep();};
-
-document.querySelectorAll('.password-toggle').forEach((icon,i)=>{
-    icon.onclick=()=>{
-        const field=document.querySelectorAll('.password-field')[i];
-        if(field.type==='password'){field.type='text';icon.classList.add('active')}
-        else{field.type='password';icon.classList.remove('active')}
+    function showStep(index) {
+        steps.forEach((s, i) => s.classList.toggle('active', i === index));
+        prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+        nextBtn.style.display = index === steps.length - 1 ? 'none' : 'inline-block';
+        submitBtn.style.display = index === steps.length - 1 ? 'inline-block' : 'none';
     }
-});
+    showStep(0);
 
-const pass=document.getElementById('password');
-const confirmPass=document.getElementById('confirmPassword');
-const passError=document.getElementById('passMatchError');
+    nextBtn.onclick = () => {
+        const inputs = steps[currentStepIndex].querySelectorAll('input, select');
+        let valid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                valid = false;
+            }
+        });
+        if (!valid) return;
+        
+        currentStepIndex++;
+        showStep(currentStepIndex);
+    };
 
-function checkPasswords(){
-    if(confirmPass.value && pass.value!==confirmPass.value){
-        passError.style.display='block';
-        confirmPass.setCustomValidity('Passwords do not match');
-    }else{
-        passError.style.display='none';
-        confirmPass.setCustomValidity('');
-    }
-}
-pass.oninput=checkPasswords;
-confirmPass.oninput=checkPasswords;
+    prevBtn.onclick = () => {
+        currentStepIndex--;
+        showStep(currentStepIndex);
+    };
 
-form.addEventListener('submit',e=>{
-    const invalid=form.querySelector('input:invalid, select:invalid');
-    if(invalid){
-        invalid.reportValidity();
-        currentStep=[...steps].indexOf(invalid.closest('.reg-step'));
-        showStep();
-        e.preventDefault();
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        alert.style.transition = 'opacity 1s ease';
-        alert.style.opacity = '1';
-        setTimeout(() => {
-            alert.style.opacity = '0';
-        }, 15000);
-        setTimeout(() => {
-            if(alert.parentNode) alert.parentNode.removeChild(alert);
-        }, 16000);
+    // Password Toggle
+    document.querySelectorAll('.password-toggle').forEach((icon, i) => {
+        icon.onclick = () => {
+            const field = document.querySelectorAll('.password-field')[i];
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.add('active');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('active');
+            }
+        };
     });
-});
+
+    // Slider Logic
+    let slideIndex = 0;
+    let autoSlideTimer;
+
+    function showSlides(n) {
+        let slides = document.getElementsByClassName("slide");
+        let dots = document.getElementsByClassName("dot");
+        if (n >= slides.length) slideIndex = 0;
+        if (n < 0) slideIndex = slides.length - 1;
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("active");
+            dots[i].classList.remove("active");
+        }
+        slides[slideIndex].classList.add("active");
+        dots[slideIndex].classList.add("active");
+    }
+
+    function currentSlide(n) {
+        clearInterval(autoSlideTimer);
+        slideIndex = n;
+        showSlides(slideIndex);
+        startAutoSlide();
+    }
+
+    function startAutoSlide() {
+        autoSlideTimer = setInterval(() => {
+            slideIndex++;
+            showSlides(slideIndex);
+        }, 5000);
+    }
+
+    window.onload = () => {
+        startAutoSlide();
+    };
 </script>
 @endsection
