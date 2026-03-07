@@ -22563,6 +22563,7 @@ body {
   height: 100%;
   padding-left: 25px;
   padding-right: 25px;
+  background-color: #057db0;
 }
 @media (max-width: 991px) {
   .navbar .navbar-content {

@@ -182,7 +182,7 @@
     svg.feather.feather-users, svg.feather.feather-edit-3, svg.feather.feather-trash-2{width: 14px;}
     /*D:\laragon\www\teamiy\resources\views\admin\branch\index.blade.php Code End*/
 
-        /*D:\laragon\www\teamiy\resources\views\admin\employees\index.blade.php Code*/
+    /*D:\laragon\www\teamiy\resources\views\admin\employees\index.blade.php Code*/
     .btn-teamiy-add-new { background: #fb8233; color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(251, 130, 51, 0.25); transition: 0.3s; }
     .btn-teamiy-add-new:hover { background: #e3722a; color: white; transform: translateY(-2px); }
     .filter-panel-teamiy { background: white; border-radius: 12px; border: 1px solid #f1f5f9; }
@@ -205,4 +205,57 @@
     .slider-mini:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider-mini { background-color: #fb8233; }
     input:checked + .slider-mini:before { transform: translateX(12px); }
+    .stats-container-teamiy {display: flex;gap: 20px;margin-bottom: 30px;flex-wrap: wrap;}
+    .stat-card-new {background: #ffffff;border-radius: 12px;padding: 20px;flex: 1;min-width: 300px;border: 1px solid #e2e8f0;box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+    .stat-header {display: flex;align-items: center;gap: 8px;color: #64748b;font-weight: 700;font-size: 14px;margin-bottom: 10px;}
+    .stat-main-row {display: flex;align-items: baseline;gap: 10px;margin-bottom: 5px;}
+    .stat-number {font-size: 28px;font-weight: 800;color: #111827;}
+    .stat-badge {background: #ecfdf5;color: #10b981;padding: 2px 8px;border-radius: 6px;font-size: 12px;font-weight: 700;}
+    .stat-subtext {color: #94a3b8;font-size: 12px;margin-bottom: 20px;display: block;}
+    .prog-row { margin-bottom: 10px; }
+    .prog-labels {display: flex;justify-content: space-between;font-size: 11px;font-weight: 700;margin-bottom: 4px;}
+    .prog-bar-bg {height: 10px;background: #f1f5f9;border-radius: 10px;}
+    .prog-fill { height: 100%; border-radius: 10px; }
+    .gender-grid-new {display: flex;gap: 15px;margin-bottom: 15px;}
+    .gender-item {flex: 1;padding: 12px;border: 1px solid #f1f5f9;border-radius: 10px;text-align: center;}
+    .gender-label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+    .gender-val { font-size: 20px; font-weight: 800; color: #111827; display: block; }
+    .gender-counts-flex {display: flex;gap: 10px;}
+    .gender-pill-new {flex: 1;padding: 10px;border-radius: 8px;font-size: 12px;font-weight: 700;text-align: center;}
     /*D:\laragon\www\teamiy\resources\views\admin\employees\index.blade.php Code End*/
+
+    /*D:\laragon\www\Teamiy-UI\resources\views\admin\section\nav.blade.php Code*/
+    .navbar .search-form {flex: 1;max-width: 500px;margin-left: 20px;}
+    .navbar .search-form .input-group {background: #f1f5f9; /* Light grey background from image */border-radius: 12px; /* Smooth rounded corners */border: 1px solid #e2e8f0;padding: 2px 12px;transition: all 0.3s ease;}
+    .navbar .search-form .input-group:focus-within {background: #ffffff;border-color: #057db0;box-shadow: 0 0 0 3px rgba(5, 125, 176, 0.1);}
+    .navbar .search-form .form-control {background: transparent;border: none;height: 40px;font-size: 14px;color: #475569;}
+    .navbar .search-form .input-group-text {background: transparent;border: none;color: #94a3b8;}
+    .notification-sidebar {position: fixed;top: 0;right: -420px; width: 400px;height: 100vh;background: #ffffff;z-index: 9999;box-shadow: -10px 0 30px rgba(0,0,0,0.1);transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);display: flex;flex-direction: column;}
+    .notification-sidebar.active { right: 0; }
+    .notif-overlay { position: fixed;top: 0;left: 0; width: 100%;height: 100%;background: rgba(15, 23, 42, 0.4);backdrop-filter: blur(2px);z-index: 9998;display: none; }
+    .notif-overlay.active { display: block; }
+    .notif-tabs-header {display: flex;padding: 10px 20px;gap: 20px;border-bottom: 1px solid #f1f5f9;}
+    .notif-tab-item {font-size: 14px;font-weight: 600;color: #057db0;padding: 8px 0;cursor: pointer;position: relative;}
+    .notif-tab-item.active { color: #fb8233; }
+    .notif-tab-item.active::after {content: '';position: absolute;bottom: 0;left: 0;width: 100%;height: 3px;background: #fb8233;border-radius: 10px;}
+    .notif-item {padding: 15px 20px;border-bottom: 1px solid #f8fafc;display: flex;gap: 12px;transition: background 0.2s;}
+    .notif-item:hover { background: #f8fafc; }
+    .notif-icon-box {width: 40px; height: 40px; border-radius: 50%;display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
+    .notif-msg { font-size: 13px; line-height: 1.5; color: #334155; margin-bottom: 4px; }
+    .notif-meta { font-size: 11px; color: #94a3b8; font-weight: 500; }
+    .btn-notif-action {padding: 6px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;border: 1px solid #e2e8f0; margin-top: 8px; cursor: pointer;}
+    .btn-approve { background: #057db0; color: white; border: none; margin-left: 8px; }
+    .navbar-nav .nav-link i { color: #64748b; width: 20px; }
+    a#openNotif,a#langDropdown{background-color: #ffffff38;padding: 12px;border-radius: 15px;color:#fff}
+    a#openNotif:hover {color: #fb8233;}
+    img.wd-35.ht-35.rounded-circle.border {border: 2px solid #fb8233 !important;}
+    .navbar .search-form .input-group{background: #f1f5f91f;border-radius: 12px;border:none;}
+    span.input-group-text {background-color: #ffffff00 !important;color: #fff !important;border-right: 1px solid #ffffff66 !important;}
+    .navbar .search-form .input-group:focus-within {background: #ffffff4f !important;}
+    .navbar .search-form .form-control {color: #ffffff !important;}
+    .p-4.d-flex.justify-content-between.align-items-center.border-bottom {background-color: #057db0;color: #fff;}
+    svg.feather.feather-x {color: #fff;}
+    .notif-footer {padding: 15px;border-top: 1px solid #f1f5f9;background: #fff;}
+    .btn-view-all {display: block;width: 100%;padding: 10px;background: #f8fafc;color: #fb8233;text-align: center;border-radius: 8px;font-weight: 700;font-size: 13px;text-decoration: none;transition: background 0.2s;}
+    .btn-view-all:hover {background: #e2e8f0;color: #0056b3;}
+    /*D:\laragon\www\Teamiy-UI\resources\views\admin\section\nav.blade.php Code End*/

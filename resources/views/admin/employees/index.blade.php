@@ -22,40 +22,59 @@
             </div>
         </div>
         @can('create_employee')
-            <a href="{{ route('admin.employees.create') }}" class="btn-teamiy-add-new text-decoration-none">
-                <i data-feather="plus" style="width: 18px; stroke-width: 3;"></i> Add Employee
+            <a href="{{ route('admin.employees.create') }}" class="btn-teamiy-add-new text-decoration-none" style="background: #057db0; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600;">
+                <i data-feather="plus" style="width: 18px;"></i> Add Employee
             </a>
         @endcan
     </div>
 
-    <!--{{-- Filter Bar --}}
-    <div class="filter-panel-teamiy mb-4 shadow-sm p-3">
-        <form action="{{ route('admin.employees.index') }}" method="get" class="row g-2 align-items-center w-100 m-0">
-            <div class="col-12 col-md-3">
-                <div class="search-container-teamiy w-100">
-                    <i data-feather="search"></i>
-                    <input type="text" name="employee_name" value="{{ $filterParameters['employee_name'] }}" placeholder="Search Name" class="w-100">
+    {{-- START: TOTAL EMPLOYEES & GENDER RATIO SECTION --}}
+    <div class="stats-container-teamiy">
+        <div class="stat-card-new">
+            <div class="stat-header">
+                <i data-feather="users" style="width: 16px; color: #057db0;"></i> Total Employees
+            </div>
+            <div class="stat-main-row">
+                <span class="stat-number">1,298</span>
+                <span class="stat-badge">2.8%</span>
+            </div>
+            <span class="stat-subtext">There are 102 new employees this year</span>
+
+            <div class="prog-row">
+                <div class="prog-labels"><span style="color:#057db0;">Full-Time</span><span>682</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: 70%; background: #057db0;"></div></div>
+            </div>
+            <div class="prog-row">
+                <div class="prog-labels"><span style="color:#3b82f6;">Contract</span><span>373</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: 45%; background: #3b82f6;"></div></div>
+            </div>
+            <div class="prog-row">
+                <div class="prog-labels"><span style="color:#60a5fa;">Interns</span><span>281</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: 30%; background: #60a5fa;"></div></div>
+            </div>
+        </div>
+
+        <div class="stat-card-new">
+            <div class="stat-header">
+                <i data-feather="pie-chart" style="width: 16px; color: #fb8233;"></i> Employee Gender Ratio
+            </div>
+            <div class="gender-grid-new">
+                <div class="gender-item">
+                    <span class="gender-label">Male</span>
+                    <span class="gender-val">78%</span>
+                </div>
+                <div class="gender-item">
+                    <span class="gender-label">Female</span>
+                    <span class="gender-val">22%</span>
                 </div>
             </div>
-            
-            <div class="col-6 col-md-2">
-                <select name="department_id" class="select-teamiy-custom w-100">
-                    <option selected disabled>Department</option>
-                </select>
+            <div class="gender-counts-flex">
+                <div class="gender-pill-new" style="background: #fff1f0; color: #f87171;">892 Male</div>
+                <div class="gender-pill-new" style="background: #f0f7ff; color: #057db0;">431 Female</div>
             </div>
-            
-            <div class="col-6 col-md-2">
-                <select name="branch_id" class="select-teamiy-custom w-100">
-                    <option selected disabled>Branch</option>
-                </select>
-            </div>
-
-            <div class="col-12 col-md-auto ms-md-auto d-flex gap-2 justify-content-center">
-                <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3" style="height: 38px;">Filter</button>
-                <a href="{{ route('admin.employees.index') }}" class="btn-utility-teamiy text-decoration-none"><i data-feather="refresh-cw"></i> Reset</a>
-            </div>
-        </form>
-    </div>-->
+        </div>
+    </div>
+    {{-- END: NEW SECTIONS --}}
 
     {{-- Employee Grid --}}
     <div class="row g-4">
@@ -120,8 +139,6 @@
                     <div class="mx-3 mb-3 p-3 rounded-4" style="border: 1.5px solid #f1f5f9; background: #ffffff;">
                         <div class="fw-bold mb-3 d-flex justify-content-between align-items-center">
                             <span style="font-size: 12px; color: #111827;"># TP-00{{ $value->id }}</span>
-                            
-                            {{-- Original Office/Field Functionality Restored --}}
                             <button class="changeWorkPlace btn btn-{{ $changeColor[$value->workspace_type] ?? 'success' }} btn-xs" 
                                     data-href="{{ route('admin.employees.change-workspace', $value->id) }}" 
                                     style="font-size: 10px; padding: 2px 8px; border-radius: 5px;">
