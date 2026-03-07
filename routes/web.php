@@ -84,7 +84,10 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
+use App\Http\Controllers\Auth\SocialLoginController;
 
+Route::get('auth/{provider}', [SocialLoginController::class, 'redirectToProvider'])->name('social.login');
+Route::get('auth/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback']);
 Route::get('/clear', function () {
     $exitCode = Artisan::call('migrate');
     $exitCode = Artisan::call('cache:clear');
