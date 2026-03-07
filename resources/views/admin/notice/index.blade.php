@@ -1,3 +1,4 @@
+{{--
 @extends('layouts.master')
 
 @section('title', __('index.notices'))
@@ -188,4 +189,255 @@
 
 @section('scripts')
     @include('admin.notice.common.scripts')
+@endsection
+--}}
+
+@extends('layouts.master')
+
+@section('title', __('index.notices'))
+
+@section('button')
+    @can('create_notice')
+        <a href="{{ route('admin.notices.create')}}" class="btn shadow-sm px-4 fw-bold rounded-3 text-white" style="background-color: #057DB0;">
+            <i class="me-1" data-feather="plus-circle"></i> @lang('index.create_notice')
+        </a>
+    @endcan
+@endsection
+
+@section('main-content')
+<section class="content-wrapper p-4" style="background: #f0f2f5; min-height: 100vh;">
+    @include('admin.section.flash_message')
+    @include('admin.notice.common.breadcrumb')
+
+    {{-- Filter Section --}}
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <form action="{{ route('admin.notices.index') }}" method="get">
+                <div class="row g-3 align-items-end">
+                    @if(!isset(auth()->user()->branch_id))
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.branch')</label>
+                            <select class="form-select border-2 shadow-none" id="branch_id" name="branch_id" style="border-color: #e9ecef;">
+                                <option value="" {{ !isset($filterParameters['branch_id']) ? 'selected': ''}} disabled>{{ __('index.select_branch') }}</option>
+                                @if(isset($companyDetail))
+                                    @foreach($companyDetail->branches()->get() as $branch)
+                                        <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
+                                            {{ucfirst($branch->name)}}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    @endif
+
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.from_date')</label>
+                        <input type="date" name="publish_date_from" value="{{ request('publish_date_from') }}" class="form-control border-2 shadow-none">
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.to_date')</label>
+                        <input type="date" name="publish_date_to" value="{{ request('publish_date_to') }}" class="form-control border-2 shadow-none">
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 d-flex gap-2">
+                        <button type="submit" class="btn text-white w-100 fw-bold shadow-sm" style="background-color: #057DB0;">
+                            <i data-feather="filter" class="icon-xs me-1"></i> @lang('index.filter')
+                        </button>
+                        <a href="{{ route('admin.notices.index') }}" class="btn btn-outline-secondary w-100 fw-bold">
+                            @lang('index.reset')
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Notice List --}}
+    <div class="notice-list">
+        @forelse ($notices as $key => $value)
+            <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card">
+                <div class="card-body p-0">
+                    <div class="row g-0 align-items-center">
+                        
+                        <div class="col-auto p-4 text-center border-end bg-light" style="min-width: 120px;">
+                            <span class="d-block small text-muted fw-bold mb-1">
+                                #{{ (($notices->currentPage() - 1) * (\App\Models\Notice::RECORDS_PER_PAGE)) + (++$key) }}
+                            </span>
+                            <div class="date-display">
+                                <h4 class="mb-0 fw-black" style="color: #057DB0;">{{ \Carbon\Carbon::parse($value->notice_publish_date)->format('d') }}</h4>
+                                <span class="text-uppercase small fw-bold text-secondary">{{ \Carbon\Carbon::parse($value->notice_publish_date)->format('M Y') }}</span>
+                            </div>
+                        </div>
+
+                        <div class="col p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1">{{ ucfirst($value->title) }}</h5>
+                                    <p class="text-muted small mb-0">
+                                        <i data-feather="clock" class="icon-xs me-1"></i>
+                                        @lang('index.publish_date'): {{ convertDateTimeFormat($value->notice_publish_date) ?? __('index.not_published_yet') }}
+                                    </p>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <span class="d-block small fw-bold text-muted mb-1 text-uppercase">@lang('index.status')</span>
+                                    <div class="form-check form-switch d-inline-block">
+                                        {{-- Toggle checkbox --}}
+                                        <input class="form-check-input toggleStatus cursor-pointer" type="checkbox" 
+                                               href="{{ route('admin.notices.toggle-status', $value->id) }}"
+                                               {{ $value->is_active ? 'checked' : '' }}
+                                               style="border-color: #057DB0;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-3 opacity-10">
+
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="small fw-bold text-muted"><i data-feather="users" class="icon-xs me-1"></i> @lang('index.notice_receiver'):</span>
+                                @forelse ($value->noticeReceiversDetail as $receiver)
+                                    <span class="badge border rounded-pill px-3 text-dark fw-normal bg-white shadow-xs">
+                                        {{ $receiver->employee ? ucfirst($receiver->employee->name) : 'N/A' }}
+                                    </span>
+                                @empty
+                                    <span class="text-muted small">@lang('index.no_records_found')</span>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <div class="col-auto p-4 bg-light-subtle border-start">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="btn-group shadow-sm bg-white rounded-3">
+                                    @can('show_notice')
+                                        <a href="javascript:void(0)" 
+                                           class="btn btn-link text-info p-2 showNoticeDescription" 
+                                           data-href="{{ route('admin.notices.show', $value->id) }}" 
+                                           title="@lang('index.show_notice_content')">
+                                            <i data-feather="eye" class="text-primary"></i>
+                                        </a>
+                                    @endcan
+                                    @can('edit_notice')
+                                        <a href="{{ route('admin.notices.edit', $value->id) }}" class="btn btn-link p-2" title="@lang('index.edit_notice')">
+                                            <i data-feather="edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('delete_notice')
+                                        <button class="btn btn-link text-danger p-2 delete" 
+                                                data-href="{{ route('admin.notices.delete', $value->id) }}" title="@lang('index.delete_notice_detail')">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    @endcan
+                                </div>
+                                
+                                @can('send_notice')
+                                    <button class="btn btn-sm text-white fw-bold rounded-3 sendNotice" 
+                                            data-href="{{ route('admin.notices.send-notice', $value->id) }}"
+                                            style="background-color: #057DB0;">
+                                        <i data-feather="send" class="icon-xs me-1"></i> @lang('index.send_notice')
+                                    </button>
+                                @endcan
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="card border-0 shadow-sm rounded-4 text-center py-5 bg-white">
+                <i data-feather="inbox" class="mx-auto mb-3" style="width: 50px; height: 50px; color: #057DB0; opacity: 0.3;"></i>
+                <h5 class="text-muted fw-bold">@lang('index.no_records_found')</h5>
+            </div>
+        @endforelse
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center">
+        {{ $notices->appends($_GET)->links('pagination::bootstrap-5') }}
+    </div>
+</section>
+
+@include('admin.notice.show')
+
+@endsection
+
+@section('scripts')
+    @include('admin.notice.common.scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            feather.replace();
+
+            // --- 1. Toggle Status with SweetAlert Confirmation ---
+            $(document).on('change', '.toggleStatus', function (e) {
+                e.preventDefault();
+                let checkbox = $(this);
+                let url = checkbox.attr('href');
+                let isChecked = checkbox.is(':checked');
+
+                // Checkbox ki state pehle change na ho, hum isay manually control karenge
+                checkbox.prop('checked', !isChecked); 
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to change the status of this notice?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#057DB0',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, change it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User ne confirm kiya to page redirect karein
+                        window.location.href = url;
+                    } else {
+                        // Agar cancel kiya to checkbox ko purani state mein rehne dein
+                        checkbox.prop('checked', !isChecked);
+                    }
+                });
+            });
+
+            // --- 2. Show Notice AJAX Modal ---
+            $(document).on('click', '.showNoticeDescription', function (e) {
+                e.preventDefault();
+                let url = $(this).data('href');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (response) {
+                        $('#addsliderLabel').text(response.data.title);
+                        $('#description').html(response.data.description);
+                        
+                        var myModal = new bootstrap.Modal(document.getElementById('addslider'));
+                        myModal.show();
+                    },
+                    error: function (error) {
+                        console.log("AJAX Error:", error);
+                        Swal.fire('Error', 'Data load nahi ho saka', 'error');
+                    }
+                });
+            });
+
+            // --- 3. Delete Confirmation Alert ---
+            $(document).on('click', '.delete', function (e) {
+                e.preventDefault();
+                let url = $(this).data('href');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#057DB0',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
