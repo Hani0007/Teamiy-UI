@@ -181,3 +181,28 @@
     input:checked + .slider-modern:before { transform: translateX(20px); }
     svg.feather.feather-users, svg.feather.feather-edit-3, svg.feather.feather-trash-2{width: 14px;}
     /*D:\laragon\www\teamiy\resources\views\admin\branch\index.blade.php Code End*/
+
+        /*D:\laragon\www\teamiy\resources\views\admin\employees\index.blade.php Code*/
+    .btn-teamiy-add-new { background: #fb8233; color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(251, 130, 51, 0.25); transition: 0.3s; }
+    .btn-teamiy-add-new:hover { background: #e3722a; color: white; transform: translateY(-2px); }
+    .filter-panel-teamiy { background: white; border-radius: 12px; border: 1px solid #f1f5f9; }
+    .search-container-teamiy { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; }
+    .search-container-teamiy i { width: 16px; color: #94a3b8; margin-right: 8px; }
+    .search-container-teamiy input { border: none; background: transparent; outline: none; font-size: 13px; font-weight: 500; }
+    .select-teamiy-custom { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600; color: #4a5568; outline: none; }
+    .btn-utility-teamiy { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 15px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: #1a202c; }
+    .card-teamiy-main { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #f1f5f9; transition: 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+    .card-teamiy-main:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; }
+    .avatar-circle-teamiy { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fb8233; padding: 3px; }
+    .avatar-circle-teamiy img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .contact-pill-teamiy { background: #fcfcfc; border: 1px solid #f1f5f9; border-radius: 30px; padding: 5px 12px; font-size: 11px; color: #4a5568; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .status-label-small { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+    .view-details-link { color: #111827; font-size: 12px; transition: 0.2s; }
+    .view-details-link:hover { color: #fb8233; }
+    .switch-mini { position: relative; display: inline-block; width: 28px; height: 16px; }
+    .switch-mini input { opacity: 0; width: 0; height: 0; }
+    .slider-mini { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e2e8f0; transition: .4s; border-radius: 34px; }
+    .slider-mini:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider-mini { background-color: #fb8233; }
+    input:checked + .slider-mini:before { transform: translateX(12px); }
+    /*D:\laragon\www\teamiy\resources\views\admin\employees\index.blade.php Code End*/
