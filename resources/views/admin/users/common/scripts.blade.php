@@ -46,8 +46,11 @@
             Swal.fire({
                 title: '{{ __('index.confirm_delete_employee') }}',
                 showDenyButton: true,
+                icon:'warning',
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                confirmButtonColor: `#057db0`,
+                denyButtonColor: `#fb8233`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
