@@ -1,13 +1,51 @@
 <div class="modal fade" id="addslider" tabindex="-1" aria-labelledby="addsliderLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center">
-                <h5 class="modal-title" id="exampleModalLabel">@yield('modal_title')</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            
+            {{-- Modern Glossy Header --}}
+            <div class="modal-header border-0 position-relative" style="background: linear-gradient(135deg, #057db0 0%, #046690 100%); padding: 30px 25px;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.1;"></div>
+                
+                {{-- Content Section --}}
+                <div class="d-flex align-items-center position-relative" style="z-index: 2;">
+                    <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; backdrop-filter: blur(5px);">
+                        <i data-feather="file-text" style="color: white; width: 24px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title text-white fw-bold mb-0" id="addsliderLabel">@yield('modal_title')</h5>
+                        <p class="text-white-50 mb-0 small" style="font-size: 11px;">Detailed information overview</p>
+                    </div>
+                </div>
+
+                {{-- X Button at Top Right --}}
+                <button type="button" class="btn-close btn-close-white position-absolute" 
+                        data-bs-dismiss="modal" aria-label="Close" 
+                        style="top: 15px; right: 15px; z-index: 3; opacity: 0.8;"></button>
             </div>
-            <div class="modal-body">
-                <h6 class="mb-2">@lang('index.description')</h6>
-                <p class="form-control1" id="description"></p>
+
+            <div class="modal-body p-4" style="background: #f8fafc;">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="p-3" style="background: #eff6ff; border-radius: 15px; border: 1px dashed #bfdbfe;">
+                            <div class="d-flex align-items-center mb-2">
+                                <div style="background: #fff; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                    <i data-feather="align-left" style="color: #057db0; width: 18px;"></i>
+                                </div>
+                                <label class="text-primary small fw-bold mb-0" style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">@lang('index.description')</label>
+                            </div>
+                            <div class="ps-1">
+                                <p class="mb-0 text-dark" id="description" style="font-size: 13.5px; line-height: 1.6; min-height: 50px; white-space: pre-wrap;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fafc;">
+                <button type="button" class="btn w-100 py-2 fw-bold" data-bs-dismiss="modal" 
+                        style="background: #fff; color: #64748b; border: 1px solid #e2e8f0; border-radius: 12px; transition: all 0.3s;">
+                    {{ __('index.close') }}
+                </button>
             </div>
         </div>
     </div>
