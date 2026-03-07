@@ -496,7 +496,7 @@
                                                             align="left" class="x_v-container-padding-padding">
                                                             <div style="font-size:14px; line-height:140%; text-align:center; word-wrap:break-word"
                                                                 class="x_v-font-size">
-                                                                <p style="line-height:140%; margin:0px">© 2025 TEAMIY.
+                                                                <p style="line-height:140%; margin:0px">© 2026 TEAMIY.
                                                                     All rights reserved</p>
                                                             </div>
                                                         </td>

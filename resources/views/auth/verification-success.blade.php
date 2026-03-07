@@ -3,49 +3,96 @@
 @section('title', __('registration_success'))
 
 @section('page-styles')
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <style>
-.success-wrapper{
-    min-height:100vh;
-    background:linear-gradient(135deg,#057db0,#045a80);
-    display:flex;align-items:center;justify-content:center;padding:20px
-}
-.success-card{
-    max-width:480px;width:100%;
-    padding:40px;border-radius:18px;text-align:center;
-    background:rgba(255,255,255,.15);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.25);
-}
-.success-icon{
-    font-size:64px;color:#28a745;margin-bottom:20px
-}
-.success-title{color:#fff;font-size:24px;margin-bottom:15px;font-weight:600}
-.success-message{color:#dff3ff;font-size:16px;margin-bottom:30px;line-height:1.5}
-.login-btn{
-    width:100%;margin-top:20px;padding:14px;border:none;border-radius:40px;
-    background:#fb7633;color:#fff;font-size:16px;font-weight:600;
-    text-decoration:none;display:inline-block;transition:all 0.3s ease
-}
-.login-btn:hover{
-    background:#e85d3c;transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.2)
-}
+    .split-success-container { display: flex; min-height: 100vh; background: #fff; }
+    .success-left {
+        flex: 1; display: flex; flex-direction: column; justify-content: center;
+        padding: 60px; max-width: 600px; overflow-y: auto; text-align: center;
+    }
+    .logo-area { align-self: center; margin-bottom: 40px; }
+    
+    .success-icon-box {
+        font-size: 80px; color: var(--success-green); margin-bottom: 20px;
+        animation: scaleUp 0.5s ease-out;
+    }
+    @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
+
+    .success-title { color: #057db0; font-size: 28px; font-weight: 800; margin-bottom: 15px; }
+    .success-message { color: #64748b; font-size: 16px; margin-bottom: 35px; line-height: 1.6; }
+    .success-message small { display: block; margin-top: 10px; opacity: 0.8; }
+
+    .login-btn {
+        width: 100%; padding: 16px; border-radius: 12px; border: none;
+        background-color: #057db0; color: #fff; font-weight: 700;
+        font-size: 16px; cursor: pointer; transition: 0.3s; text-decoration: none;
+        display: inline-block; box-sizing: border-box;
+    }
+    .login-btn:hover { background-color: #fb8233; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+
+    /* RIGHT SECTION (SLIDER) */
+    .success-right {
+        flex: 1.2; background-color: #057db0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        position: relative; color: #fff; padding: 40px;
+    }
+    .slider-container { width: 100%; max-width: 500px; text-align: center; }
+    
+    .lottie-box { height: 350px; margin-bottom: 30px; display: flex; justify-content: center; }
+    .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
+    .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
+
+    @media (max-width: 992px) { .success-right { display: none; } .success-left { max-width: 100%; padding: 40px 25px; } }
 </style>
 @endsection
 
 @section('auth-content')
-<section class="success-wrapper">
-    <div class="success-card">
-        <div class="success-icon">
-            <i class="fa fa-check-circle"></i>
+<div class="split-success-container">
+    
+    <div class="success-left">
+        <div class="logo-area">
+            <a href="https://teamiy.com/">
+                <img src="{{ asset('assets/images/company-logo.png') }}" style="max-width: 200px;">
+            </a>
         </div>
+
+        <div class="success-icon-box">
+            <i class="fas fa-check-circle"></i>
+        </div>
+
         <h3 class="success-title">{{ __('registration_success') }}</h3>
+        
         <p class="success-message">
-            {{ __('verification_successful_welcome') }}<br>
+            {{ __('verification_successful_welcome') }}
             <small>{{ __('click_below_to_login') }}</small>
         </p>
+
         <a href="{{ route('admin.login') }}" class="login-btn">
             {{ __('login_to_dashboard') }}
         </a>
     </div>
-</section>
+
+    <div class="success-right">
+        <div class="slider-container">
+            <div class="slide active">
+                <div class="lottie-box">
+                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_l4xxtfd3.json" background="transparent" speed="1" style="width: 350px; height: 350px;" loop autoplay></lottie-player>
+                </div>
+                <div class="slide-content">
+                    <h3>Welcome Aboard!</h3>
+                    <p>Your account is now fully verified. You are ready to explore the most powerful HR management tools available.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    // Success page par slider auto-rotate ki zarurat nahi hoti lekin layout consistency ke liye rakha hai
+    window.onload = function() {
+        if(typeof feather !== 'undefined') { feather.replace(); }
+    };
+</script>
 @endsection

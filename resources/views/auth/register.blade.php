@@ -145,6 +145,7 @@
                         <label class="reg-label">Confirm Password</label>
                         <div class="password-wrapper">
                             <input type="password" name="password_confirmation" id="confirmPassword" class="reg-input password-field" required minlength="8">
+                            <svg class="password-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             <div class="error-text" id="passMatchError" style="display:none">Passwords do not match</div>
                         </div>
                     </div>
