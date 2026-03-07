@@ -1,208 +1,170 @@
 @php
     $locale = \Illuminate\Support\Facades\App::getLocale();
     $authUser = auth()->user();
-    //$authEmployee = auth()->user();
 @endphp
-<style>
-    #nav-search-listing > li.highlight {
-        background-color:#e82e5f;
-    }
-    #nav-search-listing > li:hover{
-        background-color: #e82e5f;
-    }
 
-    #nav-search-listing > li {
-        border-bottom: 1px dashed #f1f1f1;
-    }
-
-    #nav-search-listing > li.highlight a,#nav-search-listing > li:hover a  {
-        color: white;
-    }
-
-    #nav-search-listing > li a {
-        text-transform: capitalize;
-        color: #232323;
-    }
-</style>
-
-<!-- partial:partials/_navbar.html -->
 <nav class="navbar">
     <a href="#" class="sidebar-toggler">
         <i data-feather="menu"></i>
     </a>
+    
     <div class="navbar-content">
-{{--        <form class="search-form">--}}
-{{--            <div class="input-group">--}}
-{{--                <div class="input-group-text">--}}
-{{--                    <i data-feather="bell"></i>--}}
-{{--                </div>--}}
-{{--                <h4 class="me-5">Attendance Application </h4>--}}
-{{--            </div>--}}
-{{--        </form>--}}
-
-        <form class="search-form mb-0">
+        <form class="search-form">
             <div class="input-group">
-                <div class="input-group-text">
-                    <i data-feather="search"></i>
-                </div>
-                <div id="admin-search-menu">
-                        <input class="form-control mt-0"
-                               id="nav-search"
-                               name="nav-search"
-                               type="text"
-                               autocomplete="off"
-                               placeholder="{{ __('index.search_menu') }}(ctrl+q)"
-                               aria-label="Search">
-
-                        <div class="card card-admin-search" data-toggle="" style="position: absolute !important;">
-                            <ul id="nav-search-listing" class="list-group list-group-flush" >
-
-                            </ul>
-                        </div>
-                </div>
+                <span class="input-group-text"><i data-feather="search"></i></span>
+                <input type="text" class="form-control" placeholder="Search Menu (ctrl+q)" id="nav-search">
             </div>
         </form>
 
         <ul class="navbar-nav">
-
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown">
-                    @switch($locale)
-                        @case('fr')
-                            <i class="flag-icon flag-icon-fr"></i> <span> Français </span>
-                            @break
-                        @case('de')
-                            <i class="flag-icon flag-icon-de"></i> <span> Deutsch </span>
-                            @break
-                        @case('it')
-                            <i class="flag-icon flag-icon-it"></i> <span> Italian </span>
-                            @break
-                        @default
-                            <i class="flag-icon flag-icon-us"></i> <span> English </span>
-                    @endswitch
+                <a class="nav-link dropdown-toggle" href="#" id="langDropdown" data-bs-toggle="dropdown">
+                    <i class="flag-icon flag-icon-{{ $locale === 'en' ? 'us' : $locale }}"></i>
                 </a>
-
-                <div class="dropdown-menu p-0">
-                    <ul class="list-unstyled p-1">
-
-                        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                            <li>
-                                <a
-                                    rel="alternate"
-                                    hreflang="{{ $localeCode }}"
-                                    href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}"
-                                    class="dropdown-item {{ $locale === $localeCode ? 'active text-white' : '' }}"
-                                >
-                                    <i class="flag-icon flag-icon-{{ $localeCode === 'en' ? 'us' : $localeCode }}"></i>
-                                    <span class="ml-1">{{ $properties['native'] }}</span>
-                                </a>
-                            </li>
-                        @endforeach
-
-                    </ul>
+                <div class="dropdown-menu dropdown-menu-end p-2 border-0 shadow-lg">
+                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <a href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" class="dropdown-item rounded-3">
+                            <i class="flag-icon flag-icon-{{ $localeCode === 'en' ? 'us' : $localeCode }} me-2"></i> {{ $properties['native'] }}
+                        </a>
+                    @endforeach
                 </div>
             </li>
 
-            @can('notification')
-                <li class="nav-item dropdown" id="notificationsNavBar" data-href="{{route('admin.nav-notifications')}}">
-                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i data-feather="bell"></i>
-                        <div class="indicator">
-                            <div class="circle"></div>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu p-0" aria-labelledby="notificationDropdown">
-                        <div class="p-1 mt-2" id="notifications-detail">
-                            <a class="text-muted p-0 px-3 py-2 " style="font-size: 12px;">{{ __('index.latest_notifications') }} </a>
-                        </div>
+            <li class="nav-item">
+                <a class="nav-link position-relative" href="javascript:void(0);" id="openNotif">
+                    <i data-feather="bell"></i>
+                    <span class="position-absolute top-2 start-75 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                </a>
+            </li>
 
-                        <div class="p-1" id="notifications-detail">
-
-
-                        </div>
-
-                        <div class="px-3 py-2 d-flex align-items-center justify-content-center border-top">
-                            <a href="" id="navAdminNotificationList" data-href="{{ route('admin.notifications.index') }}">{{ __('index.view_all') }}</a>
-                        </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
+                    <img class="wd-35 ht-35 rounded-circle border" src="{{ (isset($authUser->avatar) && $authUser->avatar) ? asset(\App\Models\User::AVATAR_UPLOAD_PATH.$authUser->avatar) : asset('assets/images/img.png') }}" alt="profile">
+                </a>
+                <div class="dropdown-menu dropdown-menu-end p-0 border-0 shadow-lg overflow-hidden" style="width: 240px; border-radius: 15px;">
+                    <div class="p-3 text-center bg-light border-bottom">
+                        <h6 class="fw-bolder mb-0">{{ ucfirst($authUser->name) }}</h6>
+                        <small class="text-muted">{{ $authUser->email }}</small>
                     </div>
-                </li>
-            @endcan
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @if(isset($authUser->avatar) && $authUser->avatar && file_exists(public_path(\App\Models\User::AVATAR_UPLOAD_PATH.$authUser->avatar)))
-                        <img class="wd-30 ht-30 rounded-circle" style="object-fit: cover"
-                             src="{{ asset(\App\Models\User::AVATAR_UPLOAD_PATH.$authUser->avatar) }}" alt="profile">
-@else
-                        <img class="wd-30 ht-30 rounded-circle" style="object-fit: cover"
-                             src="{{ asset('assets/images/img.png') }}" alt="profile">
-@endif
-
-                    </a>
-                    <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
-                        <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
-                            <div class="mb-3">
-                                @if(isset($authUser->avatar) && $authUser->avatar && file_exists(public_path(\App\Models\User::AVATAR_UPLOAD_PATH.$authUser->avatar)))
-                                <img class="wd-80 ht-80 rounded-circle" style="object-fit: cover" src="{{ asset(\App\Models\User::AVATAR_UPLOAD_PATH. $authUser->avatar) }}" alt="">
-@else
-                                <img class="wd-80 ht-80 rounded-circle" style="object-fit: cover" src="{{ asset('assets/images/img.png') }}" alt="">
-@endif
-                            </div>
-                            <div class="text-center">
-                                <p class="tx-16 fw-bolder">{{ ucfirst($authUser->name) }}</p>
-                                <p class="tx-12 text-muted">{{ $authUser->email }}</p>
-                            </div>
-                        </div>
-                        <ul class="list-unstyled p-1">
-
-                            <li class="dropdown-item py-2">
-                                <a href="{{ route('admin.profile_edit', $authUser->id) }}" class="text-body ms-0">
-                                    <i class="me-2 icon-md" data-feather="user"></i>
-                                    <span>{{ __('index.profile') }}</span>
-                                </a>
-                            </li>
-
-                            {{-- @if( isset($authEmployee))
-                                @can('request_leave')
-                                    <li class="dropdown-item py-2">
-                                        <a href="{{ route('admin.leave-request.create') }}" class="text-body ms-0">
-                                            <i class="me-2 icon-md" data-feather="info"></i>
-                                            <span>{{ __('index.request_leave') }}</span>
-                                        </a>
-                                    </li>
-                                @endcan
-                            @endif
-                            @can('app_qr')
-                            <li class="dropdown-item py-2">
-                                <a class="text-body ms-0 qr-modal" title="App QR " target="_blank" href='{{route('admin.showQR')}}'>
-                                    <i class="me-2 icon-md" data-feather="image"></i>
-                                    <span>App QR</span>
-                                </a>
-                            </li>
-                            @endcan --}}
-                            <li class="dropdown-item py-2">
-                                <a href="{{ route('admin.logout') }}"
-                                   onclick="event.preventDefault();
-                                                       document.getElementById('logout-form').submit();" class="text-body ms-0">
-                                        <i class="me-2 icon-md" data-feather="log-out"> </i>{{ __('index.log_out') }}
-                                </a>
-                                  <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                  </form>
-                            </li>
-                        </ul>
+                    <div class="p-2">
+                        <a href="{{ route('admin.profile_edit', $authUser->id) }}" class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3">
+                            <i data-feather="user" style="width: 16px;"></i> Profile
+                        </a>
+                        <a href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger rounded-3">
+                            <i data-feather="log-out" style="width: 16px;"></i> Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">@csrf</form>
                     </div>
-                </li>
-
+                </div>
+            </li>
         </ul>
-
     </div>
 </nav>
-<!-- partial -->
 
+<div class="notif-overlay" id="notifOverlay"></div>
+<div class="notification-sidebar" id="notifSidebar">
+    <div class="p-4 d-flex justify-content-between align-items-center border-bottom">
+        <h5 class="fw-bold mb-0">Notification</h5>
+        <button class="btn btn-link text-dark p-0" id="closeNotif"><i data-feather="x"></i></button>
+    </div>
 
+    <div class="notif-tabs-header">
+        <div class="notif-tab-item active" data-tab="all">All</div>
+        <div class="notif-tab-item" data-tab="mention">Mention</div>
+        <div class="notif-tab-item" data-tab="reminder">Reminder</div>
+    </div>
 
+    <div class="flex-grow-1 overflow-auto" id="notifContent">
+        <div class="p-3"><small class="text-muted fw-bold">New Notification</small></div>
+        
+        <div class="notif-item">
+            <img src="{{ asset('assets/images/img.png') }}" class="notif-icon-box" style="object-fit: cover;">
+            <div class="w-100">
+                <div class="notif-msg"><strong>John Doe</strong> has requested a day off. Review it now.</div>
+                <div class="notif-meta">02:12 PM</div>
+                <div class="d-flex">
+                    <button class="btn-notif-action">Declined</button>
+                    <button class="btn-notif-action btn-approve">Approved</button>
+                </div>
+            </div>
+            <div style="width: 8px; height: 8px; background: #007bff; border-radius: 50%; margin-top: 5px;"></div>
+        </div>
 
+        <div class="notif-item">
+            <div class="notif-icon-box bg-primary-subtle"><i data-feather="dollar-sign" class="text-primary"></i></div>
+            <div class="w-100">
+                <div class="notif-msg"><strong>Payroll December 2024</strong> has been processed successfully.</div>
+                <div class="notif-meta">02:12 PM</div>
+            </div>
+        </div>
+    </div>
+    <div class="notif-footer">
+        <a href="{{ route('admin.notifications.index') }}" class="btn-view-all">
+            View all Notifications
+        </a>
+    </div>
+</div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('notifSidebar');
+        const overlay = document.getElementById('notifOverlay');
+        const openBtn = document.getElementById('openNotif');
+        const closeBtn = document.getElementById('closeNotif');
+        const tabs = document.querySelectorAll('.notif-tab-item');
+        const contentArea = document.getElementById('notifContent');
 
+        // Sidebar Open/Close
+        openBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
 
+        const closeSidebar = () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        };
 
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        // Tabs Logic (Frontend Only)
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabType = tab.getAttribute('data-tab');
+                renderDummyData(tabType);
+            });
+        });
+
+        function renderDummyData(type) {
+            let html = `<div class="p-3"><small class="text-muted fw-bold">${type.toUpperCase()} NOTIFICATIONS</small></div>`;
+            
+            if(type === 'all') {
+                html += `
+                    <div class="notif-item">
+                        <div class="notif-icon-box bg-info-subtle"><i data-feather="info" class="text-info"></i></div>
+                        <div class="w-100"><div class="notif-msg">New HR policies updated. Review them here.</div><div class="notif-meta">Just now</div></div>
+                    </div>`;
+            } else if(type === 'mention') {
+                html += `
+                    <div class="notif-item">
+                        <div class="notif-icon-box bg-warning-subtle"><i data-feather="at-sign" class="text-warning"></i></div>
+                        <div class="w-100"><div class="notif-msg"><strong>Sarah</strong> mentioned you in a comment.</div><div class="notif-meta">5 mins ago</div></div>
+                    </div>`;
+            } else {
+                html += `
+                    <div class="notif-item">
+                        <div class="notif-icon-box bg-danger-subtle"><i data-feather="calendar" class="text-danger"></i></div>
+                        <div class="w-100"><div class="notif-msg">Reminder: Weekly Team Meeting at 4:00 PM.</div><div class="notif-meta">1 hour ago</div></div>
+                    </div>`;
+            }
+            contentArea.innerHTML = html;
+            feather.replace(); // Re-render icons
+        }
+
+        feather.replace();
+    });
+</script>
