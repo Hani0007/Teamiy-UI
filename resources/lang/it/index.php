@@ -1518,4 +1518,10 @@ return [
     'asset_assignment_error' => 'Si è verificato un errore durante l\'assegnazione dell\'asset',
     'assign_to_user' => 'Assegna al Dipendente',
     'select_all' => 'Seleziona Tutto',
+
+    // Company Profile Labels
+    'company_information' => 'Informazioni Azienda',
+    'operational_settings' => 'Impostazioni Operative',
+    'address_information' => 'Informazioni Indirizzo',
+
 ];
