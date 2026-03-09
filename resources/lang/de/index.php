@@ -1474,4 +1474,9 @@ return [
     'check_in_longitude'=>'Check-In-Längengrad',
     'check_out_latitude'=>'Check-Out-Breitengrad',
     'check_out_longitude'=>'Check-Out-Längengrad',
+
+    // Company Profile Labels
+    'company_information' => 'Firmeninformationen',
+    'operational_settings' => 'Betriebseinstellungen',
+    'address_information' => 'Adressinformationen',
 ];

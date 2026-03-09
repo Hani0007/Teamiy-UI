@@ -107,8 +107,8 @@
 
 @if (isset($user) && $user->plan_id == 1 && $remainingDays > 0)
     <div style="text-align: center; padding: 20px; width: 100%" class="bg-dark">
-        <span class="text-white fw-bold">Your <span class="15dys">15-Days</span> Trial Period will expire in <span class="15dys">{{ $remainingDays }}</span> days.</span>
-                    <a href="{{ route('admin.subscription.plans') }}" class="btn fw-bold text-white" style="background-color: #fb9d06">Upgrade Now</a>
+        <span class="text-white fw-bold">{!! __('trial_period_will_expire', ['days' => $remainingDays]) !!}</span>
+                    <a href="{{ route('admin.subscription.plans') }}" class="btn fw-bold text-white" style="background-color: #fb9d06">{{ __('upgrade_now') }}</a>
     </div>
 @endif
 
