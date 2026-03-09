@@ -1531,4 +1531,9 @@ return [
     'assign_to_user' => 'Assign to Employee',
     'select_all' => 'Select All',
 
+    // Company Profile Labels
+    'company_information' => 'Company Information',
+    'operational_settings' => 'Operational Settings',
+    'address_information' => 'Address Information',
+
 ];
