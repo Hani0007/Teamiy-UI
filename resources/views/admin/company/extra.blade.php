@@ -89,9 +89,9 @@
                     @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="teamy-label">Industry Type *</label>
+                    <label class="teamy-label">{{ __('industry_type') }} *</label>
                     <select name="industry_type" class="teamy-input-field" required>
-                        <option value="">Select Industry</option>
+                        <option value="">{{ __('index.select_industry') }}</option>
                         @if(isset($industries))
                             @foreach($industries as $industry)
                                 <option value="{{ $industry->id }}" {{ old('industry_type', $companyDetail->industry_type ?? '') == $industry->id ? 'selected' : '' }}>{{ $industry->name }}</option>
@@ -159,7 +159,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="col-md-4 mb-3"><label class="teamy-label">Province / State</label><input type="text" name="province" class="teamy-input-field" value="{{ old('province', $companyDetail->province ?? '') }}"></div>
+                <div class="col-md-4 mb-3"><label class="teamy-label">{{ __('state_province') }}</label><input type="text" name="province" class="teamy-input-field" value="{{ old('province', $companyDetail->province ?? '') }}"></div>
                 <div class="col-md-6 mb-3"><label class="teamy-label">City</label><input type="text" name="city" class="teamy-input-field" value="{{ old('city', $companyDetail->city ?? '') }}"></div>
                 <div class="col-md-6 mb-3"><label class="teamy-label">Postal Code</label><input type="text" name="postal_code" class="teamy-input-field" value="{{ old('postal_code', $companyDetail->postal_code ?? '') }}"></div>
             </div>
@@ -170,13 +170,13 @@
                 <div class="section-heading-text"><h4>Schedule</h4><p>Operational hours and rest days</p></div>
             </div>
             <div class="section-divider"></div>
-            <label class="teamy-label">Weekly Off Days</label>
+            <label class="teamy-label">{{ __('index.weekly_off_days') }}</label>
             <div class="weekend-group mb-4">
                 @php
                     $weekends = old('weekend', $companyDetail->weekend ?? []);
                     if(!is_array($weekends)) { $weekends = json_decode($weekends, true) ?? []; }
                 @endphp
-                @foreach(['SUN'=>'0','MON'=>'1','TUE'=>'2','WED'=>'3','THU'=>'4','FRI'=>'5','SAT'=>'6'] as $name => $val)
+                @foreach([__('index.sunday')=>'0',__('index.monday')=>'1',__('index.tuesday')=>'2',__('index.wednesday')=>'3',__('index.thursday')=>'4',__('index.friday')=>'5',__('index.saturday')=>'6'] as $name => $val)
                     <input type="checkbox" id="d-{{$val}}" name="weekend[]" value="{{$val}}" class="weekend-checkbox" {{ in_array($val, $weekends) ? 'checked' : '' }}>
                     <label for="d-{{$val}}" class="weekend-label">{{$name}}</label>
                 @endforeach
