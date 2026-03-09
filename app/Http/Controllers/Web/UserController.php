@@ -85,6 +85,9 @@ class UserController extends Controller
             $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
             $users = $this->userRepo->getAllUsers($filterParameters, $select, $with);
 
+            // Calculate employee statistics
+            $employeeStats = $this->calculateEmployeeStatistics($users);
+
             // $company = $this->companyRepository->getCompanyDetail(['id']);
             $branches = $this->branchRepository->getLoggedInUserCompanyBranches(AppHelper::getWebAdminCompanyId(), ['id', 'name']);
 
@@ -94,7 +97,7 @@ class UserController extends Controller
                 return \Maatwebsite\Excel\Facades\Excel::download(new UserExport($users), $fileName);
             }
 
-            return view($this->view . 'index', compact('users', 'filterParameters', 'branches'));
+            return view($this->view . 'index', compact('users', 'filterParameters', 'branches', 'employeeStats'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
@@ -648,6 +651,57 @@ class UserController extends Controller
         }
 
         return response()->json(['status' => false, 'message' => 'Record not found']);
+    }
+
+    /**
+     * Calculate employee statistics from database
+     */
+    private function calculateEmployeeStatistics($users)
+    {
+        $totalEmployees = $users->count();
+        
+        // Calculate new employees this year
+        $currentYear = now()->year;
+        $newEmployeesThisYear = $users->where('created_at', '>=', $currentYear . '-01-01')->count();
+        
+        // Calculate growth percentage
+        $previousYearEmployees = $users->where('created_at', '>=', ($currentYear - 1) . '-01-01')
+                                   ->where('created_at', '<', $currentYear . '-01-01')->count();
+        $growthPercentage = $previousYearEmployees > 0 ? 
+            (($totalEmployees - $previousYearEmployees) / $previousYearEmployees) * 100 : 0;
+        
+        // Calculate employment types
+        $fullTimeEmployees = $users->where('employment_type', 'permanent')->count();
+        $contractEmployees = $users->where('employment_type', 'contract')->count();
+        $internEmployees = $users->where('employment_type', 'temporary')->count();
+        
+        // Calculate gender distribution
+        $maleEmployees = $users->where('gender', 'male')->count();
+        $femaleEmployees = $users->where('gender', 'female')->count();
+        
+        $malePercentage = $totalEmployees > 0 ? ($maleEmployees / $totalEmployees) * 100 : 0;
+        $femalePercentage = $totalEmployees > 0 ? ($femaleEmployees / $totalEmployees) * 100 : 0;
+        
+        // Calculate progress bar widths
+        $fullTimePercentage = $totalEmployees > 0 ? ($fullTimeEmployees / $totalEmployees) * 100 : 0;
+        $contractPercentage = $totalEmployees > 0 ? ($contractEmployees / $totalEmployees) * 100 : 0;
+        $internPercentage = $totalEmployees > 0 ? ($internEmployees / $totalEmployees) * 100 : 0;
+        
+        return [
+            'total_employees' => number_format($totalEmployees),
+            'growth_percentage' => number_format($growthPercentage, 1),
+            'new_employees_this_year' => $newEmployeesThisYear,
+            'full_time_count' => $fullTimeEmployees,
+            'contract_count' => $contractEmployees,
+            'intern_count' => $internEmployees,
+            'full_time_percentage' => $fullTimePercentage,
+            'contract_percentage' => $contractPercentage,
+            'intern_percentage' => $internPercentage,
+            'male_count' => $maleEmployees,
+            'female_count' => $femaleEmployees,
+            'male_percentage' => number_format($malePercentage, 0),
+            'female_percentage' => number_format($femalePercentage, 0),
+        ];
     }
 
 }

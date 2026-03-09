@@ -12,7 +12,7 @@
         --text-dark: #1e293b;
     }
 
-    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%; overflow: hidden; }
+    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%;}
     .split-login-container { display: flex; min-height: 100vh; background: #fff; }
 
     /* LEFT SECTION */
