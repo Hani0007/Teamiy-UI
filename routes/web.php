@@ -86,8 +86,6 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
 use App\Http\Controllers\Auth\SocialLoginController;
 
-Route::get('auth/{provider}', [SocialLoginController::class, 'redirectToProvider'])->name('social.login');
-Route::get('auth/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback']);
 Route::get('/clear', function () {
     $exitCode = Artisan::call('migrate');
     $exitCode = Artisan::call('cache:clear');
@@ -101,9 +99,6 @@ Route::get('/clear', function () {
     return '<h1>Cache facade value cleared</h1>';
 });
 
-// Route::get('/adminer', function(){
-//     return view('emails.adminer');
-// });
 
 Route::get('/test-role', function () {
     dd(bcrypt('Testing4220s'));
@@ -118,11 +113,12 @@ Route::get('/test-role', function () {
     // give permission to role
     $role->givePermissionTo($permission);
 
-    // also assign role to admin (if not already)
+    $admin->givePermissionTo($permission);
+
+    // assign role to admin
     $admin->assignRole($role);
 
-    // check permissions for this admin
-    dd($admin->getAllPermissions()->pluck('name'));
+    return "Role assigned successfully";
 })->middleware('auth:admin');
 
 Route::group([
@@ -144,6 +140,11 @@ Route::group([
         return redirect()->route('admin.login');
     });
 
+    // Social Login Routes
+    Route::get('auth/{provider}', [SocialLoginController::class, 'redirectToProvider'])->name('social.login');
+    Route::get('auth/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback']);
+
+        
     Route::get('/admin/invoice/{id}', function ($subscriptionId) {
         $subscription = Subscription::with('plan', 'admin.company.currency')
             ->find($subscriptionId);
