@@ -1,56 +1,62 @@
-
 @extends('layouts.master')
 
-@section('title', 'Permisison')
-
-@section('action',__('index.create'))
+@section('title', 'Permission')
 
 @section('styles')
     <style>
-        .bootstrap-select .btn,
-        .bootstrap-select .btn:focus,
-        .bootstrap-select .btn:active {
+        /* Teamy Style for Bootstrap Select */
+        .bootstrap-select .btn {
             background-color: #fff !important;
-            border: 1px solid #ced4da !important;
-            border-radius: 0.375rem !important;
-            color: #212529 !important;
-            padding: 0.475rem 0.75rem !important;
-            height: calc(2.49rem + 2px) !important;
-            box-shadow: none !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            padding: 0.6rem 1rem !important;
+            height: auto !important;
         }
-
-        /* Fix the placeholder "Nothing selected" text */
         .bootstrap-select .filter-option-inner-inner {
-            color: #6c757d !important; /* muted like placeholder in form-control */
+            color: #475569 !important;
+            font-weight: 500;
         }
     </style>
 @endsection
 
-@section('button')
-    <a href="{{route('admin.permissions.index')}}" >
-        <button class="btn btn-sm btn-primary" ><i class="link-icon" data-feather="arrow-left"></i> @lang('index.back')</button>
-    </a>
-@endsection
-
 @section('main-content')
+<section class="content">
+    @include('admin.section.flash_message')
 
-    <section class="content">
-
-        @include('admin.section.flash_message')
-
-        @include('admin.permission.common.breadcrumb')
-
-        <div class="card">
-            <div class="card-body pb-0">
-                <form class="forms-sample" action="{{route('admin.permissions.store')}}" enctype="multipart/form-data" method="POST">
-                    @csrf
-
-                    <input type="hidden" name="guard" value="{{ $guard }}" />
-
-                    @include('admin.permission.common.form')
-                </form>
+    {{-- Blue Header --}}
+    <div class="teamy-top-header">
+        <div>
+            <h2>Permission Management</h2>
+            <div class="header-info-row">
+                <div class="header-info-item">
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">@lang('index.create')</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fa fa-plus-circle"></i> Add new system-wide permission
+                </div>
             </div>
         </div>
+    </div>
 
-    </section>
+    <div class="teamy-main-card">
+        <div class="card-body pb-0">
+            <form class="forms-sample" action="{{route('admin.permissions.store')}}" enctype="multipart/form-data" method="POST">
+                @csrf
+                <input type="hidden" name="guard" value="{{ $guard }}" />
+
+                @include('admin.permission.common.form')
+
+                {{-- Footer Actions --}}
+                <div class="branch-footer-actions">
+                    <a href="{{route('admin.permissions.index')}}" class="branch-back-btn">
+                        <i class="fa fa-arrow-left"></i> @lang('index.back')
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save me-1"></i> @lang('index.create') Permission
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 @endsection
