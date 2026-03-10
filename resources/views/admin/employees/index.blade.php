@@ -27,6 +27,34 @@
             </a>
         @endcan
     </div>
+    {{-- Filter Bar --}}
+    <div class="filter-panel-teamiy mb-4 shadow-sm p-3">
+        <form action="{{ route('admin.employees.index') }}" method="get" class="row g-2 align-items-center w-100 m-0">
+            <div class="col-12 col-md-3">
+                <div class="search-container-teamiy w-100">
+                    <i data-feather="search"></i>
+                    <input type="text" name="employee_name" value="{{ $filterParameters['employee_name'] }}" placeholder="Search Name" class="w-100">
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-2">
+                <select name="department_id" class="select-teamiy-custom w-100">
+                    <option selected disabled>Department</option>
+                </select>
+            </div>
+            
+            <div class="col-6 col-md-2">
+                <select name="branch_id" class="select-teamiy-custom w-100">
+                    <option selected disabled>Branch</option>
+                </select>
+            </div>
+
+            <div class="col-12 col-md-auto ms-md-auto d-flex gap-2 justify-content-center">
+                <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3" style="height: 38px;">Filter</button>
+                <a href="{{ route('admin.employees.index') }}" class="btn-utility-teamiy text-decoration-none"><i data-feather="refresh-cw"></i> Reset</a>
+            </div>
+        </form>
+    </div>
 
     {{-- START: TOTAL EMPLOYEES & GENDER RATIO SECTION --}}
     <div class="stats-container-teamiy">

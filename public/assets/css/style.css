@@ -25206,7 +25206,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: var(--primary-color);
+  background-color: #057db0;
 }
 
 .select2-container .select2-selection--single,

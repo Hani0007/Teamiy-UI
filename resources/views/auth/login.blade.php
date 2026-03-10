@@ -36,8 +36,8 @@
     .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
     .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
     .dots-container { margin-top: 40px; display: flex; justify-content: center; gap: 8px; }
-    .dot { height: 10px; width: 10px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
-    .dot.active { background-color: #fff; width: 30px; border-radius: 5px; }
+    .dot {height: 12px;width: 12px;background-color: rgba(255,255,255,0.3);border-radius: 50%;cursor: pointer;display: inline-block;transition: all 0.3s ease;margin: 0 5px; position: relative;z-index: 999; /* Taake koi overlay isay block na kare */}
+    .dot.active {background-color: #fff;width: 30px;border-radius: 5px;}
     @media (max-width: 992px) { .login-right { display: none; } .login-left { max-width: 100%; padding: 40px 25px; } }
 </style>
 @endsection
@@ -105,43 +105,57 @@
         </form>
     </div>
 
-    <div class="login-right">
-        <div class="slider-container">
-            <div class="slide active">
-                <div class="lottie-box">
-                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_m6cu9t9c.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-                </div>
-                <div class="slide-content">
-                    <h3>Simplify Every Process</h3>
-                    <p>Experience a dashboard designed to simplify every HR task and improve productivity across your organization.</p>
-                </div>
+<div class="login-right">
+    <div class="slider-container">
+        <div class="slide active">
+            <div class="lottie-box">
+                <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                    
+                    loop autoplay>
+                </lottie-player>
             </div>
+            <div class="slide-content">
+                <h3>Simplify Every Process</h3>
+                <p>Experience a dashboard designed to simplify every HR task and improve productivity across your organization.</p>
+            </div>
+        </div>
 
-            <div class="slide">
-                <div class="lottie-box">
-                    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_q5pk6p1k.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-                </div>
-                <div class="slide-content">
-                    <h3>Track Performance</h3>
-                    <p>Monitor employee efficiency with real-time analytics and detailed performance reports at your fingertips.</p>
-                </div>
+        <div class="slide">
+            <div class="lottie-box">
+                <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
             </div>
+            <div class="slide-content">
+                <h3>Track Performance</h3>
+                <p>Monitor employee efficiency with real-time analytics and detailed performance reports at your fingertips.</p>
+            </div>
+        </div>
 
-            <div class="slide">
-                <div class="lottie-box">
-                    <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_ai769uun.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-                </div>
-                <div class="slide-content">
-                    <h3>Secure & Reliable</h3>
-                    <p>Your data is protected with enterprise-grade security. Focus on growing your team while we handle the safety.</p>
-                </div>
+        <div class="slide">
+            <div class="lottie-box">
+                <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
             </div>
+            <div class="slide-content">
+                <h3>Secure & Reliable</h3>
+                <p>Your data is protected with enterprise-grade security. Focus on growing your team while we handle the safety.</p>
+            </div>
+        </div>
 
-            <div class="dots-container">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-            </div>
+        <div class="dots-container">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
         </div>
     </div>
 </div>
@@ -161,46 +175,68 @@
         feather.replace();
     }
 
-    // Slider Logic
-    let slideIndex = 0;
-    let autoSlideTimer;
-
-    function showSlides(n) {
-        let slides = document.getElementsByClassName("slide");
-        let dots = document.getElementsByClassName("dot");
-        
-        if (n >= slides.length) { slideIndex = 0; }
-        if (n < 0) { slideIndex = slides.length - 1; }
-        
-        for (let i = 0; i < slides.length; i++) {
-            slides[i].classList.remove("active");
-            dots[i].classList.remove("active");
-        }
-        
-        slides[slideIndex].classList.add("active");
-        dots[slideIndex].classList.add("active");
-    }
-
-    // Dot click control
-    function currentSlide(n) {
-        clearInterval(autoSlideTimer); // Click karne par auto-slide reset ho jaye
-        slideIndex = n;
-        showSlides(slideIndex);
-        startAutoSlide(); // Dobara auto-slide shuru
-    }
-
-    function startAutoSlide() {
-        autoSlideTimer = setInterval(() => {
-            slideIndex++;
-            showSlides(slideIndex);
-        }, 5000);
-    }
-
     // Initialize
     window.onload = function() {
         showSlides(slideIndex);
         startAutoSlide();
         if(typeof feather !== 'undefined') { feather.replace(); }
     };
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let slideIndex = 0;
+        let autoSlideTimer;
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+
+        function showSlides(n) {
+            if (slides.length === 0) return;
+
+            // Reset Index
+            if (n >= slides.length) slideIndex = 0;
+            else if (n < 0) slideIndex = slides.length - 1;
+            else slideIndex = n;
+
+            // Hide all and Remove Active
+            slides.forEach(slide => {
+                slide.style.display = "none";
+                slide.classList.remove("active");
+            });
+            dots.forEach(dot => dot.classList.remove("active"));
+
+            // Show Active
+            slides[slideIndex].style.display = "block";
+            slides[slideIndex].classList.add("active");
+            dots[slideIndex].classList.add("active");
+        }
+
+        // --- DOTS CLICK LOGIC ---
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                const index = parseInt(this.getAttribute('data-index'));
+                console.log("Dot manually clicked:", index);
+                
+                clearInterval(autoSlideTimer); // Auto stop
+                showSlides(index);
+                startAutoSlide(); // Restart timer
+            });
+        });
+
+        function startAutoSlide() {
+            autoSlideTimer = setInterval(() => {
+                slideIndex++;
+                showSlides(slideIndex);
+            }, 5000);
+        }
+
+        // Initialize
+        showSlides(slideIndex);
+        startAutoSlide();
+
+        // Feather Icons initialization (if used)
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    });
 </script>
 @endsection
