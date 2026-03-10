@@ -43,6 +43,7 @@ class DashboardController extends Controller
             $projectCardDetail = [];
             $recentProjects = collect();
             $multipleAttendance = false;
+            $employeeStats = [];
 
             $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
             $companyId = AppHelper::getWebAdminCompanyId();
@@ -54,6 +55,9 @@ class DashboardController extends Controller
                 $topClients = $this->clientService->getTopClientsOfCompany();
                 $taskPieChartData = $this->taskService->getTaskDataForPieChart();
                 $projectCardDetail = $this->projectService->getProjectCardData();
+                
+                // Get employee statistics
+                $employeeStats = $this->dashboardRepo->getEmployeeStats($companyId);
 
                 $projectSelect = ['id', 'name', 'start_date', 'deadline', 'status', 'priority'];
                 $withProject = [
@@ -75,7 +79,8 @@ class DashboardController extends Controller
                 'projectCardDetail',
                 'recentProjects',
                 'appTimeSetting',
-                'multipleAttendance'
+                'multipleAttendance',
+                'employeeStats'
             ));
 
         } catch (\Throwable $exception) {
