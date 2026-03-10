@@ -15,7 +15,8 @@
             </p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background: transparent; padding: 0; margin-bottom: 8px;">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #94a3b8; text-decoration: none; font-size: 12px;">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #94a3b8; text-decoration: none; font-size: 12px;">{{ __('index.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.posts.index') }}" style="color: #94a3b8; text-decoration: none; font-size: 12px;">{{ __('index.post_section') }}</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #057db0; font-weight: 600;">{{ __('index.posts') }}</li>
                 </ol>
             </nav>

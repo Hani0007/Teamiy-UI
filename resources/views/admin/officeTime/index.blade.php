@@ -10,15 +10,16 @@
     <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
         <div class="page-identity">
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.office_time') }}</h2>
+            @include('admin.officeTime.common.breadcrumb')
             <p style="color: #94a3b8; font-weight: 500; font-size: 12px; margin-top: 5px;">
                 <i data-feather="clock" style="width: 14px; vertical-align: middle;"></i> Overview of office shift timings
             </p>
-            <nav aria-label="breadcrumb">
+            <!--<nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background: transparent; padding: 0; margin-bottom: 8px;">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #94a3b8; text-decoration: none; font-size: 12px;">Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #057db0; font-size: 12px; font-weight: 600;">{{ __('index.office_time') }}</li>
                 </ol>
-            </nav>
+            </nav>-->
         </div>
 
         @can('create_office_time')
