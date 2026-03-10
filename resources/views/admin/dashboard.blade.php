@@ -20,25 +20,55 @@
     <div class="row g-3">
         @php
             $topStats = [
-                ['l' => 'Total Employees', 'v' => '183', 'd' => '+12%', 's' => 'Employee count includes all staff'],
-                ['l' => 'Branches', 'v' => '15', 'd' => '+05%', 's' => 'Total branches in the company'],
-                ['l' => 'Today Presents', 'v' => '158', 'd' => '+54%', 's' => 'Total employees presents today'],
-                ['l' => 'Today Absents', 'v' => '25', 'd' => '+11%', 's' => 'Total employees absent today'],
-                ['l' => 'Today Lates', 'v' => '06', 'd' => '-04%', 's' => 'Total employees late today']
+                [
+                    'label' => 'Total Employees', 
+                    'value' => $employeeStats['total_employees'] ?? 0, 
+                    'percentage' => '+12%', 
+                    'description' => 'Employee count includes all staff',
+                    'icon' => 'fas fa-users'
+                ],
+                [
+                    'label' => 'Branches', 
+                    'value' => $employeeStats['total_branches'] ?? 0, 
+                    'percentage' => '+05%', 
+                    'description' => 'Total branches in company',
+                    'icon' => 'fas fa-building'
+                ],
+                [
+                    'label' => 'Today Presents', 
+                    'value' => $employeeStats['today_presents'] ?? 0, 
+                    'percentage' => '+54%', 
+                    'description' => 'Total employees presents today',
+                    'icon' => 'fas fa-user-check'
+                ],
+                [
+                    'label' => 'Today Absents', 
+                    'value' => $employeeStats['today_absents'] ?? 0, 
+                    'percentage' => '+11%', 
+                    'description' => 'Total employees absent today',
+                    'icon' => 'fas fa-user-times'
+                ],
+                [
+                    'label' => 'Today Lates', 
+                    'value' => $employeeStats['today_lates'] ?? 0, 
+                    'percentage' => '-04%', 
+                    'description' => 'Total employees late today',
+                    'icon' => 'fas fa-clock'
+                ]
             ];
         @endphp
         @foreach($topStats as $ts)
         <div class="col">
             <div class="stat-card h-100">
                 <div class="stat-header">
-                    <div class="stat-icon-box"><i class="fas fa-users text-dark small"></i></div>
+                    <div class="stat-icon-box"><i class="{{ $ts['icon'] }} text-dark small"></i></div>
                     <button class="btn-details-orange">Details ></button>
                 </div>
-                <div class="stat-label">{{ $ts['l'] }}</div>
-                <span class="stat-subtext">{{ $ts['s'] }}</span>
+                <div class="stat-label">{{ $ts['label'] }}</div>
+                <span class="stat-subtext">{{ $ts['description'] }}</span>
                 <div class="d-flex align-items-center gap-2">
-                    <div class="stat-value">{{ $ts['v'] }}</div>
-                    <span class="stat-badge {{ str_contains($ts['d'], '-') ? 'badge-red' : 'badge-orange' }}">{{ $ts['d'] }}</span>
+                    <div class="stat-value">{{ $ts['value'] }}</div>
+                    <span class="stat-badge {{ str_contains($ts['percentage'], '-') ? 'badge-red' : 'badge-orange' }}">{{ $ts['percentage'] }}</span>
                     <small class="text-muted" style="font-size: 9px;">vs Last Month</small>
                 </div>
             </div>
