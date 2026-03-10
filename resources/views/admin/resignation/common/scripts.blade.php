@@ -1,8 +1,37 @@
-<script src="{{asset('assets/vendors/tinymce/tinymce.min.js')}}"></script>
-<script src="{{asset('assets/js/tinymce.js')}}"></script>
+{{-- <script src="{{asset('assets/vendors/tinymce/tinymce.min.js')}}"></script>
+<script src="{{asset('assets/js/tinymce.js')}}"></script> --}}
 
 <script>
+    console.log('Resignation script loaded successfully!');
+    
+    // Check if jQuery is loaded
+    if (typeof jQuery === 'undefined') {
+        console.error('jQuery is not loaded');
+    } else {
+        console.log('jQuery is loaded:', jQuery.fn.jquery);
+    }
+    
     $('document').ready(function(){
+        console.log('Document ready fired!');
+        
+        // Check if branch_id element exists
+        const branchElement = $('#branch_id');
+        if (branchElement.length === 0) {
+            console.error('Branch dropdown not found');
+        } else {
+            console.log('Branch dropdown found:', branchElement);
+            
+            // Add simple change event test
+            branchElement.on('change', function() {
+                console.log('Branch changed to:', $(this).val());
+                
+                // Load departments when branch changes
+                const branchId = $(this).val();
+                if (branchId) {
+                    loadDepartmentsSimple(branchId);
+                }
+            });
+        }
 
         $("#branch_id").select2();
         $("#employee_id").select2();
@@ -57,119 +86,125 @@
         });
 
 
-        $('.nepaliDate').nepaliDatePicker({
-            language: "english",
-            dateFormat: "YYYY-MM-DD",
-            ndpYear: true,
-            ndpMonth: true,
-            ndpYearCount: 20,
-            disableAfter: "2089-12-30",
-        });
-
-        // Define variables
-        const isAdmin = {{ auth('admin')->check() ? 'true' : 'false' }};
-        const defaultBranchId = {{ auth()->user()->branch_id ?? 'null' }};
-        const branchId = "{{ $filterParameters['branch_id'] ?? null }}";
-        const departmentId = "{{ $filterParameters['department_id'] ?? ($resignationDetail->department_id ?? '') }}";
-        const employeeId = "{{ $filterParameters['employee_id'] ?? ($resignationDetail->employee_id ?? '') }}";
-
-
-        const loadDepartments = async (selectedBranchId) => {
-
-            if (!selectedBranchId) return;
-
-
-            try {
-                $('#department_id').empty().append('<option selected disabled>{{ __("index.select_department") }}</option>');
-
-                const response = await $.ajax({
-                    type: 'GET',
-                    url: `{{ url('admin/departments/get-All-Departments') }}/${selectedBranchId}`,
-                });
-
-                if (!response || !response.data || response.data.length === 0) {
-                    $('#department_id').append('<option disabled>{{ __("index.no_departments_found") }}</option>');
-                    return;
-                }
-
-
-                response.data.forEach(data => {
-                    $('#department_id').append(`<option value="${data.id}" ${data.id == departmentId ? 'selected' : ''}>${data.dept_name}</option>`);
-                });
-            } catch (error) {
-                $('#department_id').append('<option disabled>{{ __("index.error_loading_departments") }}</option>');
-            }
-        };
-
-        const loadEmployees = async () => {
-            const selectedDepartmentId = $('#department_id').val();
-            if (!selectedDepartmentId) return;
-
-            try {
-                $('#employee_id').empty().append('<option selected disabled>{{ __("index.select_employee") }}</option>');
-
-                const response = await fetch(`{{ url('admin/employees/get-all-employees') }}/${selectedDepartmentId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        // Simple department loading function
+        function loadDepartmentsSimple(branchId) {
+            console.log('Loading departments for branch:', branchId);
+            
+            $.ajax({
+                url: `/admin/departments/get-All-Departments/${branchId}`,
+                method: 'GET',
+                success: function(response) {
+                    console.log('Departments response:', response);
+                    
+                    $('#department_id').empty().append('<option selected disabled>Select Department</option>');
+                    
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(dept) {
+                            console.log('Adding department:', dept);
+                            $('#department_id').append(`<option value="${dept.id}">${dept.dept_name}</option>`);
+                        });
+                        
+                        // Check if departments were actually added
+                        console.log('Department dropdown after loading:', $('#department_id'));
+                        console.log('Department options after loading:', $('#department_id').find('option').length);
+                        
+                        // Re-initialize Select2 after adding options
+                        $('#department_id').trigger('change.select2');
+                        
+                        console.log('Departments loaded successfully: ' + response.data.length + ' departments found');
+                    } else {
+                        $('#department_id').append('<option disabled>No departments found</option>');
+                        console.log('No departments found for this branch');
                     }
-                });
-
-                const data = await response.json(); // Missing in original code
-
-
-                console.log(employeeId);
-                if (data.data && data.data.length > 0) {
-                    // Populate dropdown with employee options
-                    data.data.forEach(user => {
-                        $('#employee_id').append(`<option value="${user.id}" ${user.id == employeeId ? 'selected' : ''} >${user.name}</option>`);
-                    });
-                } else {
-                    $('#employee_id').append('<option disabled>{{ __("index.no_employees_found") }}</option>');
+                },
+                error: function(error) {
+                    console.error('Error loading departments:', error);
+                    $('#department_id').append('<option disabled>Error loading departments</option>');
                 }
-
-            } catch (error) {
-                $('#employee_id').append('<option disabled>{{ __("index.error_loading_employees") }}</option>');
+            });
+        }
+        
+        // Department change event - Simple approach that works
+        $('#department_id').on('change', function() {
+            const deptId = $(this).val();
+            console.log('Department selected:', deptId);
+            
+            if (deptId && deptId !== 'Select Department') {
+                console.log('Loading employees for department:', deptId);
+                loadEmployeesSimple(deptId);
             }
-        };
-
-        const initializeDropdowns = async () => {
-            let selectedBranchId;
-
-            if (isAdmin) {
-                selectedBranchId = $('#branch_id').val() || branchId || defaultBranchId;
-
-                $('#branch_id').on('change', async () => {
-                    const newBranchId = $('#branch_id').val();
-                    await loadDepartments(newBranchId);
-                    $('#employee_id').empty().append('<option selected disabled>{{ __("index.select_employee") }}</option>');
-                    await loadEmployees();
-                });
-
-                // Trigger initial load if branch is selected
-                if (selectedBranchId) {
-                    $('#branch_id').trigger('change');
+        });
+                
+        // Simple employee loading function
+        function loadEmployeesSimple(deptId) {
+            console.log('=== EMPLOYEE LOADING START ===');
+            console.log('Loading employees for department:', deptId);
+            console.log('Department ID type:', typeof deptId);
+            console.log('Department ID value:', deptId);
+            
+            const url = `/admin/employees/get-all-employees/${deptId}`;
+            console.log('Employee loading URL:', url);
+            
+            $.ajax({
+                url: url,
+                method: 'GET',
+                beforeSend: function() {
+                    console.log('Sending AJAX request to:', url);
+                },
+                success: function(response) {
+                    console.log('=== EMPLOYEE AJAX SUCCESS ===');
+                    console.log('Raw response:', response);
+                    console.log('Response type:', typeof response);
+                    console.log('Response stringified:', JSON.stringify(response));
+                    
+                    if (response.data) {
+                        console.log('Response.data:', response.data);
+                        console.log('Response.data type:', typeof response.data);
+                        console.log('Response.data isArray:', Array.isArray(response.data));
+                        console.log('Response.data length:', response.data.length);
+                    }
+                    
+                    $('#employee_id').empty().append('<option selected disabled>Select Employee</option>');
+                    
+                    // Check if response has data property
+                    if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
+                        console.log('Using response.data branch');
+                        response.data.forEach(function(emp, index) {
+                            console.log(`Adding employee ${index}:`, emp);
+                            $('#employee_id').append(`<option value="${emp.id}">${emp.name}</option>`);
+                        });
+                        console.log('Employees loaded successfully: ' + response.data.length + ' employees found');
+                    } else if (response && Array.isArray(response) && response.length > 0) {
+                        console.log('Using direct array branch');
+                        response.forEach(function(emp, index) {
+                            console.log(`Adding employee ${index}:`, emp);
+                            $('#employee_id').append(`<option value="${emp.id}">${emp.name}</option>`);
+                        });
+                        console.log('Employees loaded successfully: ' + response.length + ' employees found');
+                    } else {
+                        console.log('No employees found, response:', response);
+                        console.log('Response keys:', response ? Object.keys(response) : 'null');
+                        $('#employee_id').append('<option disabled>No employees found for this department. Response: ' + JSON.stringify(response));
+                    }
+                    console.log('=== EMPLOYEE AJAX END ===');
+                },
+                error: function(error) {
+                    console.log('=== EMPLOYEE AJAX ERROR ===');
+                    console.error('Error loading employees:', error);
+                    console.error('Error status:', error.status);
+                    console.error('Error statusText:', error.statusText);
+                    console.error('Error responseText:', error.responseText);
+                    console.error('Error responseJSON:', error.responseJSON);
+                    console.log('Error loading employees: ' + (error.status || 'Unknown error') + ' - ' + (error.statusText || ''));
+                    console.log('=== EMPLOYEE AJAX ERROR END ===');
                 }
-            } else {
-                selectedBranchId = defaultBranchId;
-                if (selectedBranchId) {
-                    await loadDepartments(selectedBranchId);
-                    await loadEmployees();
-                }
-            }
+            });
+        }
 
-            // Attach department change listener
-            $('#department_id').on('change', loadEmployees);
+        // Disable Nepali DatePicker to avoid conflicts
+        $('.nepaliDate').prop('disabled', true).attr('placeholder', 'Use regular date picker');
 
-            // Trigger initial employee load if department is pre-selected
-            if (departmentId) {
-                $('#department_id').trigger('change');
-            }
-        };
-
-        // Initialize everything
-        initializeDropdowns();
+        console.log('Resignation form initialized successfully!');
     });
 
 </script>
