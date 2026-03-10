@@ -73,7 +73,7 @@ class CompanyController extends Controller
             if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');
                 $logoName = time() . '_' . uniqid() . '.' . $logo->getClientOriginalExtension();
-                $logo->storeAs('uploads/company/logo', $logoName, 'public');
+                $logo->move(public_path('uploads/company/logo'), $logoName);
                 $validatedData['logo'] = $logoName;
             }
 
@@ -87,7 +87,7 @@ class CompanyController extends Controller
                     $existingCompany = Company::find($request->company_id);
                     if ($existingCompany && $existingCompany->logo) {
                         // Delete old logo
-                        $oldLogoPath = storage_path('app/public/uploads/company/logo/' . $existingCompany->logo);
+                        $oldLogoPath = public_path('uploads/company/logo/' . $existingCompany->logo);
                         if (file_exists($oldLogoPath)) {
                             unlink($oldLogoPath);
                         }
@@ -142,6 +142,20 @@ class CompanyController extends Controller
             }
             $validatedData = $request->validated();
 
+            // DEBUG: Log the incoming request data in a simple way
+            file_put_contents(storage_path('logs/debug.log'), 
+                "=== UPDATE DEBUG ===\n" .
+                "Time: " . date('Y-m-d H:i:s') . "\n" .
+                "contact_number: " . ($request->input('contact_number') ?? 'NULL') . "\n" .
+                "country_code: " . ($request->input('country_code') ?? 'NULL') . "\n" .
+                "final_contact_number: " . ($request->input('final_contact_number') ?? 'NULL') . "\n" .
+                "final_country_code: " . ($request->input('final_country_code') ?? 'NULL') . "\n" .
+                "All request data: " . json_encode($request->all()) . "\n" .
+                "Validated data: " . json_encode($validatedData) . "\n" .
+                "==================\n", 
+                FILE_APPEND
+            );
+
             $validatedData['weekend'] = $validatedData['weekend'] ?? [];
             $companyDetail = $this->companyRepo->findOrFailCompanyDetailById($id);
             if (!$companyDetail) {
@@ -154,25 +168,46 @@ class CompanyController extends Controller
             if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');
                 $logoName = time() . '_' . uniqid() . '.' . $logo->getClientOriginalExtension();
-                $logo->storeAs('uploads/company/logo', $logoName, 'public');
+                $logo->move(public_path('uploads/company/logo'), $logoName);
                 $validatedData['logo'] = $logoName;
                 
                 // Delete old logo
                 if ($companyDetail->logo) {
-                    $oldLogoPath = storage_path('app/public/uploads/company/logo/' . $companyDetail->logo);
+                    $oldLogoPath = public_path('uploads/company/logo/' . $companyDetail->logo);
                     if (file_exists($oldLogoPath)) {
                         unlink($oldLogoPath);
                     }
                 }
             }
-            
+
+            // DEBUG: Log the validated data before update
+            file_put_contents(storage_path('logs/debug.log'), 
+                "BEFORE UPDATE - Validated Data: " . json_encode($validatedData) . "\n" .
+                "BEFORE UPDATE - Company Detail: " . json_encode($companyDetail->toArray()) . "\n" .
+                "==================\n", 
+                FILE_APPEND
+            );
+
             $this->companyRepo->update($companyDetail, $validatedData);
+            
+            // DEBUG: Log the company data after update
+            file_put_contents(storage_path('logs/debug.log'), 
+                "AFTER UPDATE - Company Data: " . json_encode($companyDetail->fresh()->toArray()) . "\n" .
+                "==================\n", 
+                FILE_APPEND
+            );
+            
             DB::commit();
             return redirect()->route('admin.company.index')
                 ->with('success', __('message.update_company'));
 
         } catch (Exception $e) {
             DB::rollBack();
+            file_put_contents(storage_path('logs/debug.log'), 
+                "ERROR: " . $e->getMessage() . "\n" .
+                "==================\n", 
+                FILE_APPEND
+            );
             return redirect()
                 ->route('admin.company.index')
                 ->with('danger', $e->getMessage())

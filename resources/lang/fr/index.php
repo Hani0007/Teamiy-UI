@@ -1477,4 +1477,9 @@ return [
     'check_in_longitude'=>'Longitude d’enregistrement d’entrée',
     'check_out_latitude'=>'Latitude d’enregistrement de sortie',
     'check_out_longitude'=>'Longitude d’enregistrement de sortie',
+
+    // Company Profile Labels
+    'company_information' => 'Informations sur l\'entreprise',
+    'operational_settings' => 'Paramètres opérationnels',
+    'address_information' => 'Informations d\'adresse',
 ];

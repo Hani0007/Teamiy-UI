@@ -35,22 +35,22 @@
                 <i data-feather="users" style="width: 16px; color: #057db0;"></i> Total Employees
             </div>
             <div class="stat-main-row">
-                <span class="stat-number">1,298</span>
-                <span class="stat-badge">2.8%</span>
+                <span class="stat-number">{{ $employeeStats['total_employees'] }}</span>
+                <span class="stat-badge">{{ $employeeStats['growth_percentage'] }}%</span>
             </div>
-            <span class="stat-subtext">There are 102 new employees this year</span>
+            <span class="stat-subtext">There are {{ $employeeStats['new_employees_this_year'] }} new employees this year</span>
 
             <div class="prog-row">
-                <div class="prog-labels"><span style="color:#057db0;">Full-Time</span><span>682</span></div>
-                <div class="prog-bar-bg"><div class="prog-fill" style="width: 70%; background: #057db0;"></div></div>
+                <div class="prog-labels"><span style="color:#057db0;">Full-Time</span><span>{{ $employeeStats['full_time_count'] }}</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['full_time_percentage'] }}%; background: #057db0;"></div></div>
             </div>
             <div class="prog-row">
-                <div class="prog-labels"><span style="color:#3b82f6;">Contract</span><span>373</span></div>
-                <div class="prog-bar-bg"><div class="prog-fill" style="width: 45%; background: #3b82f6;"></div></div>
+                <div class="prog-labels"><span style="color:#3b82f6;">Contract</span><span>{{ $employeeStats['contract_count'] }}</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['contract_percentage'] }}%; background: #3b82f6;"></div></div>
             </div>
             <div class="prog-row">
-                <div class="prog-labels"><span style="color:#60a5fa;">Interns</span><span>281</span></div>
-                <div class="prog-bar-bg"><div class="prog-fill" style="width: 30%; background: #60a5fa;"></div></div>
+                <div class="prog-labels"><span style="color:#60a5fa;">Interns</span><span>{{ $employeeStats['intern_count'] }}</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['intern_percentage'] }}%; background: #60a5fa;"></div></div>
             </div>
         </div>
 
@@ -61,16 +61,16 @@
             <div class="gender-grid-new">
                 <div class="gender-item">
                     <span class="gender-label">Male</span>
-                    <span class="gender-val">78%</span>
+                    <span class="gender-val">{{ $employeeStats['male_percentage'] }}%</span>
                 </div>
                 <div class="gender-item">
                     <span class="gender-label">Female</span>
-                    <span class="gender-val">22%</span>
+                    <span class="gender-val">{{ $employeeStats['female_percentage'] }}%</span>
                 </div>
             </div>
             <div class="gender-counts-flex">
-                <div class="gender-pill-new" style="background: #fff1f0; color: #f87171;">892 Male</div>
-                <div class="gender-pill-new" style="background: #f0f7ff; color: #057db0;">431 Female</div>
+                <div class="gender-pill-new" style="background: #fff1f0; color: #f87171;">{{ $employeeStats['male_count'] }} Male</div>
+                <div class="gender-pill-new" style="background: #f0f7ff; color: #057db0;">{{ $employeeStats['female_count'] }} Female</div>
             </div>
         </div>
     </div>

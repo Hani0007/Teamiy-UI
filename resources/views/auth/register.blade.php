@@ -6,14 +6,6 @@
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 <style>
-    :root {
-        --primary-blue: #057db0;
-        --accent-orange: #fb8233;
-        --text-dark: #1e293b;
-    }
-
-    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%; }
-
     .split-reg-container { display: flex; min-height: 100vh; background: #fff; }
 
     /* LEFT SECTION (FORM) */
@@ -32,20 +24,20 @@
     .reg-field { margin-bottom: 16px; text-align: left; width: 100%; }
     .reg-field.half { width: calc(50% - 7px); }
     
-    .reg-label { font-weight: 600; color: var(--accent-orange); margin-bottom: 6px; display: block; font-size: 13px; }
+    .reg-label { font-weight: 600; color:#fb8233; margin-bottom: 6px; display: block; font-size: 13px; }
     
     .reg-input, .phone-wrap select {
         width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
         background: #f8fafc; color: var(--text-dark); font-size: 14px; transition: 0.3s; box-sizing: border-box;
     }
-    .reg-input:focus, .phone-wrap select:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
+    .reg-input:focus, .phone-wrap select:focus { outline: none; border-color: #057db0; box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
 
     .password-wrapper { position: relative; }
     .password-toggle { 
         position: absolute; right: 14px; top: 50%; transform: translateY(-50%); 
         width: 18px; cursor: pointer; color: #94a3b8; 
     }
-    .password-toggle.active { color: var(--primary-blue); }
+    .password-toggle.active { color: #057db0; }
 
     .phone-wrap { display: flex; gap: 10px; }
     .phone-wrap select { max-width: 140px; }
@@ -54,8 +46,8 @@
     .reg-btn, .reg-btn-outline {
         padding: 12px 30px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s;
     }
-    .reg-btn { background: var(--primary-blue); border: none; color: #fff; flex: 1; }
-    .reg-btn:hover { background: var(--accent-orange); transform: translateY(-1px); }
+    .reg-btn { background: #057db0; border: none; color: #fff; flex: 1; }
+    .reg-btn:hover { background:#fb8233; transform: translateY(-1px); }
     .reg-btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
     .reg-btn-outline:hover { background: #f1f5f9; }
 
@@ -66,11 +58,11 @@
 
     .error-text { color: #dc2626; font-size: 12px; margin-top: 4px; font-weight: 500; }
     .reg-links { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
-    .reg-links a { color: var(--primary-blue); text-decoration: none; font-weight: 700; }
+    .reg-links a { color: #057db0; text-decoration: none; font-weight: 700; }
 
     /* RIGHT SECTION (SLIDER) */
     .reg-right {
-        flex: 1.2; background-color: var(--primary-blue);
+        flex: 1.2; background-color: #057db0;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         position: relative; color: #fff; padding: 40px;
     }
@@ -397,7 +389,7 @@
                     <div style="display: flex; gap: 10px; align-items: flex-start;">
                         <input type="checkbox" name="terms_conditions" id="terms" required style="margin-top: 4px;">
                         <label for="terms" style="font-size: 14px; color: #475569; line-height: 1.5;">
-                            I agree to the <a href="https://teamiy.com/privacy-policy/" target="_blank" style="color:var(--primary-blue); font-weight:600;">Privacy Policy</a> & <a href="https://teamiy.com/terms-and-conditions/" target="_blank" style="color:var(--primary-blue); font-weight:600;">Terms of Service</a>.
+                            I agree to the <a href="https://teamiy.com/privacy-policy/" target="_blank" style="color:#057db0; font-weight:600;">Privacy Policy</a> & <a href="https://teamiy.com/terms-and-conditions/" target="_blank" style="color:#057db0; font-weight:600;">Terms of Service</a>.
                         </label>
                     </div>
                 </div>
