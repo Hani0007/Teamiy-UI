@@ -23,8 +23,18 @@
         @csrf
         @if($companyDetail) @method('PUT') @endif-->
         
-        <input type="hidden" name="contact_number" id="final_contact_number" value="{{ isset($companyDetail) && $companyDetail ? $companyDetail->contact_number : '' }}">
-        <input type="hidden" name="country_code" id="final_country_code" value="{{ isset($companyDetail) && $companyDetail ? $companyDetail->country_code : '' }}">
+        @php
+        // Properly initialize phone fields for editing
+        $initialCountryCode = '';
+        $initialPhoneNumber = '';
+        if (isset($companyDetail) && $companyDetail) {
+            $initialCountryCode = $companyDetail->country_code ?? '';
+            $initialPhoneNumber = $companyDetail->contact_number ?? '';
+        }
+    @endphp
+        
+        <input type="hidden" name="contact_number" id="final_contact_number" value="{{ $initialPhoneNumber }}">
+        <input type="hidden" name="country_code" id="final_country_code" value="{{ $initialCountryCode }}">
 
         <div class="teamy-main-card">
             <div class="section-title-wrapper">
@@ -193,11 +203,12 @@
         const cleanNumber = input.value.replace(/\D/g,'');
         console.log('Syncing - Code:', code, 'Number:', cleanNumber);
         
-        // IMPORTANT: Don't let phone input change country code automatically
-        // Only update hidden fields, don't modify the dropdown
-        if (code) {
-            hCode.value = code;
-            hNum.value = cleanNumber;
+        // IMPORTANT: Send concatenated phone number to backend
+        if (code && cleanNumber) {
+            const concatenatedNumber = code + ' ' + cleanNumber;
+            hCode.value = code;  // Country code for reference
+            hNum.value = concatenatedNumber;  // Send concatenated to backend
+            console.log('Sending concatenated:', concatenatedNumber);
         }
         updateFormProgress();
     }
