@@ -62,6 +62,42 @@ class CompanyController extends Controller
         try {
             $validatedData = $request->validated();
             
+            // FIX: Extract phone number from concatenated contact_number
+            if (isset($validatedData['contact_number']) && isset($validatedData['country_code'])) {
+                $concatenatedNumber = $validatedData['contact_number'];
+                $countryCode = $validatedData['country_code'];
+                
+                // Simple approach: Remove country code from beginning of phone number
+                $phoneNumber = $concatenatedNumber;
+                
+                // Remove country code with space
+                if (strpos($phoneNumber, $countryCode . ' ') === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen($countryCode . ' '));
+                }
+                // Remove country code without space
+                elseif (strpos($phoneNumber, $countryCode) === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen($countryCode));
+                }
+                // Remove country code with + sign
+                elseif (strpos($phoneNumber, '+' . $countryCode) === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen('+' . $countryCode));
+                }
+                
+                // Clean up any remaining spaces
+                $phoneNumber = trim($phoneNumber);
+                
+                // Update validated data with clean phone number
+                $validatedData['contact_number'] = $phoneNumber;
+                
+                file_put_contents(storage_path('logs/debug.log'), 
+                    "STORE PHONE SPLIT DEBUG:\n" .
+                    "Country code string: '" . $countryCode . "'\n" .
+                    "Original concatenated: " . $concatenatedNumber . "\n" .
+                    "Clean phone number: " . $phoneNumber . "\n" .
+                    "==================\n", 
+                    FILE_APPEND
+                );
+            }
 
             $validatedData['weekend'] = $validatedData['weekend'] ?? [];
 
@@ -155,6 +191,43 @@ class CompanyController extends Controller
                 "==================\n", 
                 FILE_APPEND
             );
+
+            // FIX: Extract phone number from concatenated contact_number
+            if (isset($validatedData['contact_number']) && isset($validatedData['country_code'])) {
+                $concatenatedNumber = $validatedData['contact_number'];
+                $countryCode = $validatedData['country_code'];
+                
+                // Simple approach: Remove country code from beginning of phone number
+                $phoneNumber = $concatenatedNumber;
+                
+                // Remove country code with space
+                if (strpos($phoneNumber, $countryCode . ' ') === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen($countryCode . ' '));
+                }
+                // Remove country code without space
+                elseif (strpos($phoneNumber, $countryCode) === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen($countryCode));
+                }
+                // Remove country code with + sign
+                elseif (strpos($phoneNumber, '+' . $countryCode) === 0) {
+                    $phoneNumber = substr($phoneNumber, strlen('+' . $countryCode));
+                }
+                
+                // Clean up any remaining spaces
+                $phoneNumber = trim($phoneNumber);
+                
+                // Update validated data with clean phone number
+                $validatedData['contact_number'] = $phoneNumber;
+                
+                file_put_contents(storage_path('logs/debug.log'), 
+                    "PHONE SPLIT DEBUG:\n" .
+                    "Country code string: '" . $countryCode . "'\n" .
+                    "Original concatenated: " . $concatenatedNumber . "\n" .
+                    "Clean phone number: " . $phoneNumber . "\n" .
+                    "==================\n", 
+                    FILE_APPEND
+                );
+            }
 
             $validatedData['weekend'] = $validatedData['weekend'] ?? [];
             $companyDetail = $this->companyRepo->findOrFailCompanyDetailById($id);
