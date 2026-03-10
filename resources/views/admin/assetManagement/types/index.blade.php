@@ -507,7 +507,7 @@
             </div>
 
             <div class="modal-body p-4">
-                <form id="assetTypeForm" method="POST">
+                <form id="assetTypeForm" method="POST" action="">
                     @csrf
                     <input type="hidden" name="_method" id="formMethod" value="POST">
 

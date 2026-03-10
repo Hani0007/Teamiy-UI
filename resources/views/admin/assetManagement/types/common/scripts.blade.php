@@ -55,7 +55,7 @@
         })
 
         $(document).on('click', '.create-assetType', function() {
-            $('#assetTypeModalLabel').text(translations.createClient);
+            $('#assetTypeModalLabel').text(translations.createAssetType);
             $('#submitButtonText').text(translations.create);
             $('#assetTypeForm').attr('action', '{{ route("admin.asset-types.store") }}');
             $('#formMethod').val('POST');
@@ -71,13 +71,13 @@
 
             $.ajax({
                 type: 'GET',
-                url: `{{ url('admin/asset-types') }}/${assetTypeId}/edit`,
+                url: `{{ route('admin.asset-types.edit', ':id') }}`.replace(':id', assetTypeId),
                 success: function(response) {
                     const assetType = response.assetTypeDetail;
 
-                    $('#assetTypeModalLabel').text(translations.editClient);
+                    $('#assetTypeModalLabel').text(translations.editAssetType);
                     $('#submitButtonText').text(translations.update);
-                    $('#assetTypeForm').attr('action', `{{ url('admin/asset-types') }}/${assetTypeId}`);
+                    $('#assetTypeForm').attr('action', `{{ route('admin.asset-types.update', ':id') }}`.replace(':id', assetTypeId));
                     $('#formMethod').val('PUT');
 
 
@@ -125,7 +125,18 @@
                         showConfirmButton: false,
                         timer: 1500,
                         didClose: () => {
-                            location.reload(); // Consider replacing with dynamic table update
+                            // Update the specific row or reload with proper timing
+                            if (method === 'PUT') {
+                                // For update, just reload the page to show updated data
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 100);
+                            } else {
+                                // For create, reload to show new record
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 100);
+                            }
                         }
                     });
                 },
