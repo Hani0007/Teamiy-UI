@@ -30,7 +30,6 @@
     .swal2-icon.swal2-warning {border-color: #fb8233;color: #fb8233;}
     button.swal2-confirm.swal2-styled.swal2-default-outline {background-color: #057db0 !important;}
     
-    
     /*D:\laragon\www\teamiy\resources\views\admin\branch\create.blade.php code*/
     .branch-footer-actions {display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-top:25px;}
     .branch-back-btn {background:#f3f4f6; border:1px solid #e5e7eb; padding:8px 18px; border-radius:8px; font-weight:600; color:#444; transition:0.2s;}
@@ -260,7 +259,6 @@
     .btn-view-all:hover {background: #e2e8f0;color: #0056b3;}
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\section\nav.blade.php Code End*/
 
-
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\dashboard.blade.php Code*/
     .stat-card {background: #fff;border: none;border-radius: 12px;padding: 18px;position: relative;box-shadow: 0 2px 15px rgba(0,0,0,0.03);}
     .stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -293,3 +291,4 @@
     i.fas.fa-users.text-dark.small::before{color:#057db0;}
     span.stat-badge.badge-orange {background: #fb823326; color: #fb8233;}
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\dashboard.blade.php Code End*/
+    
