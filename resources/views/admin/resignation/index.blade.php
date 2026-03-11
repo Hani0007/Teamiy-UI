@@ -18,7 +18,7 @@
         
         @can('create_resignation')
             <a href="{{ route('admin.resignation.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_resignation') }}</span>
                 </button>
@@ -75,7 +75,7 @@
                             <span class="branch-ref-pill">Resignation ID: #{{$value->id}}</span>
                             @can('show_resignation')
                                 <a href="{{route('admin.resignation.show',$value->id)}}" 
-                                   style="background: rgba(255,255,255,0.2); color: white; padding: 4px 8px; border-radius: 6px; backdrop-filter: blur(5px);" 
+                                   style="background: #FFFF; color: #057DB0; padding: 4px 8px; border-radius: 20%; backdrop-filter: blur(5px);" 
                                    title="View Detail">
                                     <i data-feather="eye" style="width: 16px; height: 16px;"></i>
                                 </a>

@@ -164,7 +164,7 @@
         
         @can('create_termination')
             <a href="{{ route('admin.termination.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_termination') }}</span>
                 </button>
@@ -182,7 +182,7 @@
                 'rejected'  => ['bg' => '#ef4444', 'text' => '#fff'],
                 'cancelled' => ['bg' => '#ef4444', 'text' => '#fff'],
                 'pending'   => ['bg' => '#FB8233', 'text' => '#fff'],
-                'on_review' => ['bg' => '#0ea5e9', 'text' => '#fff'],
+                'on_review' => ['bg' => '#F8FAFC', 'text' => '#fff'],
             ];
         @endphp
 

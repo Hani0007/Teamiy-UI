@@ -25,7 +25,7 @@
         
         @can('create_task')
             <a href="{{ route('admin.tasks.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.create_tasks') }}</span>
                 </button>
@@ -83,8 +83,8 @@
             'in_progress' => '#fb8233', 
             'not_started' => '#94a3b8', 
             'on_hold' => '#0ea5e9',
-            'cancelled' => '#ef4444',
-            'completed' => '#10b981',
+            'cancelled' => '#e46f21',
+            'completed' => '#0ea5e9',
         ];
     @endphp
 
@@ -134,7 +134,7 @@
                                     <small>TIMELINE</small>
                                     <p style="font-size: 11px;">
                                         {{AppHelper::formatDateForView($value->start_date)}} - 
-                                        <span class="text-danger">{{AppHelper::formatDateForView($value->end_date)}}</span>
+                                        <span style="color:#FB8233">{{AppHelper::formatDateForView($value->end_date)}}</span>
                                     </p>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="action-dock">
                                     @can('show_task_detail')
-                                        <a href="{{route('admin.tasks.show',$value->id)}}" class="btn-action view" title="View Detail"><i data-feather="eye"></i></a>
+                                        <a href="{{route('admin.tasks.show',$value->id)}}" class="btn-action edit" title="View Detail"><i data-feather="eye" style="height:16px; width:16px"></i></a>
                                     @endcan
                                     @can('edit_task')
                                         <a href="{{route('admin.tasks.edit',$value->id)}}" class="btn-action edit ms-1" title="Edit Task"><i data-feather="edit-3"></i></a>

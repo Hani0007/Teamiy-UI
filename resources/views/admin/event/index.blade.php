@@ -15,6 +15,7 @@
         }
     </style>
 @endsection
+
 @section('button')
     @can('create_event')
         <a href="{{ route('admin.event.create')}}">
@@ -31,7 +32,18 @@
     <section class="content">
 
         @include('admin.section.flash_message')
+<div class="d-flex justify-content-between align-items-center mb-3">
 
+    <div>
+        <h4 class="mb-0 fw-bold " style="color:#057DB0" >@yield('title')</h4>
+        <small class="text-muted">@yield('action')</small>
+    </div>
+
+    <div>
+        @yield('button')
+    </div>
+
+</div>
         @include('admin.event.common.breadcrumb')
 
 

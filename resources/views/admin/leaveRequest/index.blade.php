@@ -17,7 +17,7 @@
         
         @canany(['create_leave_request','access_admin_leave'])
             <a href="{{ route('admin.leave-request.add')}}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.create_leave_request') }}</span>
                 </button>
@@ -113,7 +113,7 @@
                                     <a href="#" class="btn-action edit showLeaveReason" 
                                        data-href="{{ route('admin.leave-request.show', $value->id) }}"
                                        title="{{ __('index.show_leave_reason') }}">
-                                        <i data-feather="eye" style="color: #057db0;"></i>
+                                        <i data-feather="eye" style="color: #057db0;height:18px;widht:18px"></i>
                                     </a>
                                 </div>
                             </div>

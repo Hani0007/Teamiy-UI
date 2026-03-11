@@ -56,7 +56,7 @@
                 <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-paper-plane me-1"></i> @lang('index.send_notice')
+                 @lang('index.send_notice')
             </button>
         </div>
     </form>

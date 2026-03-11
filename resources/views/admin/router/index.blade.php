@@ -94,7 +94,7 @@
                                         @can('edit_router')
                                             <li class="me-2">
                                                 <a href="{{route('admin.routers.edit',$value->id)}}" title="{{ __('index.edit') }}">
-                                                    <i class="link-icon" data-feather="edit"></i>
+                                                    <i class="link-icon" data-feather="edit" ></i>
                                                 </a>
                                             </li>
                                         @endcan
@@ -183,25 +183,40 @@
 @endsection
 
 --}}
-
 @extends('layouts.master')
 
 @section('title', __('index.router'))
 
-@section('button')
-    @can('create_router')
-        <a href="{{ route('admin.routers.create')}}" class="btn shadow-sm px-4 fw-bold rounded-3 text-white" style="background-color: #057DB0;">
-            <i class="me-1" data-feather="plus-circle"></i> @lang('index.add_router')
-        </a>
-    @endcan
-@endsection
-
 @section('main-content')
-<section class="content-wrapper p-4" style="background: #f0f2f5; min-height: 100vh;">
+<section class="content" style="padding: 10px 20px;">
     @include('admin.section.flash_message')
+
+    {{-- Header Section --}}
+    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+        <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 600;">
+                {{ __('index.router') }}
+            </h2>
+            <p style="color: #94a3b8; font-weight: 500; font-size: 12px; margin-top: 5px;">
+                <i data-feather="wifi" style="width: 14px; vertical-align: middle;"></i> 
+                Network Connectivity Management
+            </p>
+        </div>
+        
+        @can('create_router')
+            <a href="{{ route('admin.routers.create') }}" style="text-decoration: none;">
+                <button class="btn btn-primary d-flex align-items-center gap-2" style=" border-radius: 14px;">
+                    <i data-feather="plus" style="width: 20px;"></i>
+                    <span>@lang('index.add_router')</span>
+                </button>
+            </a>
+        @endcan
+    </div>
+
     @include('admin.router.common.breadcrumb')
 
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
+    {{-- Filter Card with 14px Border Radius Buttons --}}
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: #fff;">
         <div class="card-body p-3">
             <form action="{{ route('admin.routers.index') }}" method="get" class="row g-2 align-items-center">
                 @if(!isset(auth()->user()->branch_id))
@@ -222,14 +237,14 @@
                 @endif
                 
                 <div class="col-auto d-flex gap-2">
-                    <button type="submit" class="btn text-white px-4 rounded-3 shadow-sm d-flex align-items-center gap-2" 
-                            style="background-color: #057DB0; height: 45px; border: none;">
+                    <button type="submit" class="btn text-white px-4 shadow-sm d-flex align-items-center gap-2" 
+                            style="background-color: #057DB0; height: 45px; border: none; border-radius: 14px;">
                         <i data-feather="filter" style="width: 16px;"></i> @lang('index.filter')
                     </button>
                     
-                    <a class="btn bg-white px-4 rounded-3 shadow-sm border d-flex align-items-center gap-2" 
+                    <a class="btn bg-white px-4 shadow-sm border d-flex align-items-center gap-2" 
                        href="{{ route('admin.routers.index') }}" 
-                       style="color: #057DB0; border-color: #057DB0 !important; height: 45px;">
+                       style="color: #057DB0; border-color: #057DB0 !important; height: 45px; border-radius: 14px;">
                         <i data-feather="refresh-cw" style="width: 16px;"></i> @lang('index.reset')
                     </a>
                 </div>
@@ -239,7 +254,7 @@
 
     <div class="router-list">
         @forelse($routers as $key => $value)
-            <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card" style="background: #fff;">
                 <div class="card-body p-0">
                     <div class="row g-0 align-items-center">
                         
@@ -255,38 +270,42 @@
                                 <div class="col-md-5">
                                     <h5 class="fw-bold text-dark mb-1">{{ $value->router_ssid }}</h5>
                                     <p class="text-muted small mb-0">
-                                        <i data-feather="map-pin" class="icon-xs me-1"></i> {{ ucfirst($value->branch->name) }} 
-                                        <span class="mx-2 text-silver">|</span>
-                                        <i data-feather="briefcase" class="icon-xs me-1"></i> {{ ucfirst($value->company->name) }}
+                                        <i data-feather="map-pin" style="width: 14px;"></i> {{ ucfirst($value->branch->name) }} 
+                                        <span class="mx-2" style="color: #cbd5e0;">|</span>
+                                        <i data-feather="briefcase" style="width: 14px;"></i> {{ ucfirst($value->company->name) }}
                                     </p>
                                 </div>
                                 
                                 <div class="col-md-3 text-center">
-                                    <span class="d-block small fw-bold text-muted mb-1 text-uppercase">@lang('index.status')</span>
+                                    <span class="d-block small fw-bold text-muted mb-1 text-uppercase" style="font-size: 10px;">@lang('index.status')</span>
                                     <div class="form-check form-switch d-inline-block">
-                                        <input class="form-check-input toggleStatus cursor-pointer" type="checkbox" 
+                                        <input class="form-check-input toggleStatus cursor-pointer custom-orange-toggle" type="checkbox" 
                                                href="{{route('admin.routers.toggle-status',$value->id)}}"
                                                {{($value->is_active) == 1 ? 'checked' : ''}}>
                                     </div>
                                 </div>
 
+                                {{-- Action Buttons: Separate Colored Squares --}}
                                 <div class="col-md-4 text-end">
-                                    @canany(['edit_router','delete_router'])
-                                        <div class="btn-group shadow-sm bg-white rounded-3 p-1">
-                                            @can('edit_router')
-                                                <a href="{{route('admin.routers.edit',$value->id)}}" class="btn btn-link text-primary p-2" title="{{ __('index.edit') }}">
-                                                    <i data-feather="edit-3"></i>
-                                                </a>
-                                            @endcan
+                                    <div class="d-flex justify-content-end gap-2 px-3">
+                                        @can('edit_router')
+                                            <a href="{{route('admin.routers.edit',$value->id)}}" 
+                                               style="background: #f1f5f9; color: #057DB0; padding: 10px; border-radius: 10px; display: inline-flex;" 
+                                               title="{{ __('index.edit') }}">
+                                                <i data-feather="edit-3" style="width:18px; height:18px;"></i>
+                                            </a>
+                                        @endcan
 
-                                            @can('delete_router')
-                                                <button class="btn btn-link text-danger p-2 deleteRouter" 
-                                                        data-href="{{route('admin.routers.delete',$value->id)}}" title="{{ __('index.delete') }}">
-                                                    <i data-feather="trash-2"></i>
-                                                </button>
-                                            @endcan
-                                        </div>
-                                    @endcanany
+                                        @can('delete_router')
+                                            <a href="javascript:void(0)" 
+                                               class="deleteRouter"
+                                               data-href="{{route('admin.routers.delete',$value->id)}}" 
+                                               style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 10px; display: inline-flex; cursor: pointer;" 
+                                               title="{{ __('index.delete') }}">
+                                                <i data-feather="trash-2" style="width:18px; height:18px;"></i>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -295,9 +314,9 @@
                 </div>
             </div>
         @empty
-            <div class="card border-0 shadow-sm rounded-4 text-center py-5 bg-white">
-                <i data-feather="rss" class="mx-auto mb-3" style="width: 50px; height: 50px; color: #057DB0; opacity: 0.2;"></i>
-                <h5 class="text-muted fw-bold">@lang('index.no_records_found')</h5>
+            <div class="text-center py-5">
+                <i data-feather="rss" style="width: 50px; color: #cbd5e1;"></i>
+                <p class="text-muted mt-3">@lang('index.no_records_found')</p>
             </div>
         @endforelse
     </div>
@@ -308,71 +327,22 @@
 </section>
 
 <style>
-    .rounded-4 { border-radius: 1rem !important; }
-    .hover-card { transition: all 0.3s ease; border-left: 5px solid transparent !important; }
+    /* Card Hover Style */
     .hover-card:hover { 
         transform: translateY(-3px); 
-        box-shadow: 0 12px 30px rgba(0,0,0,0.08) !important; 
-        border-left-color: #057DB0 !important;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.05) !important; 
+        border-left: 5px solid #057DB0 !important;
     }
     
-    .form-switch .form-check-input { width: 2.5em; height: 1.25em; cursor: pointer; }
-    .form-switch .form-check-input:checked {
-        background-color: #057DB0;
-        border-color: #057DB0;
+    /* Toggle Color #FB8233 */
+    .custom-orange-toggle:checked {
+        background-color: #FB8233 !important;
+        border-color: #FB8233 !important;
     }
 
-    .btn-link { text-decoration: none; border: none; transition: 0.2s; }
-    .btn-link:hover { transform: scale(1.1); }
-    
-    .icon-xs { width: 14px; height: 14px; vertical-align: middle; }
-    .text-silver { color: #cbd5e0; }
+    .form-switch .form-check-input { width: 2.5em; height: 1.25em; }
+
+    /* Custom Transitions */
+    .hover-card { transition: all 0.3s ease; border-left: 5px solid transparent; }
 </style>
-@endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function () {
-            feather.replace();
-
-            $('.toggleStatus').change(function (event) {
-                event.preventDefault();
-                var status = $(this).prop('checked') === true ? 1 : 0;
-                var href = $(this).attr('href');
-                Swal.fire({
-                    text: "Are you sure you want to change status?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#057DB0',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes',
-                    allowOutsideClick: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = href;
-                    } else {
-                        $(this).prop('checked', !$(this).prop('checked'));
-                    }
-                })
-            });
-
-            $('.deleteRouter').click(function (event) {
-                event.preventDefault();
-                let href = $(this).data('href');
-                Swal.fire({
-                    title: 'Delete Router?',
-                    text: "This action cannot be undone!",
-                    icon: 'error',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, Delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = href;
-                    }
-                })
-            });
-        });
-    </script>
 @endsection

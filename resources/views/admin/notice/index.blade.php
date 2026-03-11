@@ -195,10 +195,15 @@
 @extends('layouts.master')
 
 @section('title', __('index.notices'))
-
+<style>
+.toggleStatus:checked{
+    background-color:#FB8233 !important;
+    border-color:#FB8233 !important;
+}
+</style>
 @section('button')
     @can('create_notice')
-        <a href="{{ route('admin.notices.create')}}" class="btn shadow-sm px-4 fw-bold rounded-3 text-white" style="background-color: #057DB0;">
+        <a href="{{ route('admin.notices.create')}}" class="btn  px-4 fw-bold  btn-primary">
             <i class="me-1" data-feather="plus-circle"></i> @lang('index.create_notice')
         </a>
     @endcan
@@ -244,7 +249,7 @@
                         <button type="submit" class="btn text-white w-100 fw-bold shadow-sm" style="background-color: #057DB0;">
                             <i data-feather="filter" class="icon-xs me-1"></i> @lang('index.filter')
                         </button>
-                        <a href="{{ route('admin.notices.index') }}" class="btn btn-outline-secondary w-100 fw-bold">
+                        <a href="{{ route('admin.notices.index') }}" class="btn branch-back-btn w-100 fw-bold">
                             @lang('index.reset')
                         </a>
                     </div>
@@ -287,7 +292,7 @@
                                         <input class="form-check-input toggleStatus cursor-pointer" type="checkbox" 
                                                href="{{ route('admin.notices.toggle-status', $value->id) }}"
                                                {{ $value->is_active ? 'checked' : '' }}
-                                               style="border-color: #057DB0;">
+                                               style="border-color: #FB8233;">
                                     </div>
                                 </div>
                             </div>
@@ -314,12 +319,13 @@
                                            class="btn btn-link text-info p-2 showNoticeDescription" 
                                            data-href="{{ route('admin.notices.show', $value->id) }}" 
                                            title="@lang('index.show_notice_content')">
-                                            <i data-feather="eye" class="text-primary"></i>
+                                            <i data-feather="eye" class="text-primary mt-1" style="height:14px; width:14px"></i>
                                         </a>
                                     @endcan
                                     @can('edit_notice')
                                         <a href="{{ route('admin.notices.edit', $value->id) }}" class="btn btn-link p-2" title="@lang('index.edit_notice')">
-                                            <i data-feather="edit"></i>
+                                            <!-- <i data-feather="edit"></i> -->
+                                            <i data-feather="edit-3"></i>
                                         </a>
                                     @endcan
                                     @can('delete_notice')

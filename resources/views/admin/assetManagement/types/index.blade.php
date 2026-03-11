@@ -397,7 +397,6 @@
 
 
 --}}
-
 @extends('layouts.master')
 
 @section('title', __('index.asset_types'))
@@ -417,8 +416,8 @@
         
         <div class="d-flex gap-2">
             @can('create_type')
-                <button class="btn create-assetType d-flex align-items-center gap-2" 
-                        style="background: #ff851b; color: white; border: none; border-radius: 12px; padding: 10px 20px; font-weight: 600; transition: all 0.3s ease;">
+                <button class="btn btn-primary create-assetType d-flex align-items-center gap-2" 
+                        style=" color: white; border: none; border-radius: 12px; padding: 10px 20px; font-weight: 600; transition: all 0.3s ease;">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_asset_types') }}</span>
                 </button>
@@ -450,12 +449,17 @@
                             <span class="branch-ref-pill">Type ID: #{{ $value->id }}</span>
                             <div class="d-flex gap-1">
                                 @can('edit_type')
-                                    <a href="javascript:void(0)" class="btn-header-action edit-assetType" data-id="{{ $value->id }}" data-href="{{ route('admin.asset-types.edit', $value->id) }}">
+                                    <a href="javascript:void(0)" class="btn-header-action edit-assetType" 
+                                       data-id="{{ $value->id }}" 
+                                       data-href="{{ route('admin.asset-types.edit', $value->id) }}"
+                                       style="color: ##057DB0 !important;">
                                         <i data-feather="edit-3"></i>
                                     </a>
                                 @endcan
                                 @can('delete_type')
-                                    <a href="javascript:void(0)" data-href="{{route('admin.asset-types.delete',$value->id)}}" class="btn-header-action deleteAssetType">
+                                    <a href="javascript:void(0)" data-href="{{route('admin.asset-types.delete',$value->id)}}" 
+                                       class="btn-header-action deleteAssetType" 
+                                       style="color: #ef4444 !important;">
                                         <i data-feather="trash-2"></i>
                                     </a>
                                 @endcan
@@ -532,7 +536,6 @@
                         </div>
                     </div>
 
-                    {{-- Right Aligned Buttons with Orange Cancel --}}
                     <div class="d-flex justify-content-end gap-2 mt-2">
                          <button type="submit" class="btn btn-primary px-4 py-2" style="background: #057db0; border: none; border-radius: 10px; font-weight: 600;">
                             <span id="submitButtonText">{{ __('index.save') }}</span>
@@ -550,7 +553,22 @@
 
 <style>
     .create-assetType:hover { background: #e67616 !important; transform: translateY(-2px); }
-    .btn-header-action { background: rgba(255, 255, 255, 0.2); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3); }
+    .btn-header-action { 
+        background: rgba(255, 255, 255, 0.95); /* High opacity for icon contrast */
+        width: 32px; 
+        height: 32px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        border-radius: 8px; 
+        border: 1px solid rgba(0, 0, 0, 0.05); 
+        transition: all 0.2s ease;
+    }
+    .btn-header-action:hover {
+        background: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
     .slider-modern { background-color: rgba(255,255,255,0.3); }
     input:checked + .slider-modern { background-color: #ff851b; }
 </style>
@@ -574,7 +592,7 @@
                     confirmButtonText: 'Yes, Update!',
                     cancelButtonText: 'Cancel',
                     confirmButtonColor: '#057db0',
-                    cancelButtonColor: '#ff851b', // Orange Cancel in SweetAlert
+                    cancelButtonColor: '#ff851b',
                 }).then((result) => {
                     if (result.isConfirmed) window.location.href = href;
                     else $(this).prop('checked', !isChecked);
@@ -592,7 +610,7 @@
                     confirmButtonText: 'Yes, delete it!',
                     cancelButtonText: 'No, keep it',
                     confirmButtonColor: '#ef4444',
-                    cancelButtonColor: '#ff851b' // Orange Cancel in SweetAlert
+                    cancelButtonColor: '#ff851b' 
                 }).then((result) => {
                     if (result.isConfirmed) window.location.href = href;
                 });

@@ -140,7 +140,7 @@
                 <i class="fa fa-arrow-left"></i> {{ __('index.button_back') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save"></i> {{ __('index.submit') }}
+                 {{ __('index.submit') }}
             </button>
         </div>
     </form>

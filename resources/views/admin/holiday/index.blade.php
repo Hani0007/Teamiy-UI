@@ -26,7 +26,7 @@
         <div class="d-flex gap-2">
             @can('import_holiday')
                 <a href="{{ route('admin.holidays.import-csv.show') }}" style="text-decoration: none;">
-                    <button class="btn btn-outline-info d-flex align-items-center gap-2" style="border-radius: 12px; padding: 10px 18px; font-weight: 600;">
+                    <button class="btn btn-outline-primary d-flex align-items-center gap-2" style="border-radius: 12px; padding: 10px 18px; font-weight: 600;">
                         <i data-feather="upload-cloud" style="width: 18px;"></i>
                         <span class="d-none d-sm-inline">@lang('index.import_holiday_csv')</span>
                     </button>
@@ -35,7 +35,7 @@
 
             @can('create_holiday')
                 <a href="{{ route('admin.holidays.create') }}" style="text-decoration: none;">
-                    <button class="btn-premium-add">
+                    <button class="btn btn-primary">
                         <i data-feather="plus" style="width: 20px;"></i>
                         <span>@lang('index.add_holiday')</span>
                     </button>
@@ -84,7 +84,7 @@
                                 @endcan
 
                                 @can('delete_holiday')
-                                    <a data-href="{{ route('admin.holidays.delete', $value->id) }}" class="btn-header-action deleteHoliday cursor-pointer" title="Delete">
+                                    <a data-href="{{ route('admin.holidays.delete', $value->id) }}" class="btn-header-action deleteHoliday cursor-pointer" title="Delete" style="color:#EF955D">
                                         <i data-feather="trash-2"></i>
                                     </a>
                                 @endcan
@@ -124,8 +124,8 @@
 <style>
     /* Teeno buttons ke liye special glassy style */
     .btn-header-action {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
+        background: #FFFF;
+        color: #057DB0;
         width: 28px;
         height: 28px;
         display: flex;

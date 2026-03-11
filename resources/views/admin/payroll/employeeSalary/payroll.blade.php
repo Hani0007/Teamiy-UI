@@ -185,9 +185,9 @@
                         <div class="col-lg col-md-3 mb-4 form-check">
                             <div class="float-md-end">
                             {{-- @can('generate_payroll') --}}
-                            <button type="submit" class="btn btn-success me-md-2"> {{ __('index.filter') }} </button>
+                            <button type="submit" class="btn text-white  me-md-2" style="background:#057DB0"> {{ __('index.filter') }} </button>
                             {{-- @endcan --}}
-                                <a href="{{ route('admin.employee-salary.payroll') }}"  class="btn btn-primary">{{ __('index.clear') }}</a>
+                                <a href="{{ route('admin.employee-salary.payroll') }}"  class="btn branch-back-btn">{{ __('index.clear') }}</a>
                             </div>
                         </div>
                     </div>

@@ -367,7 +367,7 @@
         
         @can('create_time_leave_request')
             <a href="{{ route('admin.time-leave-request.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.create_time_leave_request') }}</span>
                 </button>
@@ -466,7 +466,7 @@
                                         <a href="javascript:void(0)" class="btn-action edit showTimeLeaveReason" 
                                            data-href="{{ route('admin.time-leave-request.show', $value->id) }}"
                                            title="{{ __('index.show_leave_reason') }}">
-                                            <i data-feather="eye"></i>
+                                            <i data-feather="eye" style="widtg:18px; height:18px"></i>
                                         </a>
                                     @endcan
                                 </div>
