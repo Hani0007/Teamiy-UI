@@ -14,6 +14,14 @@
 
 {{-- Teamy Wrapper: Jo aapki theme ka main part hai --}}
 <div class="teamy-body-wrapper">
+    @include('admin.section.flash_message')
+    <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('index.dashboard') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">{{ __('index.admin_section') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@yield('action')</li>
+        </ol>
+    </nav>
 
     {{-- Teamy Top Header: Branch Edit jaisa --}}
     <div class="teamy-top-header">
@@ -29,8 +37,6 @@
             </div>
         </div>
     </div>
-
-    @include('admin.section.flash_message')
 
     <form class="forms-sample" id="employeeDetail" action="{{ route('admin.profile_update', $userDetail->id) }}"
         enctype="multipart/form-data" method="POST">
@@ -54,7 +60,7 @@
             {{-- Avatar Section --}}
             <div class="d-md-flex align-items-center text-md-start text-center mb-4 ps-2">
                 @php
-                    $avatarPath = \App\Models\User::AVATAR_UPLOAD_PATH . ($userDetail->avatar ?? '');
+                    $avatarPath = \App\Models\Admin::AVATAR_UPLOAD_PATH . ($userDetail->avatar ?? '');
                     $avatar = (!empty($userDetail->avatar) && file_exists(public_path($avatarPath)))
                                 ? asset($avatarPath)
                                 : asset('assets/images/img.png');

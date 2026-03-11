@@ -11,7 +11,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.resignation.common.breadcrumb')
     {{-- Top Header --}}
     <div class="teamy-top-header">
         <div>
@@ -77,6 +77,88 @@
 
 @section('scripts')
     @include('admin.resignation.common.scripts')
+    
+    <!-- Inline test function -->
+    <script>
+        function loadEmployeesForDepartment() {
+            console.log('=== AUTO EMPLOYEE LOADING START ===');
+            
+            const deptDropdown = document.getElementById('department_id');
+            console.log('Department dropdown:', deptDropdown);
+            
+            if (deptDropdown) {
+                const deptId = deptDropdown.value;
+                console.log('Selected department ID:', deptId);
+                
+                if (deptId && deptId !== 'Select Department') {
+                    console.log('Auto-loading employees for department:', deptId);
+                    
+                    // Clear existing employees
+                    const employeeDropdown = document.getElementById('employee_id');
+                    if (employeeDropdown) {
+                        employeeDropdown.innerHTML = '<option selected disabled>Loading employees...</option>';
+                    }
+                    
+                    // Add 3-second delay before loading employees
+                    setTimeout(function() {
+                        // Load employees via AJAX
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', '/admin/employees/get-all-employees/' + deptId, true);
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    console.log('=== AUTO LOAD SUCCESS ===');
+                                    console.log('Response:', xhr.responseText);
+                                    
+                                    try {
+                                        const response = JSON.parse(xhr.responseText);
+                                        console.log('Parsed response:', response);
+                                        
+                                        if (response.data && response.data.length > 0) {
+                                            // Add employees to dropdown
+                                            response.data.forEach(function(emp) {
+                                                const option = document.createElement('option');
+                                                option.value = emp.id;
+                                                option.textContent = emp.name;
+                                                employeeDropdown.appendChild(option);
+                                            });
+                                            
+                                            console.log('SUCCESS! Auto-loaded ' + response.data.length + ' employees for department ' + deptId);
+                                        } else {
+                                            console.log('No employees found for department ' + deptId);
+                                            employeeDropdown.innerHTML = '<option selected disabled>Select Employee</option><option disabled>No employees found</option>';
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing response:', e);
+                                        employeeDropdown.innerHTML = '<option selected disabled>Select Employee</option><option disabled>Error loading employees</option>';
+                                    }
+                                } else {
+                                    console.log('=== AUTO LOAD ERROR ===');
+                                    console.error('Error loading employees:', xhr.status);
+                                    employeeDropdown.innerHTML = '<option selected disabled>Select Employee</option><option disabled>Error loading employees</option>';
+                                }
+                            }
+                        };
+                        xhr.send();
+                    }, 3000); // 3-second delay
+                } else {
+                    console.log('No department selected');
+                }
+            } else {
+                console.log('Department dropdown not found!');
+            }
+            
+            console.log('=== AUTO EMPLOYEE LOADING END ===');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const deptDropdown = document.getElementById('department_id');
+            if (deptDropdown) {
+                deptDropdown.addEventListener('change', loadEmployeesForDepartment);
+            }
+        });
+    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof feather !== 'undefined') { feather.replace(); }

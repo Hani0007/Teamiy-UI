@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DashboardController extends Controller
@@ -43,6 +44,8 @@ class DashboardController extends Controller
             $projectCardDetail = [];
             $recentProjects = collect();
             $multipleAttendance = false;
+            $employeeStats = [];
+            $projectStats = [];
 
             $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
             $companyId = AppHelper::getWebAdminCompanyId();
@@ -54,6 +57,12 @@ class DashboardController extends Controller
                 $topClients = $this->clientService->getTopClientsOfCompany();
                 $taskPieChartData = $this->taskService->getTaskDataForPieChart();
                 $projectCardDetail = $this->projectService->getProjectCardData();
+                
+                // Get employee statistics
+                $employeeStats = $this->dashboardRepo->getEmployeeStats($companyId);
+                
+                // Get project statistics
+                $projectStats = $this->dashboardRepo->getProjectStats($companyId);
 
                 $projectSelect = ['id', 'name', 'start_date', 'deadline', 'status', 'priority'];
                 $withProject = [
@@ -75,7 +84,9 @@ class DashboardController extends Controller
                 'projectCardDetail',
                 'recentProjects',
                 'appTimeSetting',
-                'multipleAttendance'
+                'multipleAttendance',
+                'employeeStats',
+                'projectStats'
             ));
 
         } catch (\Throwable $exception) {

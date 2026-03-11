@@ -18,7 +18,7 @@
 
     <div class="col-lg-4 col-md-6 mb-4">
         <label for="department_id" class="form-label">{{ __('index.department') }} <span style="color: red">*</span></label>
-        <select class="form-select" id="department_id" name="department_id">
+        <select class="form-select" id="department_id" name="department_id" onchange="loadEmployeesForDepartment()">
             @if(isset($resignationDetail))
                 @foreach($filteredDepartment as $department)
                     <option value="{{ $department->id }}" {{ $department->id == $resignationDetail->department_id ? 'selected' : '' }}>
