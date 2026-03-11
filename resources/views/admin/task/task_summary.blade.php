@@ -15,11 +15,11 @@
                     </tr>
                     <tr>
                         <td>{{ __('index.created') }}:</td>
-                        <td class="text-end text-success">{{ \App\Helpers\AppHelper::formatDateForView($taskDetail->start_date) }}</td>
+                        <td class="text-end " style="color:#057DB0">{{ \App\Helpers\AppHelper::formatDateForView($taskDetail->start_date) }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('index.deadline') }}:</td>
-                        <td class="text-end text-danger">{{ \App\Helpers\AppHelper::formatDateForView($taskDetail->end_date) }}</td>
+                        <td class="text-end " style="color:#057DB0">{{ \App\Helpers\AppHelper::formatDateForView($taskDetail->end_date) }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('index.priority') }}:</td>
@@ -30,7 +30,7 @@
                     <tr>
                         <td>{{ __('index.remaining_days') }}:</td>
                         <td class="text-end">
-                                <span class="badge badge-soft-success text-end d-inline-block float-end">
+                                <span class="badge  text-end d-inline-block float-end" style="color:#057DB0; background:#E0F2FE">
                                     {{ $taskDetail->taskRemainingDaysToComplete() }} {{ __('index.days_left') }}
                                 </span>
                         </td>

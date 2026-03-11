@@ -28,7 +28,7 @@
             </div>
         </div>
         <a href="{{ route('admin.company.edit', $companyDetail->id) }}">
-            <button class="btn btn-edit-glow d-flex align-items-center gap-2">
+            <button class="btn btn-primary d-flex align-items-center gap-2">
                 <i data-feather="edit-2" style="width: 16px;"></i> {{ __('edit') }}
             </button>
         </a>

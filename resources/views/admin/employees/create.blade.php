@@ -415,7 +415,7 @@
             <h2>{{ __('index.employee_management') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">{{ __('index.add_new') }}</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">New</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-user-plus"></i> {{ __('index.create_employee') }}
