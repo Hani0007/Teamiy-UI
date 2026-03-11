@@ -135,6 +135,7 @@ class LeaveTypeController extends Controller
                     throw new Exception(__('message.validateddata_not_found'), 404);
                 }
                 $this->leaveTypeRepo->update($leaveDetail, $validatedData);
+                
                 Log::info('Leave Update', [
                     'id' => $id,
                     'name' => $request->name,
