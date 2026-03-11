@@ -54,7 +54,7 @@
             {{-- Avatar Section --}}
             <div class="d-md-flex align-items-center text-md-start text-center mb-4 ps-2">
                 @php
-                    $avatarPath = \App\Models\User::AVATAR_UPLOAD_PATH . ($userDetail->avatar ?? '');
+                    $avatarPath = \App\Models\Admin::AVATAR_UPLOAD_PATH . ($userDetail->avatar ?? '');
                     $avatar = (!empty($userDetail->avatar) && file_exists(public_path($avatarPath)))
                                 ? asset($avatarPath)
                                 : asset('assets/images/img.png');
