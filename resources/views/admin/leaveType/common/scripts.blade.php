@@ -92,13 +92,15 @@
 
             $.ajax({
                 type: 'GET',
-                url: `{{ url('admin/leaves') }}/${leaveTypeId}/edit`,
+                url: `{{ route('admin.leaves.edit', ':id') }}`.replace(':id', leaveTypeId),
+                
                 success: function(response) {
                     const leaveType = response.leaveTypeDetail;
 
                     $('#leaveTypeModalLabel').text(translations.editLeaveType);
                     $('#submitButtonText').text(translations.update);
-                    $('#leaveTypeForm').attr('action', `{{ url('admin/leaves') }}/${leaveTypeId}`);
+                    $('#leaveTypeForm').attr('action', `{{ route('admin.leaves.update', ':id') }}`.replace(':id', leaveTypeId));
+
                     $('#formMethod').val('PUT');
 
                     let isPaid = leaveType.leave_allocated > 0 ? 1 : 0;
