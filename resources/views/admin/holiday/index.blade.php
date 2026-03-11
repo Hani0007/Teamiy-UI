@@ -11,22 +11,20 @@
         }
     @endphp
 
-<section class="content" style="padding: 10px 20px;">
+<section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh;">
     @include('admin.section.flash_message')
 
-    {{-- Header Section --}}
-    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+    {{-- 1. Modern Breadcrumbs & Top Header --}}
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
-            <h2 style="color: #057db0;">{{ __('index.holiday') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="calendar" style="width: 14px; vertical-align: middle;"></i> Annual Events & Holidays
-            </p>
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.holiday') }}</h2>
+            @include('admin.holiday.common.breadcrumb')
         </div>
-        
+
         <div class="d-flex gap-2">
             @can('import_holiday')
                 <a href="{{ route('admin.holidays.import-csv.show') }}" style="text-decoration: none;">
-                    <button class="btn btn-outline-info d-flex align-items-center gap-2" style="border-radius: 12px; padding: 10px 18px; font-weight: 600;">
+                    <button class="btn btn-outline-info d-flex align-items-center gap-2" style="border-radius: 12px; padding: 10px 18px; font-weight: 600; height: 48px; border: 1px solid #057db0;">
                         <i data-feather="upload-cloud" style="width: 18px;"></i>
                         <span class="d-none d-sm-inline">@lang('index.import_holiday_csv')</span>
                     </button>
@@ -35,13 +33,54 @@
 
             @can('create_holiday')
                 <a href="{{ route('admin.holidays.create') }}" style="text-decoration: none;">
-                    <button class="btn-premium-add">
+                    <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 0 24px; height: 48px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
                         <i data-feather="plus" style="width: 20px;"></i>
                         <span>@lang('index.add_holiday')</span>
                     </button>
                 </a>
             @endcan
         </div>
+    </div>
+
+    {{-- 2. Glass-morphism Filter Panel --}}
+    <div class="glass-filter-panel mb-5 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; border: 1px solid #ffffff;">
+        <form action="{{ route('admin.holidays.index') }}" method="get" class="row g-3 align-items-end">
+            
+            <div class="col-lg col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">@lang('index.event_name')</label>
+                <input type="text" placeholder="@lang('index.event_name')" id="event" name="event" value="{{ $filterParameters['event'] }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+            </div>
+
+            <div class="col-lg col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">@lang('index.leave_requested_year')</label>
+                <input type="number" min="{{ $filterData['min_year'] }}" max="{{ $filterData['max_year'] }}" step="1"
+                       placeholder="e.g : {{ $filterData['min_year'] }}"
+                       id="year" name="event_year" value="{{ $filterParameters['event_year'] }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+            </div>
+
+            <div class="col-lg col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">@lang('index.month')</label>
+                <select class="form-select shadow-none modern-select" name="month" id="month" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    <option value="" {{ !isset($filterParameters['month']) ? 'selected' : '' }}>@lang('index.all_month')</option>
+                    @foreach($months as $key => $value)
+                        <option value="{{ $key }}" {{ (isset($filterParameters['month']) && $key == $filterParameters['month'] ) ? 'selected' : '' }}>
+                            {{ $value[$filterData['month']] }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn w-100" style="background: #057db0; color: white; height: 48px; border-radius: 12px; font-weight: 600; border: none; transition: all 0.3s ease;">
+                        @lang('index.filter')
+                    </button>
+                    <a href="{{ route('admin.holidays.index') }}" class="btn w-100 d-flex align-items-center justify-content-center" style="height: 48px; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; background: #fff; font-weight: 600; text-decoration: none;">
+                        @lang('index.reset')
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
 
     {{-- Cards Grid --}}
@@ -186,7 +225,7 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, Delete',
-                    confirmButtonColor: '#ef4444'
+                    confirmButtonColor: '#fb8233'
                 }).then((result) => {
                     if (result.isConfirmed) window.location.href = href;
                 })

@@ -140,10 +140,10 @@ Route::group([
         return redirect()->route('admin.login');
     });
 
-
     // Social Login Routes
     Route::get('auth/{provider}', [SocialLoginController::class, 'redirectToProvider'])->name('social.login');
-    Route::get('auth/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback'])->name('social.callback');
+    Route::get('auth/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback']);
+    // Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirectToProvider']);
 
         
     Route::get('/admin/invoice/{id}', function ($subscriptionId) {

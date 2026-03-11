@@ -5,7 +5,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.officeTime.common.breadcrumb')
     <div class="teamy-top-header">
         <div>
             <h2>{{ __('index.office_time') }} {{ __('index.edit') }}</h2>
