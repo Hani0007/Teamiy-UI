@@ -1,613 +1,190 @@
-@php use App\Helpers\AttendanceHelper; @endphp
-@php use App\Models\Client; @endphp
-@php use App\Models\User; @endphp
-@php use App\Helpers\AppHelper; @endphp
 @extends('layouts.master')
 
-@section('title',__('index.digital_hr_dashboard'))
-
-<?php
-$attendanceDetail = (AppHelper::employeeTodayAttendanceDetail());
-
-$multipleEntries = count($attendanceDetail);
-$firstAttendance = $attendanceDetail->first();
-$lastAttendance = $attendanceDetail->last();
-
-$checkInAt = $firstAttendance['check_in_at'] ?? '';
-$checkOutAt = $lastAttendance['check_out_at'] ?? '';
-$attendanceDate = $lastAttendance['attendance_date'] ?? '';
-$viewCheckIn = $checkInAt ? AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $checkInAt) : '-:-:-';
-$viewCheckOut = $checkOutAt ? AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $checkOutAt) : '-:-:-';
-?>
-
-@section('nav-head',__('index.welcome').' : ' .ucfirst($dashboardDetail?->company_name) )
-
-@section('styles')
-<style>
-    #clockContainer {
-        background: url({{asset('assets/images/clock.png')
-    }
-    }) no-repeat;
-    background-size: 100%;
-    }
-
-    .alert {
-        display: flex;
-        align-items: center;
-    }
-
-    .scrolling-message {
-        display: inline-block;
-        white-space: nowrap;
-        position: absolute;
-        animation: scroll-left 10s linear infinite;
-    }
-
-    @keyframes scroll-left {
-        0% {
-            transform: translateX(100%);
-        }
-
-        100% {
-            transform: translateX(-100%);
-        }
-    }
-</style>
-@endsection
+@section('title', 'Dashboard')
 
 @section('main-content')
-
-<section class="content">
-    <?php
-        $projectPriority = [
-            'low' => 'info',
-            'medium' => 'warning',
-            'high' => 'primary',
-            'urgent' => 'primary'
-        ];
-        ?>
-
-    <div id="flashAttendanceMessage" class="d-none">
-        <div class="alert alert-danger errorStartWorking">
-            <p class="errorStartWorkingMessage"></p>
+<div class="content-wrapper">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Dashboard</h3>
+            <p class="text-muted small">Key HR metrics, employee and Project activity insights.</p>
         </div>
-
-        <div class="alert alert-danger errorStopWorking">
-            <p class="errorStopWorkingMessage"></p>
-        </div>
-
-        <div class="alert alert-success successStartWorking">
-            <p class="successStartWorkingMessage"></p>
-        </div>
-
-        <div class="alert alert-success successStopWorking">
-            <p class="successStopWorkingMessage"></p>
+        <div class="d-flex align-items-center bg-white border rounded-3 px-3 py-2 shadow-sm">
+            <i class="far fa-calendar-alt text-muted me-2"></i>
+            <span class="small fw-bold">January 1 - January 7, 2026</span>
+            <i class="fas fa-chevron-left ms-3 me-2 small"></i>
+            <i class="fas fa-chevron-right small"></i>
         </div>
     </div>
 
-    <div id="loader" style="display:none;">
-        <div class="loading">
-            <div class="loading-content"></div>
+    <div class="row g-3">
+        @php
+            $topStats = [
+                [
+                    'label' => 'Total Employees', 
+                    'value' => $employeeStats['total_employees'] ?? 0, 
+                    'percentage' => '+12%', 
+                    'description' => 'Employee count includes all staff',
+                    'icon' => 'fas fa-users'
+                ],
+                [
+                    'label' => 'Branches', 
+                    'value' => $employeeStats['total_branches'] ?? 0, 
+                    'percentage' => '+05%', 
+                    'description' => 'Total branches in company',
+                    'icon' => 'fas fa-building'
+                ],
+                [
+                    'label' => 'Today Presents', 
+                    'value' => $employeeStats['today_presents'] ?? 0, 
+                    'percentage' => '+54%', 
+                    'description' => 'Total employees presents today',
+                    'icon' => 'fas fa-user-check'
+                ],
+                [
+                    'label' => 'Today Absents', 
+                    'value' => $employeeStats['today_absents'] ?? 0, 
+                    'percentage' => '+11%', 
+                    'description' => 'Total employees absent today',
+                    'icon' => 'fas fa-user-times'
+                ],
+                [
+                    'label' => 'Today Lates', 
+                    'value' => $employeeStats['today_lates'] ?? 0, 
+                    'percentage' => '-04%', 
+                    'description' => 'Total employees late today',
+                    'icon' => 'fas fa-clock'
+                ]
+            ];
+        @endphp
+        @foreach($topStats as $ts)
+        <div class="col">
+            <div class="stat-card h-100">
+                <div class="stat-header">
+                    <div class="stat-icon-box"><i class="{{ $ts['icon'] }} text-dark small"></i></div>
+                    <button class="btn-details-orange">Details ></button>
+                </div>
+                <div class="stat-label">{{ $ts['label'] }}</div>
+                <span class="stat-subtext">{{ $ts['description'] }}</span>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="stat-value">{{ $ts['value'] }}</div>
+                    <span class="stat-badge {{ str_contains($ts['percentage'], '-') ? 'badge-red' : 'badge-orange' }}">{{ $ts['percentage'] }}</span>
+                    <small class="text-muted" style="font-size: 9px;">vs Last Month</small>
+                </div>
+            </div>
         </div>
+        @endforeach
     </div>
 
-    <div class="row">
-        @can('attendance_summary')
-        <div class=" {{ isset(auth()->user()->id) ? 'col-xxl-9 col-xl-8': 'col-xxl-12 col-xl-12'  }} d-flex">
-            <div class="row">
-                <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.total_departments') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_departments)}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="layers"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.total_employees') }}</h6>
-                            </div>
-
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_employee)}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="users"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.total_holidays') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_holidays) ?? 0}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="umbrella"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.paid_leaves') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_paid_leaves) ?? 0}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="file-text"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.on_leave_today') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_on_leave) ?? 0}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="file-minus"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.pending_leave_requests') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{ number_format($dashboardDetail?->total_pending_leave_requests) ?? 0}}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="twitch"> </i>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.total_check_in_today') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-flex">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_checked_in_employee) ?? 0 }}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="log-in"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 mb-4 d-flex">
-                    <div class="card w-100">
-                        <div class="card-body text-md-start text-center">
-                            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
-                                <h6 class="card-title mb-2 mb-md-0">{{ __('index.total_check_out_today') }}</h6>
-                            </div>
-                            <div class="row align-items-center d-md-fle">
-                                <div class="col-lg-6 col-md-6">
-                                    <h3>{{number_format($dashboardDetail?->total_checked_out_employee) ?? 0 }}</h3>
-                                </div>
-                                <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                    <i class="link-icon" data-feather="log-out"> </i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    <div class="section-card">
+        <div class="section-header">
+            <h5 class="fw-bold mb-0">Projects</h5>
+            <div class="d-flex gap-3 small fw-bold">
+                <span><span class="badge bg-secondary rounded-circle me-1">5</span> Not Started</span>
+                <span><span class="badge bg-warning rounded-circle me-1 text-dark">6</span> In Progress</span>
+                <span><span class="badge bg-danger rounded-circle me-1">3</span> Late</span>
+                <span><span class="badge bg-success rounded-circle me-1">26</span> Completed</span>
             </div>
         </div>
-        @endcan
-        @if(auth()->user())
-        @can('allow_attendance')
-        <div class="col-xxl-3 col-xl-4 mb-4 d-flex">
-            <div class="card w-100">
-                <div class="card-body text-center clock-display">
-                    <div id="clockContainer" class="mb-2">
-                        <div id="hour"></div>
-                        <div id="minute"></div>
-                        <div id="second"></div>
-                    </div>
-
-                    <p id="date" class="text-primary fw-bolder mb-2"> {{ AppHelper::getCurrentDate() }}</p>
-
-                    <div class="punch-btn mb-2 d-flex align-items-center justify-content-around">
-                        @if($multipleAttendance > 1)
-                        @if($multipleEntries < $multipleAttendance || ($lastAttendance->check_in_at &&
-                            !$lastAttendance->check_out_at))
-
-                            @if((!isset($firstAttendance->check_in_at) && !isset($firstAttendance->check_out_at)) ||
-                            ($lastAttendance->check_in_at && $lastAttendance->check_out_at))
-                            {{-- <button href="{{route('admin.dashboard.takeAttendance','checkIn')}}"
-                                class="btn btn-lg btn-danger " id="startWorkingBtn"
-                                data-audio="{{asset('assets/audio/beep.mp3')}}">
-                                {{ __('index.punch_in') }}
-                            </button> --}}
-
-                            <button href="javascript: (0);" class="btn btn-lg btn-danger "
-                                {{-- id="startWorkingBtn" --}}
-                                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                {{-- data-audio="{{asset('assets/audio/beep.mp3')}}" --}}
-                                >
-                                {{ __('index.punch_in') }}
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="text-align: left;" id="exampleModalLabel">Modal title</h5>
-                                            {{-- <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button> --}}
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>
-                                                To ensure accurate tracking, check-ins must be performed via the <strong>Teamiy app</strong>.
-                                                Please log in to your mobile device to proceed.
-                                            </p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr><th>Name</th><th>Status</th><th>About</th><th>Members</th><th>Progress</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @for($i=1; $i<=3; $i++)
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="project-avatar me-3"></div>
+                                <div><div class="fw-bold">Website Redesign</div><small class="text-muted">techverdi.com</small></div>
                             </div>
-
-                            @elseif(($firstAttendance->check_in_at && !$firstAttendance->check_out_at) ||
-                            ($lastAttendancess->check_in_at && !$lastAttendance->check_out_at))
-                            <button href="{{route('admin.dashboard.takeAttendance','checkOut')}}"
-                                class="btn btn-lg btn-danger" id="stopWorkingBtn"
-                                data-audio="{{asset('assets/audio/beep.mp3')}}">
-                                {{ __('index.punch_out') }}
-                            </button>
-                            @endif
-                            @endif
-                            @else
-                            <button href="{{route('admin.dashboard.takeAttendance','checkIn')}}"
-                                class="btn btn-lg btn-danger  {{ $checkInAt ? 'd-none' : ''}}" id="startWorkingBtn"
-                                data-audio="{{asset('assets/audio/beep.mp3')}}">
-                                {{ __('index.punch_in') }}
-                            </button>
-                            <button href="{{route('admin.dashboard.takeAttendance','checkOut')}}"
-                                class="btn btn-lg btn-danger {{ $checkOutAt ? 'd-none' : ''}}" id="stopWorkingBtn"
-                                data-audio="{{asset('assets/audio/beep.mp3')}}">
-                                {{ __('index.punch_out') }}
-                            </button>
-                            @endif
-                    </div>
-
-                    <div class="check-text d-flex align-items-center justify-content-around">
-                        <span>{{ __('index.check_in_at') }}<p class="text-success fw-bold h5" id="checkInTime">
-                                {{$viewCheckIn}} </p></span>
-                        <span>{{ __('index.check_out_at') }}<p class="text-danger fw-bold h5" id="checkOutTime">
-                                {{$viewCheckOut}} </p></span>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                        <td><span class="status-pill {{ $i==1 ? 'sp-approved bg-soft-success text-success' : ($i==2 ? 'sp-pending bg-soft-primary text-primary' : 'sp-pending bg-soft-secondary text-muted') }}">
+                            {{ $i==1 ? 'Done' : ($i==2 ? 'In Progress' : 'Not Started') }}</span>
+                        </td>
+                        <td><div class="fw-bold">Home Page Redesign</div><small class="text-muted">Redesign website homepage in wordpress...</small></td>
+                        <td>
+                            <div class="member-group d-flex">
+                                <div class="member-count">+{{ $i * 2 }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="pg-bar"><div class="pg-fill {{ $i==1 ? 'bg-green' : ($i==2 ? 'bg-green' : 'bg-gray') }}" style="width: {{ $i==1 ? '100%' : ($i==2 ? '69%' : '0%') }}"></div></div>
+                                <span class="fw-bold">{{ $i==1 ? '100%' : ($i==2 ? '69%' : '00%') }}</span>
+                            </div>
+                        </td>
+                        <td><i class="fas fa-ellipsis-v text-muted"></i></td>
+                    </tr>
+                    @endfor
+                </tbody>
+            </table>
         </div>
-        @endcan
-        @endif
-
-    </div>
-    @canany(['project_detail','client_detail'])
-    @can('project_detail')
-    <div class="projectManagement">
-        <h4 class="mb-4">{{ __('index.project_management') }} </h4>
-        <div class="row">
-            <div class="col-xxl-6 col-xl-6 d-flex mb-4">
-                <div class="card card-table flex-fill">
-                    <div class="card-header">
-                        <h3 class="card-title mb-0">{{ __('index.projects_detail') }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="projectChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xxl-6 col-xl-6 d-flex">
-                <div class="row">
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.total_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['total_projects'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.pending_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['not_started'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.on_hold_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['on_hold'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.in_progress_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['in_progress'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.finished_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['completed'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-6 col-xl-6 col-lg-4 col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body text-md-start text-center">
-                                <h6 class="card-title mb-2">{{ __('index.cancelled_projects') }}</h6>
-                                <div class="row align-items-center d-md-flex">
-                                    <div class="col-lg-6 col-md-6">
-                                        <h3>{{number_format($projectCardDetail['cancelled'])}}</h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 text-md-end dash-icon mt-md-0 mt-2">
-                                        <i class="link-icon" data-feather="layers"> </i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-
-    <div class="row">
-        @can('client_detail')
-        <div class="col-xxl-8 col-xl-8 mb-4 d-flex">
-            <div class="card card-table flex-fill">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h3 class="card-title mb-0">{{ __('index.top_clients') }}</h3>
-                    <a href="{{route('admin.clients.index')}}">{{ __('index.view_all_clients') }}</a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table custom-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('index.name') }}</th>
-                                    <th class="text-center">{{ __('index.email') }}</th>
-                                    <th class="text-center">{{ __('index.contact') }}</th>
-                                    <th class="text-center">{{ __('index.project') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($topClients as $key => $client)
-                                <tr>
-                                    <td class="table-avatar w-35">
-
-                                        <a href="{{route('admin.clients.show',$client->id)}}" class="avatar">
-                                            <img alt="" src="{{asset(Client::UPLOAD_PATH.$client->avatar)}}">
-                                            <span class="ms-1">{{ucfirst($client->name)}}</span>
-                                        </a>
-
-                                    </td>
-                                    <td class="text-center">{{$client->email}}</td>
-                                    <td class="text-center">
-                                        {{$client->contact_no}}
-                                    </td>
-
-                                    <td class="text-center">
-                                        {{$client->project_count}}
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="100%">
-                                        <p class="text-center"><b>{{ __('index.no_records_found') }}</b></p>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endcan
-
-        @can('project_detail')
-        <div class="col-xxl-4 col-xl-4 mb-4 d-flex">
-            <div class="card card-table flex-fill">
-                <div class="card-header text-center">
-                    <h3 class="card-title mb-0">{{ __('index.task_details') }}</h3>
-                </div>
-                <div class="card-body text-center">
-                    <canvas id="tasksChart"></canvas>
-                </div>
-            </div>
-        </div>
-        @endcan
+        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
     </div>
 
-    @can('project_detail')
-    <div class="card card-table flex-fill">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('index.recent_projects') }}</h3>
-            <a href="{{route('admin.projects.index')}}">{{ __('index.view_all_projects') }}</a>
+    <div class="section-card">
+        <div class="section-header border-0 pb-0">
+            <div class="d-flex align-items-center gap-2">
+                <div class="stat-icon-box"><i class="fas fa-crosshairs text-dark"></i></div>
+                <h5 class="fw-bold mb-0">Recent Activities</h5>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width:125px;"><option>Last 7 Days</option></select>
+                <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-payroll">Payroll</button>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table custom-table mb-0">
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-leave">
+                <table class="table mb-0 mt-3">
                     <thead>
-                        <tr>
-                            <th class="w-25">{{ __('index.title') }}</th>
-                            <th class="text-center">{{ __('index.date_start') }}</th>
-                            <th class="text-center">{{ __('index.deadline') }}</th>
-                            <th class="text-center">{{ __('index.leader') }}</th>
-                            <th class="text-center">{{ __('index.completion') }}</th>
-                            <th class="text-center">{{ __('index.priority') }}</th>
-                        </tr>
+                        <tr><th>ID Employee</th><th>Name</th><th>Department</th><th>Leave Type</th><th>Reason</th><th>Date/Time</th><th>Status</th><th></th></tr>
                     </thead>
                     <tbody>
-                        @forelse($recentProjects as $key => $project)
+                        @php
+                            $leaves = [
+                                ['id' => 'FCD-154', 'n' => 'Pietro La Torre', 'd' => 'Inbound Sales', 't' => 'Full Day', 'r' => 'Doctor Appointment...', 'dt' => '02 Feb, 2026', 's' => 'Not Approved'],
+                                ['id' => 'FCD-155', 'n' => 'Benjamin', 'd' => 'PHP (Laravel)', 't' => 'Full Day', 'r' => 'Accident Emergency...', 'dt' => '24 Feb, 2026', 's' => 'Pending'],
+                                ['id' => 'FCD-156', 'n' => 'Jone Snow', 'd' => 'Flutter (Dart)', 't' => 'Short Leave', 'r' => 'Stuck in Traffic...', 'dt' => '9:30 AM to 12:00 PM', 's' => 'Approved']
+                            ];
+                        @endphp
+                        @foreach($leaves as $lv)
                         <tr>
-                            <td class="w-25">
-                                <a href="{{route('admin.projects.show',$project->id)}}">{{ucfirst($project->name)}} </a>
-                            </td>
-                            <td class="text-center">{{AppHelper::formatDateForView($project->start_date)}}</td>
-                            <td class="text-center">
-                                {{AppHelper::formatDateForView($project->deadline)}}
-                            </td>
-
-                            <td class="member-listed text-center">
-                                @forelse($project->projectLeaders as $key => $leader)
-
-                                <button type="button" class="p-0 border-0 bg-transparent ms-n3 " disabled
-                                    data-toggle="tooltip" data-placement="top"
-                                    title="{{ $leader->user ? ucfirst($leader->user->name) : 'Project Leader' }}">
-                                    <img class="rounded-circle" style="object-fit: cover" src="{{ $leader->user ? asset(User::AVATAR_UPLOAD_PATH.$leader->user->avatar):
-                                                                    asset('assets/images/img.png')
-                                                        }}" alt="profile">
-                                </button>
-
-                                @empty
-
-                                @endforelse
-                            </td>
-                            <td class="text-center">
-                                <div class="progress">
-                                    <div class="progress-bar color2 rounded" role="progressbar"
-                                        style="{{AppHelper::getProgressBarStyle($project->getProjectProgressInPercentage())}}"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                        <span>{{($project->getProjectProgressInPercentage())}} %</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="btn btn-{{$projectPriority[$project->priority]}} btn-xs cursor-default">
-                                    {{ucfirst($project->priority)}}
-                                </span>
-                            </td>
+                            <td>{{ $lv['id'] }}</td>
+                            <td><strong>{{ $lv['n'] }}</strong></td>
+                            <td>{{ $lv['d'] }}</td>
+                            <td>{{ $lv['t'] }}</td>
+                            <td>{{ $lv['r'] }}</td>
+                            <td>{{ $lv['dt'] }}</td>
+                            <td><span class="status-pill {{ $lv['s']=='Approved' ? 'sp-approved' : ($lv['s']=='Pending' ? 'sp-pending' : 'sp-rejected') }}">{{ $lv['s'] }}</span></td>
+                            <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="100%">
-                                <p class="text-center"><b>{{ __('index.no_records_found') }}</b></p>
-                            </td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
+
+            <div class="tab-pane fade" id="tab-attendance">
+                <div class="p-5 text-center text-muted">
+                    <i class="fas fa-clock fa-2x mb-3"></i>
+                    <p>Attendance logs for the selected period will appear here.</p>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-payroll">
+                <div class="p-5 text-center text-muted">
+                    <i class="fas fa-money-check-alt fa-2x mb-3"></i>
+                    <p>Payroll processing data for 2026 is ready to view.</p>
+                </div>
+            </div>
         </div>
+        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
     </div>
-    @endcan
-    @endcanany
-</section>
-@endsection
-
-<script src="{{asset('assets/vendors/chartjs/Chart.min.js')}}"></script>
-
-@section('scripts')
-<script>
-    let translatedStrings = @json(__('index'));
-</script>
-@include('admin.dashboard_scripts')
+</div>
 @endsection
