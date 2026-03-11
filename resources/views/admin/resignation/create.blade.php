@@ -11,7 +11,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.resignation.common.breadcrumb')
     {{-- Top Header --}}
     <div class="teamy-top-header">
         <div>
