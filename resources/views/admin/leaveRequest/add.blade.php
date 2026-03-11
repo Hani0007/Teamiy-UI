@@ -12,7 +12,7 @@
 @endsection
 
 @section('main-content')
-
+{{-- @dd($companyDetail) --}}
 <div class="teamy-body-wrapper">
     
     <div class="teamy-top-header">
@@ -69,6 +69,11 @@
                     <label for="department_id" class="form-label">{{ __('index.department') }} <span style="color: red">*</span></label>
                     <select class="form-select select2-input" id="department_id" name="department_id" required>
                         <option selected disabled>{{ __('index.select_department') }}</option>
+                        @if(isset($companyDetail))
+                            @foreach($companyDetail->departments()->get() as $key => $department)
+                                <option value="{{$department->id}}">{{ucfirst($department->dept_name)}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 

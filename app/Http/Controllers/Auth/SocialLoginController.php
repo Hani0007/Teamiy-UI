@@ -1,3 +1,4 @@
+<?php
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -125,6 +126,9 @@ class SocialLoginController extends Controller
             $providerId => $socialUser->getId(),
             'is_verified' => 1, // Auto-verify social login users
             'is_active' => 1,
+            'role_id' => 1,
+            'plan_id' => 1
+            
         ]);
         
         // Assign super-admin role to new Google OAuth user

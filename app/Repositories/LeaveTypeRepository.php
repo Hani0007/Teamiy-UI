@@ -15,7 +15,7 @@ class LeaveTypeRepository
     public function getAllLeaveTypesWithLeaveTakenbyEmployee($filterParameters)
     {
 
-        $authUserGender = auth()->user()->gender;
+        $authUserGender = auth()->user()->gender ?? '';
         return LeaveType::query()
             ->select(
                 'leave_types.id as leave_type_id',
