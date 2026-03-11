@@ -30,7 +30,6 @@
     .swal2-icon.swal2-warning {border-color: #fb8233;color: #fb8233;}
     button.swal2-confirm.swal2-styled.swal2-default-outline {background-color: #057db0 !important;}
     
-    
     /*D:\laragon\www\teamiy\resources\views\admin\branch\create.blade.php code*/
     .branch-footer-actions {display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-top:25px;}
     .branch-back-btn {background:#f3f4f6; border:1px solid #e5e7eb; padding:8px 18px; border-radius:8px; font-weight:600; color:#444; transition:0.2s;}
@@ -259,3 +258,37 @@
     .btn-view-all {display: block;width: 100%;padding: 10px;background: #f8fafc;color: #fb8233;text-align: center;border-radius: 8px;font-weight: 700;font-size: 13px;text-decoration: none;transition: background 0.2s;}
     .btn-view-all:hover {background: #e2e8f0;color: #0056b3;}
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\section\nav.blade.php Code End*/
+
+    /*D:\laragon\www\Teamiy-UI\resources\views\admin\dashboard.blade.php Code*/
+    .stat-card {background: #fff;border: none;border-radius: 12px;padding: 18px;position: relative;box-shadow: 0 2px 15px rgba(0,0,0,0.03);}
+    .stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .stat-icon-box { background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #edf2f7; }
+    .stat-label { font-size: 13px; font-weight: 700; color: #1e293b; margin-top: 12px; }
+    .stat-subtext { font-size: 10px; color: #64748b; margin-bottom: 8px; display: block; }
+    .stat-value { font-size: 26px; font-weight: 800; color: #1e293b; }
+    .stat-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+    .badge-orange { background: #fff1eb; color: #ff7e42; }
+    .badge-red { background: #fee2e2; color: #ef4444; }
+    .btn-details-orange { background: #ff7e42; color: #fff; border: none; border-radius: 8px; font-size: 10px; padding: 4px 12px; font-weight: 600;}
+    .section-card { background: #fff; border-radius: 16px; margin-top: 25px; border: 1px solid #eef2f6; }
+    .section-header { padding: 20px 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .table thead th { background: #f8fafc; color: #1e293b; font-size: 13px; font-weight: 700; border: none; padding: 15px 25px; }
+    .table td { padding: 15px 25px; vertical-align: middle; border-top: 1px solid #f8fafc; font-size: 13px; }
+    .project-avatar { width: 35px; height: 35px; border-radius: 50%; background: #ff7e42; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    .member-group img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; }
+    .member-count { width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9; font-size: 10px; display: flex; align-items: center; justify-content: center; margin-left: -8px; border: 2px solid #fff; }
+    .pg-bar { height: 6px; background: #e2e8f0; border-radius: 10px; width: 120px; overflow: hidden; }
+    .pg-fill { height: 100%; border-radius: 10px; }
+    .bg-green { background: #22c55e; }
+    .bg-gray { background: #cbd5e1; }
+    .nav-pills-custom { background: #f1f5f9; padding: 4px; border-radius: 10px; display: inline-flex; }
+    .nav-pills-custom .nav-link { border: none; color: #64748b; padding: 6px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; transition: 0.3s;}
+    .nav-pills-custom .nav-link.active { background: #ff7e42 !important; color: #fff !important; }
+    .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .sp-approved { background: #dcfce7; color: #15803d; }
+    .sp-pending { background: #f1f5f9; color: #64748b; }
+    .sp-rejected { background: #fee2e2; color: #b91c1c; }
+    i.fas.fa-users.text-dark.small::before{color:#057db0;}
+    span.stat-badge.badge-orange {background: #fb823326; color: #fb8233;}
+    /*D:\laragon\www\Teamiy-UI\resources\views\admin\dashboard.blade.php Code End*/
+    

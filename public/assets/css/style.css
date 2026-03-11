@@ -2588,8 +2588,8 @@ textarea.form-control{height: inherit!important;}
   box-shadow: none;
 }
 .form-check-input:checked {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: #057db0;
+  border-color: #057db0;
 }
 .form-check-input:checked[type=checkbox] {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
@@ -3446,27 +3446,27 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 }
 
 .btn-outline-info {
-  color: #66d1d1;
-  border-color: #66d1d1;
+  color: #057db0;
+  border-color: #057db0;
 }
 .btn-outline-info:hover {
-  color: #232323;
-  background-color: #66d1d1;
-  border-color: #66d1d1;
+  color: #fff;
+  background-color: #057db0;
+  border-color: #057db0;
 }
 .btn-check:focus + .btn-outline-info, .btn-outline-info:focus {
   box-shadow: 0 0 0 0 rgba(102, 209, 209, 0.5);
 }
 .btn-check:checked + .btn-outline-info, .btn-check:active + .btn-outline-info, .btn-outline-info:active, .btn-outline-info.active, .btn-outline-info.dropdown-toggle.show {
   color: #232323;
-  background-color: #66d1d1;
-  border-color: #66d1d1;
+  background-color: #057db0;
+  border-color: #057db0;
 }
 .btn-check:checked + .btn-outline-info:focus, .btn-check:active + .btn-outline-info:focus, .btn-outline-info:active:focus, .btn-outline-info.active:focus, .btn-outline-info.dropdown-toggle.show:focus {
   box-shadow: 0 0 0 0 rgba(102, 209, 209, 0.5);
 }
 .btn-outline-info:disabled, .btn-outline-info.disabled {
-  color: #66d1d1;
+  color: #057db0;
   background-color: transparent;
 }
 
@@ -3572,7 +3572,7 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 
 .btn-link {
   font-weight: 400;
-  color: var(--primary-color);
+  color: #057db0;
   text-decoration: none;
 }
 .btn-link:hover {
@@ -3881,7 +3881,7 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 .dropdown-item.active, .tt-menu .active.tt-suggestion, .dropdown-item:active, .tt-menu .tt-suggestion:active {
   color: #fff;
   text-decoration: none;
-  background-color: var(--primary-color);
+  background-color: #057db0;
 }
 .dropdown-item.disabled, .tt-menu .disabled.tt-suggestion, .dropdown-item:disabled, .tt-menu .tt-suggestion:disabled {
   color: #aeb7c5;
@@ -3895,7 +3895,7 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 
 .dropdown-menu a{color:#7987a1;}
 
-.dropdown-menu a:hover{color:var(--primary-color);}
+.dropdown-menu a:hover{color:#057db0;}
 
 .dropdown-header {
   display: block;
@@ -3926,7 +3926,7 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 }
 .dropdown-menu-dark .dropdown-item.active, .dropdown-menu-dark .tt-menu .active.tt-suggestion, .tt-menu .dropdown-menu-dark .active.tt-suggestion, .dropdown-menu-dark .dropdown-item:active, .dropdown-menu-dark .tt-menu .tt-suggestion:active, .tt-menu .dropdown-menu-dark .tt-suggestion:active {
   color: #fff;
-  background-color: var(--primary-color);
+  background-color: #057db0;
 }
 .dropdown-menu-dark .dropdown-item.disabled, .dropdown-menu-dark .tt-menu .disabled.tt-suggestion, .tt-menu .dropdown-menu-dark .disabled.tt-suggestion, .dropdown-menu-dark .dropdown-item:disabled, .dropdown-menu-dark .tt-menu .tt-suggestion:disabled, .tt-menu .dropdown-menu-dark .tt-suggestion:disabled {
   color: #aeb7c5;
@@ -4116,7 +4116,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
-  color: var(--primary-color);
+  color: #057db0;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -4172,7 +4172,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: var(--primary-color);
+  background-color: #057db0;
 }
 
 .nav-fill > .nav-link,
@@ -4974,7 +4974,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 .page-link {
   position: relative;
   display: block;
-  color: var(--primary-color);
+  color: #057db0;
   background-color: #fff;
   border: 1px solid #dee2e6;
   border-radius: 5px;
@@ -5004,8 +5004,8 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 .page-item.active .page-link, .page-item:hover .page-link {
   z-index: 3;
   color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: #057db0;
+  border-color: #057db0;
 }
 
 .page-link {
@@ -8157,7 +8157,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 /* rtl:end:remove */
 .text-primary {
   --bs-text-opacity: 1;
-  color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+  color: #057db0 !important;
 }
 
 .text-secondary {
@@ -8182,7 +8182,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 
 .text-danger {
   --bs-text-opacity: 1;
-  color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
+  color:#057db0 !important;
 }
 
 .text-light {
@@ -8273,7 +8273,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 
 .bg-danger {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-danger-rgb), var(--bs-bg-opacity)) !important;
+  background-color: #fb8233 !important;
 }
 
 .bg-light {
@@ -25206,7 +25206,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: var(--primary-color);
+  background-color: #057db0;
 }
 
 .select2-container .select2-selection--single,
@@ -25241,9 +25241,9 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-
   padding: 0;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: var(--primary-color);
+  background-color: #057db0;
   color: #fff;
-  border-color: var(--primary-color);
+  border-color: #057db0;
   padding: 1px 8px 1px 5px;
     border-radius: 10px;
   margin-top: 5px;

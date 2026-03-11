@@ -403,200 +403,336 @@
 @section('title', __('index.asset_types'))
 
 @section('main-content')
-<section class="content" style="padding: 10px 20px;">
-    @include('admin.section.flash_message')
+<section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
+@include('admin.section.flash_message')
 
-    {{-- Header Section --}}
-    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
-        <div class="page-identity">
-            <h2 style="color: #057db0;">{{ __('index.asset_types') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="box" style="width: 14px; vertical-align: middle;"></i> Asset Categorization & Management
-            </p>
-        </div>
-        
-        <div class="d-flex gap-2">
-            @can('create_type')
-                <button class="btn create-assetType d-flex align-items-center gap-2" 
-                        style="background: #ff851b; color: white; border: none; border-radius: 12px; padding: 10px 20px; font-weight: 600; transition: all 0.3s ease;">
-                    <i data-feather="plus" style="width: 20px;"></i>
-                    <span>{{ __('index.add_asset_types') }}</span>
-                </button>
-            @endcan
-        </div>
+{{-- Header Section --}}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+    <div class="page-identity">
+        <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.asset_types') }}</h2>
+        @include('admin.assetManagement.types.common.breadcrumb')
     </div>
 
-    {{-- Cards Grid --}}
-    <div class="row g-4 justify-content-start">
-        @forelse($assetTypeLists as $key => $value)
-            <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
-                <div class="branch-master-card">
-                    <div class="card-glossy-header">
-                        <div class="header-overlay"></div>
-                        <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
-                            <div class="branch-icon-square">
-                                <i data-feather="package"></i>
-                            </div>
-                            <label class="switch-modern">
-                                <input class="toggleStatus" href="{{route('admin.asset-types.toggle-status',$value->id)}}"
-                                       type="checkbox" {{($value->is_active) == 1 ? 'checked' : ''}}>
-                                <span class="slider-modern round"></span>
-                            </label>
-                        </div>
-                        
-                        <h4 class="branch-name-display text-truncate" title="{{ $value->name }}">{{ ucfirst($value->name) }}</h4>
-                        
-                        <div class="d-flex align-items-center justify-content-between position-relative mt-2" style="z-index: 2;">
-                            <span class="branch-ref-pill">Type ID: #{{ $value->id }}</span>
-                            <div class="d-flex gap-1">
-                                @can('edit_type')
-                                    <a href="javascript:void(0)" class="btn-header-action edit-assetType" data-id="{{ $value->id }}" data-href="{{ route('admin.asset-types.edit', $value->id) }}">
-                                        <i data-feather="edit-3"></i>
-                                    </a>
-                                @endcan
-                                @can('delete_type')
-                                    <a href="javascript:void(0)" data-href="{{route('admin.asset-types.delete',$value->id)}}" class="btn-header-action deleteAssetType">
-                                        <i data-feather="trash-2"></i>
-                                    </a>
-                                @endcan
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-white-body">
-                        <div class="info-listing mb-0">
-                            <div class="info-item-box border-0 pb-0">
-                                <div class="icon-circle"><i data-feather="layers"></i></div>
-                                <div class="text-content">
-                                    <small>{{ __('index.asset_item_count') }}</small>
-                                    <p class="mb-0">
-                                        <a href="{{route('admin.asset-types.show',$value->id)}}" style="color: #057db0; font-weight: 700; text-decoration: none;">
-                                            {{$value->assets_count}} Items
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-12 text-center py-5">
-                <p class="text-muted"><b>{{ __('index.no_records_found') }}</b></p>
-            </div>
-        @endforelse
-    </div>
-</section>
-
-{{-- Create/Edit Modal --}}
-<div class="modal fade" id="assetTypeModal" tabindex="-1" aria-labelledby="assetTypeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
-            <div class="modal-header d-block" style="background: #057db0; color: white; border: none; padding: 25px;">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="modal-identity d-flex align-items-center gap-3">
-                        <div class="header-icon-box" style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 12px;">
-                            <i data-feather="box" style="width: 24px; height: 24px;"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title mb-0 fw-bold" id="assetTypeModalLabel">{{ __('index.add_asset_types') }}</h5>
-                            <p class="mb-0 small text-white-50">Manage your asset categorization below.</p>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-
-            <div class="modal-body p-4">
-                <form id="assetTypeForm" method="POST">
-                    @csrf
-                    <input type="hidden" name="_method" id="formMethod" value="POST">
-
-                    <div class="row">
-                        @if(!isset(auth()->user()->branch_id))
-                            <div class="col-12 mb-3">
-                                <label class="form-label fw-bold small text-muted">{{ __('index.branch') }} <span class="text-danger">*</span></label>
-                                <select class="form-select" id="branch_id" name="branch_id" style="border-radius: 10px; padding: 12px; background-color: #f8fafc;">
-                                    <option selected disabled>{{ __('index.select_branch') }}</option>
-                                    @if(isset($companyDetail))
-                                        @foreach($companyDetail->branches()->get() as $branch)
-                                            <option value="{{$branch->id}}">{{ucfirst($branch->name)}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        @endif
-
-                        <div class="col-12 mb-4">
-                            <label class="form-label fw-bold small text-muted">{{ __('index.name') }}<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" required placeholder="Enter Assets Name" style="border-radius: 10px; padding: 12px; background-color: #f8fafc;">
-                        </div>
-                    </div>
-
-                    {{-- Right Aligned Buttons with Orange Cancel --}}
-                    <div class="d-flex justify-content-end gap-2 mt-2">
-                         <button type="submit" class="btn btn-primary px-4 py-2" style="background: #057db0; border: none; border-radius: 10px; font-weight: 600;">
-                            <span id="submitButtonText">{{ __('index.save') }}</span>
-                        </button>
-                        <button type="button" class="btn px-4 py-2" data-bs-dismiss="modal" 
-                                style="background: #ff851b; color: white; border: none; border-radius: 10px; font-weight: 600;">
-                            {{ __('index.cancel') }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div class="d-flex gap-2">
+        @can('create_type')
+        <button class="btn create-assetType d-flex align-items-center gap-2"
+            style="background: #ff851b; color: white; border: none; border-radius: 12px; padding: 12px 24px; font-weight: 600;">
+            <i data-feather="plus" style="width: 20px;"></i>
+            <span>{{ __('index.add_asset_types') }}</span>
+        </button>
+        @endcan
     </div>
 </div>
 
+{{-- Glass Filter Panel --}}
+<div class="glass-filter-panel mb-5 shadow-sm border-0"
+    style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius:20px; padding:25px; border:1px solid #ffffff;">
+
+<form action="{{ route('admin.asset-types.index') }}" method="get" class="row g-3 align-items-end">
+
+    @if(!isset(auth()->user()->branch_id))
+    <div class="col-xxl-4 col-xl-4 col-md-6">
+        <label class="form-label fw-bold text-muted small"
+            style="letter-spacing:0.5px; text-transform:uppercase;">
+            {{ __('index.branch') }}
+        </label>
+
+        <select class="form-select shadow-none modern-select"
+            id="branch"
+            name="branch_id"
+            style="height:48px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px;">
+
+            <option {{ !isset($filterParameters['branch_id']) || old('branch_id') ? 'selected': ''}} disabled>
+                {{ __('index.select_branch') }}
+            </option>
+
+            @if(isset($companyDetail))
+            @foreach($companyDetail->branches()->get() as $branch)
+
+            <option value="{{$branch->id}}"
+                {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
+
+                {{ucfirst($branch->name)}}
+
+            </option>
+
+            @endforeach
+            @endif
+
+        </select>
+    </div>
+    @endif
+
+
+    <div class="col-xxl-4 col-xl-4 col-md-6">
+
+        <label class="form-label fw-bold text-muted small"
+            style="letter-spacing:0.5px; text-transform:uppercase;">
+            {{ __('index.type') }}
+        </label>
+
+        <div style="position:relative;">
+
+            <i data-feather="package"
+                style="position:absolute;left:15px;top:50%;transform:translateY(-50%);width:16px;color:#94a3b8;"></i>
+
+            <input type="text"
+                class="form-control shadow-none"
+                name="type"
+                id="title"
+                value="{{ $filterParameters['type'] }}"
+                placeholder="Search asset type..."
+                style="height:48px;border-radius:12px;border:1px solid #e2e8f0;padding-left:45px;font-size:14px;">
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xxl-4 col-xl-4 col-md-12">
+
+        <div class="d-flex gap-2">
+
+            <button type="submit"
+                class="btn w-100"
+                style="background:#057db0;color:white;height:48px;border-radius:12px;font-weight:600;">
+
+                {{ __('index.filter') }}
+
+            </button>
+
+            <a href="{{ route('admin.asset-types.index') }}"
+                class="btn w-100 text-decoration-none d-flex align-items-center justify-content-center"
+                style="height:48px;border:1px solid #e2e8f0;border-radius:12px;color:#64748b;background:#fff;font-weight:600;">
+
+                {{ __('index.reset') }}
+
+            </a>
+
+        </div>
+
+    </div>
+
+</form>
+</div>
+
+
+{{-- Cards Grid --}}
+<div class="row g-4 justify-content-start">
+@forelse($assetTypeLists as $key => $value)
+
+<div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
+
+<div class="branch-master-card">
+
+<div class="card-glossy-header">
+
+<div class="header-overlay"></div>
+
+<div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
+
+<div class="branch-icon-square">
+<i data-feather="package"></i>
+</div>
+
+<label class="switch-modern">
+<input class="toggleStatus"
+href="{{route('admin.asset-types.toggle-status',$value->id)}}"
+type="checkbox"
+{{($value->is_active) == 1 ? 'checked' : ''}}>
+<span class="slider-modern round"></span>
+</label>
+
+</div>
+
+<h4 class="branch-name-display text-truncate" title="{{ $value->name }}">
+{{ ucfirst($value->name) }}
+</h4>
+
+<div class="d-flex align-items-center justify-content-between position-relative mt-2" style="z-index: 2;">
+
+<span class="branch-ref-pill">
+Type ID: #{{ $value->id }}
+</span>
+
+<div class="d-flex gap-1">
+
+@can('edit_type')
+
+<a href="javascript:void(0)"
+class="btn-header-action edit-assetType"
+data-id="{{ $value->id }}"
+data-href="{{ route('admin.asset-types.edit', $value->id) }}">
+
+<i data-feather="edit-3"></i>
+
+</a>
+
+@endcan
+
+
+@can('delete_type')
+
+<a href="javascript:void(0)"
+data-href="{{route('admin.asset-types.delete',$value->id)}}"
+class="btn-header-action deleteAssetType">
+
+<i data-feather="trash-2"></i>
+
+</a>
+
+@endcan
+
+</div>
+
+</div>
+</div>
+
+
+<div class="card-white-body">
+
+<div class="info-listing mb-0">
+
+<div class="info-item-box border-0 pb-0">
+
+<div class="icon-circle">
+<i data-feather="layers"></i>
+</div>
+
+<div class="text-content">
+
+<small>{{ __('index.asset_item_count') }}</small>
+
+<p class="mb-0">
+
+<a href="{{route('admin.asset-types.show',$value->id)}}"
+style="color:#057db0;font-weight:700;text-decoration:none;">
+
+{{$value->assets_count}} Items
+
+</a>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+@empty
+
+<div class="col-12 text-center py-5">
+<p class="text-muted"><b>{{ __('index.no_records_found') }}</b></p>
+</div>
+
+@endforelse
+</div>
+
+</section>
+
 <style>
-    .create-assetType:hover { background: #e67616 !important; transform: translateY(-2px); }
-    .btn-header-action { background: rgba(255, 255, 255, 0.2); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3); }
-    .slider-modern { background-color: rgba(255,255,255,0.3); }
-    input:checked + .slider-modern { background-color: #ff851b; }
+
+.create-assetType:hover{
+background:#e67616 !important;
+transform:translateY(-2px);
+}
+
+.btn-header-action{
+background:rgba(255,255,255,0.2);
+color:white;
+width:32px;
+height:32px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:8px;
+backdrop-filter:blur(4px);
+border:1px solid rgba(255,255,255,0.3);
+}
+
+.slider-modern{
+background-color:rgba(255,255,255,0.3);
+}
+
+input:checked + .slider-modern{
+background-color:#ff851b;
+}
+
 </style>
+
 @endsection
 
+
 @section('scripts')
-    @include('admin.assetManagement.types.common.scripts')
-    <script>
-        $(document).ready(function() {
-            feather.replace();
 
-            $('.toggleStatus').change(function (event) {
-                event.preventDefault();
-                var href = $(this).attr('href');
-                var isChecked = $(this).prop('checked');
-                Swal.fire({
-                    title: 'Update Status?',
-                    text: 'Change the visibility of this asset type.',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Update!',
-                    cancelButtonText: 'Cancel',
-                    confirmButtonColor: '#057db0',
-                    cancelButtonColor: '#ff851b', // Orange Cancel in SweetAlert
-                }).then((result) => {
-                    if (result.isConfirmed) window.location.href = href;
-                    else $(this).prop('checked', !isChecked);
-                });
-            });
+@include('admin.assetManagement.types.common.scripts')
 
-            $('.deleteAssetType').click(function (event) {
-                event.preventDefault();
-                let href = $(this).data('href');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This action cannot be undone!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, keep it',
-                    confirmButtonColor: '#ef4444',
-                    cancelButtonColor: '#ff851b' // Orange Cancel in SweetAlert
-                }).then((result) => {
-                    if (result.isConfirmed) window.location.href = href;
-                });
-            });
-        });
-    </script>
+<script>
+
+$(document).ready(function(){
+
+feather.replace();
+
+$('.toggleStatus').change(function(event){
+
+event.preventDefault();
+
+var href=$(this).attr('href');
+var isChecked=$(this).prop('checked');
+
+Swal.fire({
+title:'Update Status?',
+text:'Change the visibility of this asset type.',
+icon:'question',
+showCancelButton:true,
+confirmButtonText:'Yes, Update!',
+cancelButtonText:'Cancel',
+confirmButtonColor:'#057db0',
+cancelButtonColor:'#ff851b'
+}).then((result)=>{
+
+if(result.isConfirmed){
+window.location.href=href;
+}else{
+$(this).prop('checked',!isChecked);
+}
+
+});
+
+});
+
+$('.deleteAssetType').click(function(event){
+
+event.preventDefault();
+
+let href=$(this).data('href');
+
+Swal.fire({
+title:'Are you sure?',
+text:"This action cannot be undone!",
+icon:'warning',
+showCancelButton:true,
+confirmButtonText:'Yes, delete it!',
+cancelButtonText:'No, keep it',
+confirmButtonColor:'#ef4444',
+cancelButtonColor:'#ff851b'
+}).then((result)=>{
+if(result.isConfirmed){
+window.location.href=href;
+}
+});
+
+});
+
+});
+
+</script>
+
 @endsection

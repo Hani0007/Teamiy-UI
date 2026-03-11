@@ -6,8 +6,11 @@
 
 @section('main-content')
 <section class="content" style="padding: 10px 20px;">
-    @include('admin.section.flash_message')
-
+      @include('admin.section.flash_message')
+    <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">Asset Returns</h2>
+            @include('admin.leaveType.common.breadcrumb')
+        </div>
     {{-- Tabs Navigation --}}
     <div class="custom-tabs-container mb-4  border-bottom pb-2">
         <ul class="nav nav-pills gap-2" id="assetTab" role="tablist">

@@ -4,33 +4,86 @@
 @section('title', __('index.resignation'))
 
 @section('main-content')
-<section class="content" style="padding: 10px 20px;">
+<section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')
 
-    {{-- Header Section --}}
-    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+    {{-- 1. Modern Breadcrumbs & Top Header --}}
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
-            <h2 style="color: #057db0;">{{ __('index.resignation') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="file-text" style="width: 14px; vertical-align: middle;"></i> Employee Resignation Management
-            </p>
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.resignation') }}</h2>
+            @include('admin.resignation.common.breadcrumb')
         </div>
-        
-        @can('create_resignation')
-            <a href="{{ route('admin.resignation.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
-                    <i data-feather="plus" style="width: 20px;"></i>
-                    <span>{{ __('index.add_resignation') }}</span>
-                </button>
-            </a>
-        @endcan
+        <a href="{{ route('admin.resignation.create') }}" style="text-decoration: none;">
+            <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
+                <i data-feather="plus" style="width: 20px;"></i>
+                <span>{{ __('index.add_resignation') }}</span>
+            </button>
+        </a>
+    </div>
+
+    {{-- 2. Glass-morphism Filter Panel --}}
+    <div class="glass-filter-panel mb-5 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; border: 1px solid #ffffff;">
+        <form action="{{route('admin.resignation.index')}}" method="get" class="row g-3 align-items-end">
+            
+            @if(!isset(auth()->user()->branch_id))
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.branch') }}</label>
+                    <select class="form-select shadow-none modern-select" id="branch_id" name="branch_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                        <option selected disabled>{{ __('index.select_branch') }}</option>
+                        @if(isset($companyDetail))
+                            @foreach($companyDetail->branches()->get() as $key => $branch)
+                                <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
+                                    {{ucfirst($branch->name)}}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            @endif
+
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.department') }}</label>
+                <select class="form-select shadow-none modern-select" name="department_id" id="department_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    <option selected disabled>{{ __('index.select_department') }}</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.employee') }}</label>
+                <select class="form-select shadow-none modern-select" name="employee_id" id="employee_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    <option selected disabled>{{ __('index.select_employee') }}</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.resignation_date') }}</label>
+                <div>
+                    @if(\App\Helpers\AppHelper::ifDateInBsEnabled())
+                        <input type="text" id="nepali-datepicker-from" name="resignation_date" value="{{ $filterParameters['resignation_date'] ?? '' }}" placeholder="mm/dd/yyyy" class="form-control nepaliDate shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    @else
+                        <input type="date" name="resignation_date" value="{{ $filterParameters['resignation_date'] ?? '' }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn w-100" style="background: #057db0; color: white; height: 48px; border-radius: 12px; font-weight: 600; border: none; transition: all 0.3s ease;">
+                        {{ __('index.filter') }}
+                    </button>
+                    <a href="{{route('admin.resignation.index')}}" class="btn w-100 d-flex align-items-center justify-content-center" style="height: 48px; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; background: #fff; font-weight: 600; text-decoration: none;">
+                        {{ __('index.reset') }}
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
 
     {{-- Cards Grid --}}
     <div class="row g-4 justify-content-start">
         @php
             $statusTheme = [
-                ResignationStatusEnum::approved->value  => ['bg' => '#057db01', 'text' => '#fff'],
+                ResignationStatusEnum::approved->value  => ['bg' => '#057db0', 'text' => '#fff'],
                 ResignationStatusEnum::onReview->value  => ['bg' => '#0ea5e9', 'text' => '#fff'],
                 ResignationStatusEnum::pending->value   => ['bg' => '#FB8233', 'text' => '#fff'],
                 ResignationStatusEnum::cancelled->value => ['bg' => '#ef4444', 'text' => '#fff'],
@@ -70,7 +123,6 @@
                         </div>
                         <h4 class="branch-name-display">{{ $value->employee?->name }}</h4>
                         
-                        {{-- ID and Eye Icon (View) moved here --}}
                         <div class="d-flex justify-content-between align-items-center mt-2 position-relative" style="z-index:2;">
                             <span class="branch-ref-pill">Resignation ID: #{{$value->id}}</span>
                             @can('show_resignation')

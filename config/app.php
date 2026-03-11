@@ -84,7 +84,7 @@ return [
 
     'locale' => 'en',
 
-    'available_locales' => ['en', 'fr', 'it', 'it', 'de'],
+    'available_locales' => ['en', 'fr', 'it', 'de'],
 
     /*
     |--------------------------------------------------------------------------

@@ -12,6 +12,8 @@ use App\Repositories\LeaveRepository;
 use App\Repositories\LeaveTypeRepository;
 use App\Requests\Leave\LeaveTypeRequest;
 use App\Traits\CustomAuthorizesRequests;
+use Illuminate\Support\Facades\Log;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -75,6 +77,9 @@ class LeaveTypeController extends Controller
 
     public function store(LeaveTypeRequest $request)
     {
+        Log::info('Update Method Called', [
+            'data' => $request->all()
+        ]);
         if (auth('admin')->user() || Gate::allows('leave_type_create') || Gate::allows('access_admin_leave')) {
             try {
                 $validatedData = $request->validated();
@@ -113,16 +118,30 @@ class LeaveTypeController extends Controller
     }
     public function update(LeaveTypeRequest $request, $id)
     {
+        // dd($request);
+     Log::info('data', $request->all()); 
+        
         if (auth('admin')->user() || Gate::allows('leave_type_edit') || Gate::allows('access_admin_leave')) {
 
             try {
                 $validatedData = $request->validated();
                 $validatedData['company_id'] = AppHelper::getAuthUserCompanyId();
+                Log::info('Validated Data', $request->validated());
                 $leaveDetail = $this->leaveTypeRepo->findLeaveTypeDetailById($id);
                 if (!$leaveDetail) {
                     throw new Exception(__('message.leave_type_not_found'), 404);
                 }
+                if(!$validatedData) {
+                    throw new Exception(__('message.validateddata_not_found'), 404);
+                }
                 $this->leaveTypeRepo->update($leaveDetail, $validatedData);
+                
+                Log::info('Leave Update', [
+                    'id' => $id,
+                    'name' => $request->name,
+                    'leave_paid' => $request->leave_paid,
+                    'leave_allocated' => $request->leave_allocated
+                ]);
                 return redirect()
                     ->route('admin.leaves.index')
                     ->with('success', __('message.leave_type_updated'));

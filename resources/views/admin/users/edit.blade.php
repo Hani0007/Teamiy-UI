@@ -15,7 +15,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.users.common.breadcrumb')
     {{-- Blue Header (Teamy Top Header) --}}
     <div class="teamy-top-header">
         <div>

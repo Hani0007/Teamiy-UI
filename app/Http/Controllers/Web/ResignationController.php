@@ -86,7 +86,15 @@ class ResignationController extends Controller
             $with = ['branches:id,name'];
             $select = ['id', 'name'];
             $companyDetail = $this->companyRepository->getCompanyDetail($select, $with);
-            return view($this->view.'create', compact('resignationStatus','companyDetail','isBsEnabled'));
+            
+            // Initialize filter parameters for JavaScript
+            $filterParameters = [
+                'branch_id' => null,
+                'department_id' => null,
+                'employee_id' => null,
+            ];
+            
+            return view($this->view.'create', compact('resignationStatus','companyDetail','isBsEnabled','filterParameters'));
         }catch(Exception $exception){
             return redirect()->back()->with('danger', $exception->getMessage());
         }

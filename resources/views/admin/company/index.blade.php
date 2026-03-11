@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('title', __('index.company_profile'))
+@section('title', __('company_profile'))
 
-{{--@section('nav-head', __('index.company_profile'))--}}
+{{--@section('nav-head', __('company_profile'))--}}
 
 @section('main-content')
 

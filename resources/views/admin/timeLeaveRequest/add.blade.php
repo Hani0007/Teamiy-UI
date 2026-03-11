@@ -20,7 +20,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.timeleaveRequest.common.breadcrumb')
     <div class="teamy-top-header">
         <div>
             <h2>{{ __('index.time_leave_request') }}</h2>

@@ -124,8 +124,8 @@
                 {{ strtoupper(substr($user->name ?? 'T', 0, 1)) }}{{ strtoupper(substr($user->name ?? 'A', 1, 1)) }}
             </div>
             <div class="user-info-text">
-                <span class="u-name">{{ $user->name ?? 'teamiy Admin' }}</span>
-                <span class="u-role">{{ $user->role->name ?? 'Super Admin' }}</span>
+                <span class="u-name">{{ $user->name ?? __('admin_name') }}</span>
+                <span class="u-role">{{ $user->role->name ?? __('super_admin') }}</span>
             </div>
         </div>
     </div>
