@@ -481,27 +481,26 @@ class AdminController extends Controller
 
 
         if ($request->hasFile('avatar')) {
-
-            if ($admin->avatar && file_exists(public_path(\App\Models\User::AVATAR_UPLOAD_PATH . $admin->avatar))) {
-
-                unlink(public_path(\App\Models\User::AVATAR_UPLOAD_PATH . $admin->avatar));
-
+ 
+            if ($admin->avatar && file_exists(public_path(\App\Models\Admin::AVATAR_UPLOAD_PATH . $admin->avatar))) {
+ 
+                unlink(public_path(\App\Models\Admin::AVATAR_UPLOAD_PATH . $admin->avatar));
+ 
             }
-
-
-
+ 
+ 
+ 
             $file = $request->file('avatar');
-
+ 
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-            $file->move(public_path(\App\Models\User::AVATAR_UPLOAD_PATH), $filename);
-
-
-
+ 
+            $file->move(public_path(\App\Models\Admin::AVATAR_UPLOAD_PATH), $filename);
+ 
+ 
+ 
             $admin->avatar = $filename;
-
+ 
         }
-
 
 
         $admin->save();

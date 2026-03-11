@@ -157,6 +157,91 @@ class DashboardRepository
 
     }
 
+    public function getEmployeeStats($companyId)
+    {
+        $currentDate = AppHelper::getCurrentDateInYmdFormat();
+        
+        // Simple queries to get real employee statistics
+        $totalEmployees = DB::table('users')
+            ->where('company_id', $companyId)
+            ->whereNull('deleted_at')
+            ->count();
+
+        $totalBranches = DB::table('branches')
+            ->where('company_id', $companyId)
+            ->count();
+
+        $todayPresents = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->whereDate('attendances.attendance_date', $currentDate)
+            ->whereNotNull('attendances.check_in_at')
+            ->distinct('attendances.user_id')
+            ->count();
+
+        $todayAbsents = DB::table('users')
+            ->leftJoin('attendances', function($join) use ($currentDate) {
+                $join->on('users.id', '=', 'attendances.user_id')
+                     ->whereDate('attendances.attendance_date', $currentDate);
+            })
+            ->where('users.company_id', $companyId)
+            ->whereNull('attendances.id')
+            ->whereNull('users.deleted_at')
+            ->count();
+
+        $todayLates = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->whereDate('attendances.attendance_date', $currentDate)
+            ->whereNotNull('attendances.check_in_at')
+            ->whereRaw('TIME(attendances.check_in_at) > "09:00:00"')
+            ->distinct('attendances.user_id')
+            ->count();
+
+        return [
+            'total_employees' => $totalEmployees,
+            'total_branches' => $totalBranches,
+            'today_presents' => $todayPresents,
+            'today_absents' => $todayAbsents,
+            'today_lates' => $todayLates
+        ];
+    }
+
+    public function getProjectStats($companyId)
+    {
+        // Fetch real project statistics
+        $notStarted = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'not_started')
+            ->count();
+
+        $inProgress = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'in_progress')
+            ->count();
+
+        $late = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'late')
+            ->count();
+
+        $completed = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'completed')
+            ->count();
+
+        return [
+            'not_started' => $notStarted,
+            'in_progress' => $inProgress,
+            'late' => $late,
+            'completed' => $completed
+        ];
+    }
+
 }
 
 

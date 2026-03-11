@@ -5,6 +5,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
+    @include('admin.router.common.breadcrumb')
     {{-- Blue Header --}}
     <div class="teamy-top-header">
         <div>

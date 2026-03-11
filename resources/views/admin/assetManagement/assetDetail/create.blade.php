@@ -44,7 +44,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.assetManagement.assetDetail.common.breadcrumb')
     {{-- Top Header --}}
     <div class="teamy-top-header">
         <div>

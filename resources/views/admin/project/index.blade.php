@@ -16,7 +16,8 @@
     <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
         <div class="page-identity">
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.project') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px; margin-top: 5px;">
+            @include('admin.project.common.breadcrumb')
+            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
                 <i data-feather="grid" style="width: 14px; vertical-align: middle;"></i> Organization Projects
             </p>
         </div>

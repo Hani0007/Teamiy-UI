@@ -18,6 +18,7 @@
     <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
         <div class="page-identity">
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.tasks') }}</h2>
+            @include('admin.task.common.breadcrumb')
             <p style="color: #94a3b8; font-weight: 500; font-size: 12px; margin-top: 5px;">
                 <i data-feather="check-square" style="width: 14px; vertical-align: middle;"></i> Task Management System
             </p>

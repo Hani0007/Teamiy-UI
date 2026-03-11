@@ -20,25 +20,55 @@
     <div class="row g-3">
         @php
             $topStats = [
-                ['l' => 'Total Employees', 'v' => '183', 'd' => '+12%', 's' => 'Employee count includes all staff'],
-                ['l' => 'Branches', 'v' => '15', 'd' => '+05%', 's' => 'Total branches in the company'],
-                ['l' => 'Today Presents', 'v' => '158', 'd' => '+54%', 's' => 'Total employees presents today'],
-                ['l' => 'Today Absents', 'v' => '25', 'd' => '+11%', 's' => 'Total employees absent today'],
-                ['l' => 'Today Lates', 'v' => '06', 'd' => '-04%', 's' => 'Total employees late today']
+                [
+                    'label' => 'Total Employees', 
+                    'value' => $employeeStats['total_employees'] ?? 0, 
+                    'percentage' => '+12%', 
+                    'description' => 'Employee count includes all staff',
+                    'icon' => 'fas fa-users'
+                ],
+                [
+                    'label' => 'Branches', 
+                    'value' => $employeeStats['total_branches'] ?? 0, 
+                    'percentage' => '+05%', 
+                    'description' => 'Total branches in company',
+                    'icon' => 'fas fa-building'
+                ],
+                [
+                    'label' => 'Today Presents', 
+                    'value' => $employeeStats['today_presents'] ?? 0, 
+                    'percentage' => '+54%', 
+                    'description' => 'Total employees presents today',
+                    'icon' => 'fas fa-user-check'
+                ],
+                [
+                    'label' => 'Today Absents', 
+                    'value' => $employeeStats['today_absents'] ?? 0, 
+                    'percentage' => '+11%', 
+                    'description' => 'Total employees absent today',
+                    'icon' => 'fas fa-user-times'
+                ],
+                [
+                    'label' => 'Today Lates', 
+                    'value' => $employeeStats['today_lates'] ?? 0, 
+                    'percentage' => '-04%', 
+                    'description' => 'Total employees late today',
+                    'icon' => 'fas fa-clock'
+                ]
             ];
         @endphp
         @foreach($topStats as $ts)
         <div class="col">
             <div class="stat-card h-100">
                 <div class="stat-header">
-                    <div class="stat-icon-box"><i class="fas fa-users text-dark small"></i></div>
+                    <div class="stat-icon-box"><i class="{{ $ts['icon'] }} text-dark small"></i></div>
                     <button class="btn-details-orange">Details ></button>
                 </div>
-                <div class="stat-label">{{ $ts['l'] }}</div>
-                <span class="stat-subtext">{{ $ts['s'] }}</span>
+                <div class="stat-label">{{ $ts['label'] }}</div>
+                <span class="stat-subtext">{{ $ts['description'] }}</span>
                 <div class="d-flex align-items-center gap-2">
-                    <div class="stat-value">{{ $ts['v'] }}</div>
-                    <span class="stat-badge {{ str_contains($ts['d'], '-') ? 'badge-red' : 'badge-orange' }}">{{ $ts['d'] }}</span>
+                    <div class="stat-value">{{ $ts['value'] }}</div>
+                    <span class="stat-badge {{ str_contains($ts['percentage'], '-') ? 'badge-red' : 'badge-orange' }}">{{ $ts['percentage'] }}</span>
                     <small class="text-muted" style="font-size: 9px;">vs Last Month</small>
                 </div>
             </div>
@@ -50,10 +80,10 @@
         <div class="section-header">
             <h5 class="fw-bold mb-0">Projects</h5>
             <div class="d-flex gap-3 small fw-bold">
-                <span><span class="badge bg-secondary rounded-circle me-1">5</span> Not Started</span>
-                <span><span class="badge bg-warning rounded-circle me-1 text-dark">6</span> In Progress</span>
-                <span><span class="badge bg-danger rounded-circle me-1">3</span> Late</span>
-                <span><span class="badge bg-success rounded-circle me-1">26</span> Completed</span>
+                <span><span class="badge bg-secondary rounded-circle me-1">{{ $projectStats['not_started'] ?? 0 }}</span> Not Started</span>
+                <span><span class="badge bg-warning rounded-circle me-1 text-dark">{{ $projectStats['in_progress'] ?? 0 }}</span> In Progress</span>
+                <span><span class="badge bg-danger rounded-circle me-1">{{ $projectStats['late'] ?? 0 }}</span> Late</span>
+                <span><span class="badge bg-success rounded-circle me-1">{{ $projectStats['completed'] ?? 0 }}</span> Completed</span>
             </div>
         </div>
         <div class="table-responsive">
@@ -62,6 +92,44 @@
                     <tr><th>Name</th><th>Status</th><th>About</th><th>Members</th><th>Progress</th><th></th></tr>
                 </thead>
                 <tbody>
+                    @if($recentProjects->count() > 0)
+                    @foreach($recentProjects as $project)
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="project-avatar me-3"></div>
+                                <div>
+                                    <div class="fw-bold">{{ $project->name ?? 'Website Redesign' }}</div>
+                                    <small class="text-muted">{{ $project->client_name ?? 'techverdi.com' }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : 'sp-pending bg-soft-secondary text-muted') }}">
+                                {{ $project->status == 'completed' ? 'Done' : ($project->status == 'in_progress' ? 'In Progress' : 'Not Started') }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ $project->name ?? 'Home Page Redesign' }}</div>
+                            <small class="text-muted">{{ Str::limit($project->description ?? 'Redesign website homepage in wordpress...', 50) }}...</small>
+                        </td>
+                        <td>
+                            <div class="member-group d-flex">
+                                <div class="member-count">+{{ $project->members ?? 2 }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="pg-bar">
+                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->progress ?? 0 }}%"></div>
+                                </div>
+                                <span class="fw-bold">{{ $project->progress ?? 0 }}%</span>
+                            </div>
+                        </td>
+                        <td><i class="fas fa-ellipsis-v text-muted"></i></td>
+                    </tr>
+                    @endforeach
+                    @else
                     @for($i=1; $i<=3; $i++)
                     <tr>
                         <td>
@@ -88,6 +156,7 @@
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
                     @endfor
+                    @endif
                 </tbody>
             </table>
         </div>

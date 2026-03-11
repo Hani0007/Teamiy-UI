@@ -19,8 +19,10 @@
     <section class="content">
 
         @include('admin.section.flash_message')
-
-        @include('admin.router.common.breadcrumb')
+        <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.router') }}</h2>
+            @include('admin.router.common.breadcrumb')
+        </div>
         <div class="card mb-4">
             <div class="card-header">
                 <h6 class="card-title mb-0">@lang('index.router_filter')</h6>

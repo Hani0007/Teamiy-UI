@@ -13,7 +13,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.teamMeeting.common.breadcrumb')
     <div class="teamy-top-header">
         <div>
             <h2>{{ __('index.team_meeting') }}</h2>

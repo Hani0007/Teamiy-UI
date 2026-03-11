@@ -1,19 +1,7 @@
-{{--
 @extends('layouts.master')
 
 @section('title', __('index.notices'))
-
 @section('action', __('index.lists'))
-
-@section('button')
-    @can('create_notice')
-        <a href="{{ route('admin.notices.create')}}">
-            <button class="btn btn-primary">
-                <i class="link-icon" data-feather="plus"></i> @lang('index.create_notice')
-            </button>
-        </a>
-    @endcan
-@endsection
 
 @section('main-content')
 
@@ -212,7 +200,6 @@
 @section('main-content')
 <section class="content-wrapper p-4" style="background: #f0f2f5; min-height: 100vh;">
     @include('admin.section.flash_message')
-    @include('admin.notice.common.breadcrumb')
 
     {{-- Filter Section --}}
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -256,9 +243,64 @@
                 </div>
             </form>
         </div>
+        <button onclick="window.location.href='{{ route('admin.notices.create')}}'" class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
+            <i data-feather="plus" style="width: 20px;"></i>
+            <span>{{ __('index.create_notice') }}</span>
+        </button>
     </div>
 
-    {{-- Notice List --}}
+    {{-- 2. Glass-morphism Filter Panel (As per Sample) --}}
+    <div class="glass-filter-panel mb-5 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; border: 1px solid #ffffff;">
+        <form action="{{ route('admin.notices.index') }}" method="get" class="row g-3 align-items-end">
+            
+            @if(!isset(auth()->user()->branch_id))
+                <div class="col-xxl-3 col-xl-3 col-md-6">
+                    <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.branch') }}</label>
+                    <select class="form-select shadow-none modern-select" name="branch_id" id="branch_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                        <option {{ !isset($filterParameters['branch_id']) || old('branch_id') ? 'selected': ''}} disabled>{{ __('index.select_branch') }}</option>
+                        @if(isset($companyDetail))
+                            @foreach($companyDetail->branches()->get() as $key => $branch)
+                                <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
+                                    {{ucfirst($branch->name)}}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            @endif
+
+            <div class="col-xxl-3 col-xl-3 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.from_date') }}</label>
+                <div style="position: relative;">
+                    <i data-feather="calendar" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                    <input type="date" name="publish_date_from" value="{{ request('publish_date_from') }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; padding-left: 45px; font-size: 14px;">
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-xl-3 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.to_date') }}</label>
+                <div style="position: relative;">
+                    <i data-feather="calendar" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                    <input type="date" name="publish_date_to" value="{{ request('publish_date_to') }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; padding-left: 45px; font-size: 14px;">
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-xl-3 col-md-6">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn w-100" style="background: #057db0; color: white; height: 48px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        {{ __('index.filter') }}
+                    </button>
+                    
+                    <a href="{{ route('admin.notices.index') }}" class="btn-theme-outline w-100 text-decoration-none d-flex align-items-center justify-content-center" 
+                       style="height: 48px; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; background: #fff; font-weight: 600;">
+                        {{ __('index.reset') }}
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {{-- Notice List (Keeping your existing card design as requested) --}}
     <div class="notice-list">
         @forelse ($notices as $key => $value)
             <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card">
@@ -288,7 +330,6 @@
                                 <div class="text-end">
                                     <span class="d-block small fw-bold text-muted mb-1 text-uppercase">@lang('index.status')</span>
                                     <div class="form-check form-switch d-inline-block">
-                                        {{-- Toggle checkbox --}}
                                         <input class="form-check-input toggleStatus cursor-pointer" type="checkbox" 
                                                href="{{ route('admin.notices.toggle-status', $value->id) }}"
                                                {{ $value->is_active ? 'checked' : '' }}
@@ -373,14 +414,12 @@
         $(document).ready(function () {
             feather.replace();
 
-            // --- 1. Toggle Status with SweetAlert Confirmation ---
+            // Toggle Status with SweetAlert
             $(document).on('change', '.toggleStatus', function (e) {
                 e.preventDefault();
                 let checkbox = $(this);
                 let url = checkbox.attr('href');
                 let isChecked = checkbox.is(':checked');
-
-                // Checkbox ki state pehle change na ho, hum isay manually control karenge
                 checkbox.prop('checked', !isChecked); 
 
                 Swal.fire({
@@ -394,42 +433,36 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // User ne confirm kiya to page redirect karein
                         window.location.href = url;
                     } else {
-                        // Agar cancel kiya to checkbox ko purani state mein rehne dein
                         checkbox.prop('checked', !isChecked);
                     }
                 });
             });
 
-            // --- 2. Show Notice AJAX Modal ---
+            // Show Notice AJAX
             $(document).on('click', '.showNoticeDescription', function (e) {
                 e.preventDefault();
                 let url = $(this).data('href');
-
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function (response) {
                         $('#addsliderLabel').text(response.data.title);
                         $('#description').html(response.data.description);
-                        
                         var myModal = new bootstrap.Modal(document.getElementById('addslider'));
                         myModal.show();
                     },
                     error: function (error) {
-                        console.log("AJAX Error:", error);
                         Swal.fire('Error', 'Data load nahi ho saka', 'error');
                     }
                 });
             });
 
-            // --- 3. Delete Confirmation Alert ---
+            // Delete Confirmation
             $(document).on('click', '.delete', function (e) {
                 e.preventDefault();
                 let url = $(this).data('href');
-
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

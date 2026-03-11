@@ -4,16 +4,14 @@
 @section('title', __('index.resignation'))
 
 @section('main-content')
-<section class="content" style="padding: 10px 20px;">
+<section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')
 
-    {{-- Header Section --}}
-    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+    {{-- 1. Modern Breadcrumbs & Top Header --}}
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
-            <h2 style="color: #057db0;">{{ __('index.resignation') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="file-text" style="width: 14px; vertical-align: middle;"></i> Employee Resignation Management
-            </p>
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.resignation') }}</h2>
+            @include('admin.resignation.common.breadcrumb')
         </div>
         
         @can('create_resignation')
@@ -30,7 +28,7 @@
     <div class="row g-4 justify-content-start">
         @php
             $statusTheme = [
-                ResignationStatusEnum::approved->value  => ['bg' => '#057db01', 'text' => '#fff'],
+                ResignationStatusEnum::approved->value  => ['bg' => '#057db0', 'text' => '#fff'],
                 ResignationStatusEnum::onReview->value  => ['bg' => '#0ea5e9', 'text' => '#fff'],
                 ResignationStatusEnum::pending->value   => ['bg' => '#FB8233', 'text' => '#fff'],
                 ResignationStatusEnum::cancelled->value => ['bg' => '#ef4444', 'text' => '#fff'],
@@ -70,7 +68,6 @@
                         </div>
                         <h4 class="branch-name-display">{{ $value->employee?->name }}</h4>
                         
-                        {{-- ID and Eye Icon (View) moved here --}}
                         <div class="d-flex justify-content-between align-items-center mt-2 position-relative" style="z-index:2;">
                             <span class="branch-ref-pill">Resignation ID: #{{$value->id}}</span>
                             @can('show_resignation')

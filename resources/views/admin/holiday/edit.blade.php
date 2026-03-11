@@ -11,7 +11,7 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-
+    @include('admin.holiday.common.breadcrumb')
     <div class="teamy-top-header">
         <div>
             <h2>{{ __('index.holiday') }}</h2>
