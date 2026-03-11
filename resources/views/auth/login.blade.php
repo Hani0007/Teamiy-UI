@@ -6,6 +6,13 @@
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 <style>
+    :root {
+        --primary-blue: #057db0;
+        --accent-orange: #fb8233;
+        --text-dark: #1e293b;
+    }
+
+    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%;}
     .split-login-container { display: flex; min-height: 100vh; background: #fff; }
     .login-left {flex: 1; display: flex; flex-direction: column; justify-content: center;padding: 60px; max-width: 600px; overflow-y: auto;}
     .logo-area { align-self: center; margin-bottom: 25px; }

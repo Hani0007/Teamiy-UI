@@ -39,7 +39,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
-                    <img class="wd-35 ht-35 rounded-circle border" src="{{ (isset($authUser->avatar) && $authUser->avatar) ? asset(\App\Models\User::AVATAR_UPLOAD_PATH.$authUser->avatar) : asset('assets/images/img.png') }}" alt="profile">
+                    <img class="wd-35 ht-35 rounded-circle border" src="{{ (isset($authUser->avatar) && $authUser->avatar && str_starts_with($authUser->avatar, 'http')) ? $authUser->avatar : ((isset($authUser->avatar) && $authUser->avatar) ? asset('uploads/admin/avatar/'.$authUser->avatar) : asset('assets/images/img.png')) }}" alt="profile">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end p-0 border-0 shadow-lg overflow-hidden" style="width: 240px; border-radius: 15px;">
                     <div class="p-3 text-center bg-light border-bottom">
