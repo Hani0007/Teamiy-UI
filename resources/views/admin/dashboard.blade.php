@@ -80,10 +80,10 @@
         <div class="section-header">
             <h5 class="fw-bold mb-0">Projects</h5>
             <div class="d-flex gap-3 small fw-bold">
-                <span><span class="badge bg-secondary rounded-circle me-1">5</span> Not Started</span>
-                <span><span class="badge bg-warning rounded-circle me-1 text-dark">6</span> In Progress</span>
-                <span><span class="badge bg-danger rounded-circle me-1">3</span> Late</span>
-                <span><span class="badge bg-success rounded-circle me-1">26</span> Completed</span>
+                <span><span class="badge bg-secondary rounded-circle me-1">{{ $projectStats['not_started'] ?? 0 }}</span> Not Started</span>
+                <span><span class="badge bg-warning rounded-circle me-1 text-dark">{{ $projectStats['in_progress'] ?? 0 }}</span> In Progress</span>
+                <span><span class="badge bg-danger rounded-circle me-1">{{ $projectStats['late'] ?? 0 }}</span> Late</span>
+                <span><span class="badge bg-success rounded-circle me-1">{{ $projectStats['completed'] ?? 0 }}</span> Completed</span>
             </div>
         </div>
         <div class="table-responsive">
@@ -92,6 +92,44 @@
                     <tr><th>Name</th><th>Status</th><th>About</th><th>Members</th><th>Progress</th><th></th></tr>
                 </thead>
                 <tbody>
+                    @if($recentProjects->count() > 0)
+                    @foreach($recentProjects as $project)
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="project-avatar me-3"></div>
+                                <div>
+                                    <div class="fw-bold">{{ $project->name ?? 'Website Redesign' }}</div>
+                                    <small class="text-muted">{{ $project->client_name ?? 'techverdi.com' }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : 'sp-pending bg-soft-secondary text-muted') }}">
+                                {{ $project->status == 'completed' ? 'Done' : ($project->status == 'in_progress' ? 'In Progress' : 'Not Started') }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ $project->name ?? 'Home Page Redesign' }}</div>
+                            <small class="text-muted">{{ Str::limit($project->description ?? 'Redesign website homepage in wordpress...', 50) }}...</small>
+                        </td>
+                        <td>
+                            <div class="member-group d-flex">
+                                <div class="member-count">+{{ $project->members ?? 2 }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="pg-bar">
+                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->progress ?? 0 }}%"></div>
+                                </div>
+                                <span class="fw-bold">{{ $project->progress ?? 0 }}%</span>
+                            </div>
+                        </td>
+                        <td><i class="fas fa-ellipsis-v text-muted"></i></td>
+                    </tr>
+                    @endforeach
+                    @else
                     @for($i=1; $i<=3; $i++)
                     <tr>
                         <td>
@@ -118,6 +156,7 @@
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
                     @endfor
+                    @endif
                 </tbody>
             </table>
         </div>
