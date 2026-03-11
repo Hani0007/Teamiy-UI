@@ -7,7 +7,7 @@
 @section('button')
     @can('create_role')
         <a href="{{ route('admin.roles.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm px-4 py-2" style="border-radius: 10px; font-weight: 600;">
-            <i data-feather="plus-circle" class="me-2" style="width: 18px;"></i> 
+            <i data-feather="plus" class="me-2" style="width: 18px;"></i> 
             @lang('index.add_role')
         </a>
     @endcan
@@ -57,7 +57,7 @@
                                     <div class="text-end">
                                         <div class="btn-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
                                             <a href="{{ route('admin.roles.edit', $value->id) }}" class="btn btn-white btn-sm px-3 border-end" title="@lang('index.edit')">
-                                                <i data-feather="edit-2" class="text-primary" style="width: 15px;"></i>
+                                                <i data-feather="edit-3" class="text-primary" style="width: 15px;"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-white btn-sm px-3 deleteRole" data-href="{{ route('admin.roles.delete', $value->id) }}" title="@lang('index.delete')">
                                                 <i data-feather="trash-2" class="text-danger" style="width: 15px;"></i>

@@ -52,7 +52,7 @@
                         <i class="fa fa-arrow-left"></i> @lang('index.back')
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-save me-1"></i> @lang('index.create') Permission
+                         @lang('index.create') Permission
                     </button>
                 </div>
             </form>

@@ -36,7 +36,7 @@
                         <i class="fa fa-arrow-left"></i> @lang('index.back')
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-sync-alt me-1"></i> @lang('index.update') Permission
+                        @lang('index.update') Permission
                     </button>
                 </div>
             </form>
