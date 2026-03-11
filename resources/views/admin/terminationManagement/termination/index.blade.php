@@ -1,181 +1,87 @@
-{{--
-@extends('layouts.master')
-
-@section('title',__('index.termination'))
-
-@section('action',__('index.lists'))
-
-@section('button')
-
-    <div class="float-end">
-
-        @can('create_termination')
-            <a href="{{ route('admin.termination.create')}}">
-                <button class="btn btn-primary">
-                    <i class="link-icon" data-feather="plus"></i>{{ __('index.add_termination') }}
-                </button>
-            </a>
-        @endcan
-        <!-- @can('termination_type_list')
-            <a href="{{ route('admin.termination-types.index')}}">
-                <button class="btn btn-primary">
-                    <i class="link-icon" data-feather="list"></i>{{ __('index.termination_types') }}
-                </button>
-            </a>
-        @endcan -->
-    </div>
-
-@endsection
-
-@section('main-content')
-    <section class="content">
-        @include('admin.section.flash_message')
-
-        @include('admin.terminationManagement.termination.common.breadcrumb')
-        
-
-        <div class="card support-main">
-            <div class="card-header">
-                <h6 class="card-title mb-0">{{ __('index.termination_list') }}</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="dataTableExample" class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>{{ __('index.employee') }}</th>
-                            <!-- <th>{{ __('index.termination_type') }}</th> -->
-                            <th class="text-center">{{ __('index.notice_date') }}</th>
-                            <th class="text-center">{{ __('index.termination_date') }}</th>
-                            <th class="text-center">{{ __('index.status') }}</th>
-                            @canany(['show_termination','delete_termination','update_termination'])
-                                <th class="text-center">{{ __('index.action') }}</th>
-                            @endcanany
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $color = [
-                                \App\Enum\TerminationStatusEnum::approved->value => 'success',
-                                \App\Enum\TerminationStatusEnum::onReview->value => 'info',
-                                \App\Enum\TerminationStatusEnum::pending->value => 'secondary',
-                                \App\Enum\TerminationStatusEnum::cancelled->value => 'warning',
-                            ];
-
-
-                            ?>
-                            @forelse($terminationLists as $key => $value)
-                                <tr>
-                                    <td>{{++$key}}</td>
-                                    <td>{{ $value->employee?->name }}</td>
-                                    <!-- <td>{{ $value->terminationType?->title }}</td> -->
-                                    <td class="text-center">{{ \App\Helpers\AppHelper::formatDateForView($value->notice_date) }}</td>
-                                    <td class="text-center">{{ \App\Helpers\AppHelper::formatDateForView($value->termination_date) }}</td>
-                                    <td class="text-center">
-                                        <a href=""
-                                           class="terminationStatusUpdate"
-                                           data-href="{{route('admin.termination.update-status',$value->id)}}"
-                                           data-status="{{$value->status}}"
-                                           data-reason="{{$value->admin_remark}}"
-                                           data-id="{{$value->id}}"
-                                        >
-                                            <button class="btn btn-{{ $color[$value->status] }} btn-xs">
-                                                {{ ucfirst($value->status) }}
-                                            </button>
-                                        </a>
-
-                                    </td>
-                                    <td class="text-center">
-                                        <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            @can('update_termination')
-                                                <li class="me-2">
-                                                    <a href="{{route('admin.termination.edit',$value->id)}}" title="{{ __('index.edit') }}">
-                                                        <i class="link-icon" data-feather="edit"></i>
-                                                    </a>
-                                                </li>
-                                            @endcan
-
-                                            @can('show_termination')
-                                                <li class="me-2">
-                                                    <a href="{{route('admin.termination.show',$value->id)}}" title="{{ __('index.show_detail') }}">
-                                                        <i class="link-icon" data-feather="eye"></i>
-                                                    </a>
-                                                </li>
-                                            @endcan
-
-                                            @can('delete_termination')
-                                                <li>
-                                                    <a class="delete"
-                                                       data-title="{{$value->name}} Detail"
-                                                       data-href="{{route('admin.termination.delete',$value->id)}}"
-                                                       title="{{ __('index.delete') }}">
-                                                        <i class="link-icon"  data-feather="delete"></i>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                          </ul>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="100%">
-                                        <p class="text-center"><b>{{ __('index.no_records_found') }}</b></p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="dataTables_paginate mt-3">
-            {{ $terminationLists->appends($_GET)->links() }}
-        </div>
-    </section>
-    @include('admin.terminationManagement.termination.common.status_update')
-
-@endsection
-
-@section('scripts')
-    @include('admin.terminationManagement.termination.common.scripts')
-@endsection
-
---}}
 @extends('layouts.master')
 
 @section('title', __('index.termination'))
 
 @section('main-content')
-<section class="content" style="padding: 10px 20px;">
+<section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')
 
-    {{-- Header Section --}}
-    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+    {{-- 1. Modern Breadcrumbs & Top Header --}}
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
-            <h2 style="color: #057db0;">
-                {{ __('index.termination') }}
-            </h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="user-minus" style="width: 14px; vertical-align: middle;"></i> Employee Exit Management
-            </p>
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.termination') }}</h2>
+            @include('admin.terminationManagement.termination.common.breadcrumb')
         </div>
-        
-        @can('create_termination')
-            <a href="{{ route('admin.termination.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
-                    <i data-feather="plus" style="width: 20px;"></i>
-                    <span>{{ __('index.add_termination') }}</span>
-                </button>
-            </a>
-        @endcan
+
+        <a href="{{ route('admin.termination.create') }}" style="text-decoration: none;">
+            <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
+                <i data-feather="plus" style="width: 20px;"></i>
+                <span>{{ __('index.add_termination') }}</span>
+            </button>
+        </a>
     </div>
 
-    {{-- Cards Grid --}}
+    {{-- 2. Glass-morphism Filter Panel --}}
+    <div class="glass-filter-panel mb-5 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; border: 1px solid #ffffff;">
+        <form action="{{route('admin.termination.index')}}" method="get" class="row g-3 align-items-end">
+            
+            @if(!isset(auth()->user()->branch_id))
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.branch') }}</label>
+                    <select class="form-select shadow-none modern-select" name="branch_id" id="branch_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                        <option selected disabled>{{ __('index.select_branch') }}</option>
+                        @if(isset($companyDetail))
+                            @foreach($companyDetail->branches()->get() as $key => $branch)
+                                <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
+                                    {{ucfirst($branch->name)}}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            @endif
+
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.department') }}</label>
+                <select class="form-select shadow-none modern-select" name="department_id" id="department_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    <option selected disabled>{{ __('index.select_department') }}</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.employee') }}</label>
+                <select class="form-select shadow-none modern-select" name="employee_id" id="employee_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    <option selected disabled>{{ __('index.select_employee') }}</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.termination_date') }}</label>
+                <div style="position: relative;">
+                    @if(\App\Helpers\AppHelper::ifDateInBsEnabled())
+                        <input type="text" id="nepali-datepicker-from" name="termination_date" value="{{ $filterParameters['termination_date'] ?? '' }}" placeholder="mm/dd/yyyy" class="form-control nepaliDate shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    @else
+                        <input type="date" name="termination_date" value="{{ $filterParameters['termination_date'] ?? '' }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn w-100" style="background: #057db0; color: white; height: 48px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        {{ __('index.filter') }}
+                    </button>
+                    <a href="{{route('admin.termination.index')}}" class="btn w-100 d-flex align-items-center justify-content-center" style="height: 48px; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; background: #fff; font-weight: 600; text-decoration: none;">
+                        {{ __('index.reset') }}
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {{-- 3. Termination Cards Grid (Keeping your existing design) --}}
     <div class="row g-4 justify-content-start">
         @php
-            // Status Theme Colors
             $statusTheme = [
                 'approved'  => ['bg' => '#057db0', 'text' => '#fff'],
                 'accepted'  => ['bg' => '#057db0', 'text' => '#fff'],
@@ -200,7 +106,6 @@
                                 <i data-feather="user-x"></i>
                             </div>
                             
-                            {{-- Clickable Status Badge --}}
                             <a href="javascript:void(0)" 
                                class="terminationStatusUpdate text-decoration-none"
                                data-href="{{route('admin.termination.update-status',$value->id)}}"
@@ -213,7 +118,6 @@
                             </a>
                         </div>
                         <h4 class="branch-name-display">{{ $value->employee?->name }}</h4>
-                        {{-- Termination ID at Top --}}
                         <span class="branch-ref-pill">Termination ID: #{{$value->id}}</span>
                     </div>
 
@@ -231,7 +135,6 @@
                         <div class="stats-footer-box">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="emp-group">
-                                    {{-- Notice Date at Footer --}}
                                     <div class="avatar-stack">
                                         <i data-feather="clock" style="width: 14px; color: #64748b;"></i>
                                     </div>
@@ -277,6 +180,7 @@
 </section>
 
 @include('admin.terminationManagement.termination.common.status_update')
+
 @endsection
 
 @section('scripts')

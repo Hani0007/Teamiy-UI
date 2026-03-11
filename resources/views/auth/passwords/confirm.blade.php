@@ -5,13 +5,6 @@
 @section('page-styles')
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <style>
-    :root {
-        --primary-blue: #057db0;
-        --accent-orange: #fb8233;
-        --text-dark: #1e293b;
-    }
-
-    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%; overflow: hidden; }
     .split-confirm-container { display: flex; min-height: 100vh; background: #fff; }
 
     /* LEFT SECTION (FORM) */
@@ -21,17 +14,17 @@
     }
     .logo-area { align-self: center; margin-bottom: 25px; }
     .confirm-header { text-align: center; margin-bottom: 30px; }
-    .confirm-header h3 { color: var(--primary-blue); font-weight: 800; font-size: 24px; margin-bottom: 10px; }
+    .confirm-header h3 { color: #057db0; font-weight: 800; font-size: 24px; margin-bottom: 10px; }
     .confirm-header p { color: #64748b; font-size: 15px; line-height: 1.6; }
 
     /* Form Styles from Login Design */
     .form-group { margin-bottom: 20px; position: relative; }
-    .confirm-label { font-weight: 600; color: var(--accent-orange); margin-bottom: 8px; display: block; font-size: 14px; }
+    .confirm-label { font-weight: 600; color: #fb8233; margin-bottom: 8px; display: block; font-size: 14px; }
     .confirm-input {
         width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
         background: #fff; font-size: 14px; transition: 0.3s; box-sizing: border-box;
     }
-    .confirm-input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
+    .confirm-input:focus { outline: none; border-color: #057db0; box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
     
     /* Error Styling */
     .is-invalid { border-color: #ef4444 !important; }
@@ -45,14 +38,14 @@
 
     .confirm-btn {
         width: 100%; padding: 14px; border-radius: 12px; border: none;
-        background-color: var(--primary-blue); color: #fff; font-weight: 700;
+        background-color: #057db0; color: #fff; font-weight: 700;
         font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;
     }
-    .confirm-btn:hover { background-color: var(--accent-orange); transform: translateY(-1px); }
+    .confirm-btn:hover { background-color: #fb8233; transform: translateY(-1px); }
 
     /* RIGHT SECTION (SLIDER) */
     .confirm-right {
-        flex: 1.2; background-color: var(--primary-blue);
+        flex: 1.2; background-color: #057db0;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         position: relative; color: #fff; padding: 40px;
     }
