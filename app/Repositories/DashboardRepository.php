@@ -207,6 +207,41 @@ class DashboardRepository
         ];
     }
 
+    public function getProjectStats($companyId)
+    {
+        // Fetch real project statistics
+        $notStarted = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'not_started')
+            ->count();
+
+        $inProgress = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'in_progress')
+            ->count();
+
+        $late = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'late')
+            ->count();
+
+        $completed = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->where('projects.status', 'completed')
+            ->count();
+
+        return [
+            'not_started' => $notStarted,
+            'in_progress' => $inProgress,
+            'late' => $late,
+            'completed' => $completed
+        ];
+    }
+
 }
 
 
