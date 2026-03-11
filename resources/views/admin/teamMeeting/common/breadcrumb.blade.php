@@ -5,6 +5,6 @@
         <li class="breadcrumb-item active" aria-current="page">@yield('action')</li>
     </ol>
 
-    @yield('button')
+    <!-- @yield('button') -->
 
 </nav>

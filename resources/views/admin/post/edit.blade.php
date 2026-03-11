@@ -12,6 +12,11 @@
 @section('main-content')
 
 <div class="teamy-body-wrapper">
+    <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('index.dashboard') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.posts.index') }}">{{ __('index.post_section') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('index.edit') }}</li>
+            </ol>
 
     <div class="teamy-top-header">
         <div>

@@ -2,19 +2,19 @@
 
 @section('title', __('index.leave_request'))
 
-{{-- Modern Top Action Button --}}
-@section('button')
+<!--@section('button')
     <a href="{{ route('admin.leave-request.index') }}">
         <button class="btn btn-sm btn-primary">
             <i class="link-icon" data-feather="arrow-left"></i> {{ __('index.button_back') }}
         </button>
     </a>
-@endsection
+@endsection-->
 
 @section('main-content')
 
 <div class="teamy-body-wrapper">
-    
+     @include('admin.section.flash_message')
+    @include('admin.leaveRequest.common.breadcrumb')
     <div class="teamy-top-header">
         <div>
             <h2>{{ __('index.leave_request') }}</h2>
@@ -28,8 +28,6 @@
             </div>
         </div>
     </div>
-
-    @include('admin.section.flash_message')
 
     <form class="forms-sample" action="{{route('admin.leave-request.save')}}" enctype="multipart/form-data" method="post">
         @csrf
