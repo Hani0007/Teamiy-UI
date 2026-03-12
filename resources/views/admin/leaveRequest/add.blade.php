@@ -20,7 +20,7 @@
             <h2>{{ __('index.leave_request') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge">Admin Panel</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">Admin Panel</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-plus-circle"></i> {{ __('index.create') }}
@@ -144,7 +144,7 @@
                 <i class="fa fa-arrow-left"></i> {{ __('index.button_back') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save"></i> {{ __('index.submit') }}
+                 {{ __('index.submit') }}
             </button>
         </div>
     </form>

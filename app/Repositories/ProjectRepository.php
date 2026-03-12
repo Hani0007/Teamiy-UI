@@ -105,6 +105,7 @@ class ProjectRepository
     public function getRecentProjectListsForDashboard($select=['*'],$with=[])
     {
         return Project::query()
+            ->withoutGlobalScope('branch')
             ->select($select)
             ->with($with)
             ->latest()

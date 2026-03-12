@@ -39,7 +39,8 @@
                         <i data-feather="file-text" style="color: white; width: 24px;"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title text-white fw-bold mb-0" id="addsliderLabel">{{ __('index.leave_request_details') }}</h5>
+                        <h5 class="modal-title text-white fw-bold mb-0" id="addsliderLabel">Leave Requests
+</h5>
                         <p class="text-white-50 mb-0 small" style="font-size: 11px;">Reviewing submission information</p>
                     </div>
                 </div>
@@ -95,7 +96,7 @@
 
             <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fafc;">
                 <button type="button" class="btn w-100 py-2 fw-bold" data-bs-dismiss="modal" 
-                        style="background: #fff; color: #64748b; border: 1px solid #e2e8f0; border-radius: 12px; transition: all 0.3s;">
+                        style=" border: 1px solid #e2e8f0; border-radius: 12px; transition: all 0.3s; branch-back-btn">
                     {{ __('index.close') }}
                 </button>
             </div>

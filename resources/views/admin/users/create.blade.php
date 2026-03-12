@@ -60,7 +60,7 @@
                 <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save me-1"></i> {{ __('index.create_user') }}
+                {{ __('index.create_user') }}
             </button>
         </div>
     </form>

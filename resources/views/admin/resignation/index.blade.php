@@ -13,70 +13,15 @@
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.resignation') }}</h2>
             @include('admin.resignation.common.breadcrumb')
         </div>
-        <a href="{{ route('admin.resignation.create') }}" style="text-decoration: none;">
-            <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
-                <i data-feather="plus" style="width: 20px;"></i>
-                <span>{{ __('index.add_resignation') }}</span>
-            </button>
-        </a>
-    </div>
-
-    {{-- 2. Glass-morphism Filter Panel --}}
-    <div class="glass-filter-panel mb-5 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; border: 1px solid #ffffff;">
-        <form action="{{route('admin.resignation.index')}}" method="get" class="row g-3 align-items-end">
-            
-            @if(!isset(auth()->user()->branch_id))
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.branch') }}</label>
-                    <select class="form-select shadow-none modern-select" id="branch_id" name="branch_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
-                        <option selected disabled>{{ __('index.select_branch') }}</option>
-                        @if(isset($companyDetail))
-                            @foreach($companyDetail->branches()->get() as $key => $branch)
-                                <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
-                                    {{ucfirst($branch->name)}}
-                                </option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            @endif
-
-            <div class="col-lg-3 col-md-6">
-                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.department') }}</label>
-                <select class="form-select shadow-none modern-select" name="department_id" id="department_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
-                    <option selected disabled>{{ __('index.select_department') }}</option>
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.employee') }}</label>
-                <select class="form-select shadow-none modern-select" name="employee_id" id="employee_id" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
-                    <option selected disabled>{{ __('index.select_employee') }}</option>
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">{{ __('index.resignation_date') }}</label>
-                <div>
-                    @if(\App\Helpers\AppHelper::ifDateInBsEnabled())
-                        <input type="text" id="nepali-datepicker-from" name="resignation_date" value="{{ $filterParameters['resignation_date'] ?? '' }}" placeholder="mm/dd/yyyy" class="form-control nepaliDate shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
-                    @else
-                        <input type="date" name="resignation_date" value="{{ $filterParameters['resignation_date'] ?? '' }}" class="form-control shadow-none" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
-                    @endif
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn w-100" style="background: #057db0; color: white; height: 48px; border-radius: 12px; font-weight: 600; border: none; transition: all 0.3s ease;">
-                        {{ __('index.filter') }}
-                    </button>
-                    <a href="{{route('admin.resignation.index')}}" class="btn w-100 d-flex align-items-center justify-content-center" style="height: 48px; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; background: #fff; font-weight: 600; text-decoration: none;">
-                        {{ __('index.reset') }}
-                    </a>
-                </div>
-            </div>
-        </form>
+        
+        @can('create_resignation')
+            <a href="{{ route('admin.resignation.create') }}" style="text-decoration: none;">
+                <button class="btn btn-primary">
+                    <i data-feather="plus" style="width: 20px;"></i>
+                    <span>{{ __('index.add_resignation') }}</span>
+                </button>
+            </a>
+        @endcan
     </div>
 
     {{-- Cards Grid --}}
@@ -127,7 +72,7 @@
                             <span class="branch-ref-pill">Resignation ID: #{{$value->id}}</span>
                             @can('show_resignation')
                                 <a href="{{route('admin.resignation.show',$value->id)}}" 
-                                   style="background: rgba(255,255,255,0.2); color: white; padding: 4px 8px; border-radius: 6px; backdrop-filter: blur(5px);" 
+                                   style="background: #FFFF; color: #057DB0; padding: 4px 8px; border-radius: 20%; backdrop-filter: blur(5px);" 
                                    title="View Detail">
                                     <i data-feather="eye" style="width: 16px; height: 16px;"></i>
                                 </a>

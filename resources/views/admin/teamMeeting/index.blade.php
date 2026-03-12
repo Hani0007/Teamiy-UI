@@ -15,7 +15,7 @@
 
         @can('create_team_meeting')
             <a href="{{ route('admin.team-meetings.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add shadow-sm" style="background: #FB8233; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.create_team_meeting') }}</span>
                 </button>
@@ -104,7 +104,7 @@
                             </span>
 
                             @can('edit_team_meeting')
-                                <a href="{{ route('admin.team-meetings.edit', $value->id) }}" title="Edit Meeting" style="color: white; background: rgba(255,255,255,0.2); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s;">
+                                <a href="{{ route('admin.team-meetings.edit', $value->id) }}" title="Edit Meeting" style="color: #057DB0; background: #FFFF; width: 28px; height: 28px; border-radius: 20%; display: flex; align-items: center; justify-content: center; transition: 0.3s;">
                                     <i data-feather="edit-3" style="width: 13px;"></i>
                                 </a>
                             @endcan

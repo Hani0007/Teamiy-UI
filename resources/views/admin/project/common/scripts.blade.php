@@ -33,8 +33,12 @@
                 showDenyButton: true,
                 confirmButtonText: '@lang('index.yes')',
                 denyButtonText: '@lang('index.no')',
+                
+                confirmButtonColor: '#057DB0',
+                denyButtonColor: '#FB8233',
                 padding: '10px 50px 10px 50px',
-                allowOutsideClick: false
+                allowOutsideClick: false,
+                
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = href;
