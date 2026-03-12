@@ -430,7 +430,6 @@
         el.addEventListener('input', updateFormProgress);
     });
 
-
     // address autocomplete logic
     document.addEventListener('DOMContentLoaded', function() {
 
