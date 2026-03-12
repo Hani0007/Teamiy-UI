@@ -23,35 +23,35 @@
                 [
                     'label' => 'Total Employees',
                     'value' => $employeeStats['total_employees'] ?? 0,
-                    'percentage' => '+12%',
+                    'percentage' => ($employeeStats['employees_change'] ?? '0.0') . '%',
                     'description' => 'Employee count includes all staff',
                     'icon' => 'fas fa-users'
                 ],
                 [
                     'label' => 'Branches',
                     'value' => $employeeStats['total_branches'] ?? 0,
-                    'percentage' => '+05%',
+                    'percentage' => ($employeeStats['branches_change'] ?? '0.0') . '%',
                     'description' => 'Total branches in company',
                     'icon' => 'fas fa-building'
                 ],
                 [
                     'label' => 'Today Presents',
                     'value' => $employeeStats['today_presents'] ?? 0,
-                    'percentage' => '+54%',
+                    'percentage' => ($employeeStats['presents_change'] ?? '0.0') . '%',
                     'description' => 'Total employees presents today',
                     'icon' => 'fas fa-user-check'
                 ],
                 [
                     'label' => 'Today Absents',
                     'value' => $employeeStats['today_absents'] ?? 0,
-                    'percentage' => '+11%',
+                    'percentage' => ($employeeStats['absents_change'] ?? '0.0') . '%',
                     'description' => 'Total employees absent today',
                     'icon' => 'fas fa-user-times'
                 ],
                 [
                     'label' => 'Today Lates',
                     'value' => $employeeStats['today_lates'] ?? 0,
-                    'percentage' => '-04%',
+                    'percentage' => ($employeeStats['lates_change'] ?? '0.0') . '%',
                     'description' => 'Total employees late today',
                     'icon' => 'fas fa-clock'
                 ]
@@ -160,7 +160,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
+        <div class="text-center py-3 border-top"><a href="{{ route('admin.projects.index') }}" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
     </div>
 
     <div class="section-card">
@@ -174,7 +174,7 @@
                 <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-payroll">Payroll</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-meetings">Team Meetings</button>
                 </div>
             </div>
         </div>
@@ -186,44 +186,126 @@
                         <tr><th>ID Employee</th><th>Name</th><th>Department</th><th>Leave Type</th><th>Reason</th><th>Date/Time</th><th>Status</th><th></th></tr>
                     </thead>
                     <tbody>
-                        @php
-                            $leaves = [
-                                ['id' => 'FCD-154', 'n' => 'Pietro La Torre', 'd' => 'Inbound Sales', 't' => 'Full Day', 'r' => 'Doctor Appointment...', 'dt' => '02 Feb, 2026', 's' => 'Not Approved'],
-                                ['id' => 'FCD-155', 'n' => 'Benjamin', 'd' => 'PHP (Laravel)', 't' => 'Full Day', 'r' => 'Accident Emergency...', 'dt' => '24 Feb, 2026', 's' => 'Pending'],
-                                ['id' => 'FCD-156', 'n' => 'Jone Snow', 'd' => 'Flutter (Dart)', 't' => 'Short Leave', 'r' => 'Stuck in Traffic...', 'dt' => '9:30 AM to 12:00 PM', 's' => 'Approved']
-                            ];
-                        @endphp
-                        @foreach($leaves as $lv)
+                        @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
+                        @foreach($recentLeaveRequests as $leaveRequest)
                         <tr>
-                            <td>{{ $lv['id'] }}</td>
-                            <td><strong>{{ $lv['n'] }}</strong></td>
-                            <td>{{ $lv['d'] }}</td>
-                            <td>{{ $lv['t'] }}</td>
-                            <td>{{ $lv['r'] }}</td>
-                            <td>{{ $lv['dt'] }}</td>
-                            <td><span class="status-pill {{ $lv['s']=='Approved' ? 'sp-approved' : ($lv['s']=='Pending' ? 'sp-pending' : 'sp-rejected') }}">{{ $lv['s'] }}</span></td>
+                            <td>{{ $leaveRequest->employee->employee_code ?? 'FCD-' . $leaveRequest->id }}</td>
+                            <td><strong>{{ $leaveRequest->employee->name ?? 'N/A' }}</strong></td>
+                            <td>{{ $leaveRequest->department->dept_name ?? 'N/A' }}</td>
+                            <td>{{ $leaveRequest->leaveType->name ?? 'N/A' }}</td>
+                            <td>{{ Str::limit($leaveRequest->reasons ?? 'N/A', 30) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($leaveRequest->leave_requested_date)->format('d M, Y') }}</td>
+                            <td><span class="status-pill {{ $leaveRequest->status == 'approved' ? 'sp-approved' : ($leaveRequest->status == 'pending' ? 'sp-pending' : 'sp-rejected') }}">{{ ucfirst($leaveRequest->status ?? 'Pending') }}</span></td>
                             <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                         </tr>
                         @endforeach
+                        @else
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-3">
+                                <p class="mb-0">No recent leave requests found.</p>
+                            </td>
+                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
 
             <div class="tab-pane fade" id="tab-attendance">
-                <div class="p-5 text-center text-muted">
-                    <i class="fas fa-clock fa-2x mb-3"></i>
-                    <p>Attendance logs for the selected period will appear here.</p>
-                </div>
+                <table class="table mb-0 mt-3">
+                    <thead>
+                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>John Smith</strong></td>
+                            <td>8.5 hrs</td>
+                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
+                            <td>Morning (9AM-5PM)</td>
+                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sarah Johnson</strong></td>
+                            <td>8.0 hrs</td>
+                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
+                            <td>Morning (9AM-5PM)</td>
+                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mike Wilson</strong></td>
+                            <td>7.5 hrs</td>
+                            <td><span class="status-pill sp-pending bg-soft-warning text-warning">Late</span></td>
+                            <td>Morning (9AM-5PM)</td>
+                            <td><button class="btn btn-sm btn-warning" disabled>Checked In Late</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emily Davis</strong></td>
+                            <td>0.0 hrs</td>
+                            <td><span class="status-pill sp-rejected bg-soft-danger text-danger">Absent</span></td>
+                            <td>Morning (9AM-5PM)</td>
+                            <td><button class="btn btn-sm btn-warning">Check In</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Robert Brown</strong></td>
+                            <td>9.0 hrs</td>
+                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
+                            <td>Evening (2PM-10PM)</td>
+                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="tab-pane fade" id="tab-payroll">
-                <div class="p-5 text-center text-muted">
-                    <i class="fas fa-money-check-alt fa-2x mb-3"></i>
-                    <p>Payroll processing data for 2026 is ready to view.</p>
-                </div>
+            <div class="tab-pane fade" id="tab-meetings">
+                <table class="table mb-0 mt-3">
+                    <thead>
+                        <tr><th>Meeting Title</th><th>Date & Time</th><th>Duration</th><th>Attendees</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Weekly Team Standup</strong></td>
+                            <td>Today, 10:00 AM</td>
+                            <td>30 mins</td>
+                            <td>12 participants</td>
+                            <td><span class="status-pill sp-approved bg-soft-success text-success">Completed</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Notes</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Project Review Meeting</strong></td>
+                            <td>Today, 2:00 PM</td>
+                            <td>1 hour</td>
+                            <td>8 participants</td>
+                            <td><span class="status-pill sp-pending bg-soft-primary text-primary">In Progress</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Join Meeting</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Client Presentation</strong></td>
+                            <td>Tomorrow, 11:00 AM</td>
+                            <td>2 hours</td>
+                            <td>6 participants</td>
+                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Prepare</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quarterly Planning</strong></td>
+                            <td>Dec 15, 9:00 AM</td>
+                            <td>3 hours</td>
+                            <td>25 participants</td>
+                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Upcoming</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Set Reminder</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Training Session</strong></td>
+                            <td>Dec 18, 3:00 PM</td>
+                            <td>1.5 hours</td>
+                            <td>15 participants</td>
+                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Register</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
+        <div class="text-center py-3 border-top"><a href="{{ route('admin.leave-request.index') }}" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
     </div>
 </div>
 @endsection
