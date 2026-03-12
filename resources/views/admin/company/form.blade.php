@@ -91,7 +91,8 @@
             </div>
             <div class="section-divider"></div>
             <div class="row">
-                <div class="col-md-12 mb-3"><label class="teamy-label">{{ __('full_address') }} *</label><input type="text" name="address" class="teamy-input-field" value="{{ old('address', $companyDetail->address ?? '') }}" required></div>
+                <div class="col-md-12 mb-3"><label class="teamy-label">{{ __('full_address') }} *</label><input type="text" name="address" id="address" class="teamy-input-field" value="{{ old('address', $companyDetail->address ?? '') }}" required></div>
+                <div id="address-suggestions" class="address-suggestions hidden absolute overflow-y-auto z-50"></div>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <label for="contact_number" class="form-label">{{ __('index.contact_number') }} <span style="color: red">*</span></label>
                     <div class="input-group phone-group" data-no-combine="true">
@@ -368,6 +369,93 @@
     document.querySelectorAll('.teamy-input-field').forEach(el => {
         el.addEventListener('input', updateFormProgress);
     });
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const input = document.getElementById('address');
+        const suggestionsBox = document.getElementById('address-suggestions');
+
+        if (!input || !suggestionsBox) return;
+
+        let debounceTimer;
+
+        input.addEventListener('keyup', function () {
+            let query = this.value.trim();
+
+            clearTimeout(debounceTimer);
+
+            if (query.length < 2) {
+                suggestionsBox.innerHTML = '';
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+
+                fetch(`https://us-central1-flecso-98e70.cloudfunctions.net/placesAutocomplete?input=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        suggestionsBox.innerHTML = '';
+
+                        if (data.status === "OK" && data.predictions.length > 0) {
+
+                            data.predictions.forEach(item => {
+
+                                let option = document.createElement('a');
+                                option.classList.add('list-group-item', 'list-group-item-action');
+                                option.textContent = item.description;
+
+                                option.addEventListener('click', function () {
+
+                                    input.value = item.description;
+                                    suggestionsBox.innerHTML = '';
+
+                                    input.dispatchEvent(new CustomEvent('placeSelected', {
+                                        detail: {
+                                            placeId: item.place_id,
+                                            description: item.description
+                                        }
+                                    }));
+                                });
+
+                                suggestionsBox.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Autocomplete Error:", error);
+                    });
+
+            }, 300);
+        });
+
+        input.addEventListener('placeSelected', function (e) {
+
+            console.log("Event Triggered");
+
+            const placeId = e.detail.placeId;
+
+            fetch(`https://us-central1-flecso-98e70.cloudfunctions.net/placeDetails?place_id=${placeId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "OK") {
+
+                        const location = data.result.geometry.location;
+
+                        document.getElementById('branch_location_latitude').value = location.lat;
+                        document.getElementById('branch_location_longitude').value = location.lng;
+                    }
+                })
+                .catch(err => console.error('Place Details Error:', err));
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.innerHTML = '';
+            }
+        });
+    });
+
+
 
     window.onload = initializePhoneData;
 </script>
