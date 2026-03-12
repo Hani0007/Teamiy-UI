@@ -97,7 +97,7 @@
                 <div class="img-preview-wrapper position-relative d-inline-block">
                     <span class="remove-img-btn removeImage" 
                           data-href="{{ route('admin.team-meetings.remove-image', $teamMeetingDetail->id) }}"
-                          style="position: absolute; top: -10px; right: -10px; background: #ff3366; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; line-height: 22px;">
+                          style="position: absolute; top: -10px; right: -10px; background: #FB8233; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; line-height: 22px;">
                         &times;
                     </span>
                     <img src="{{ asset(TeamMeeting::UPLOAD_PATH.$teamMeetingDetail->image) }}"

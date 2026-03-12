@@ -43,8 +43,8 @@
                 <div class="ms-auto">
                     @php
                         $color = [
-                            \App\Enum\TerminationStatusEnum::approved->value => 'info',
-                            \App\Enum\TerminationStatusEnum::onReview->value => 'info',
+                            \App\Enum\TerminationStatusEnum::approved->value => 'primary',
+                            \App\Enum\TerminationStatusEnum::onReview->value => 'primary',
                             \App\Enum\TerminationStatusEnum::pending->value => 'secondary',
                             \App\Enum\TerminationStatusEnum::cancelled->value => 'warning',
                         ];

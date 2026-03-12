@@ -14,7 +14,7 @@
                         <p class="text-white-50 mb-0 small" style="font-size: 11px;">View holiday event and schedule</p>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2 " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body p-4" style="background: #f8fafc;">
