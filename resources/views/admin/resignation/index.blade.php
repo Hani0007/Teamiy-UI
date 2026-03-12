@@ -29,7 +29,7 @@
         @php
             $statusTheme = [
                 ResignationStatusEnum::approved->value  => ['bg' => '#057db0', 'text' => '#fff'],
-                ResignationStatusEnum::onReview->value  => ['bg' => '#0ea5e9', 'text' => '#fff'],
+                ResignationStatusEnum::onReview->value  => ['bg' => '#057DB0', 'text' => '#fff'],
                 ResignationStatusEnum::pending->value   => ['bg' => '#FB8233', 'text' => '#fff'],
                 ResignationStatusEnum::cancelled->value => ['bg' => '#ef4444', 'text' => '#fff'],
             ];
