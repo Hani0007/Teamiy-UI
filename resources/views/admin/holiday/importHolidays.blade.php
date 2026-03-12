@@ -93,6 +93,11 @@
 
                     </div>
                 </div>
+                <div class="d-flex justify-content-end my-1 mb-3 me-4">
+                    <a href="{{ route('admin.holidays.index') }}" class="branch-back-btn">
+                            <i data-feather="arrow-left" style="width: 16px;"></i> {{ __('index.back')}}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
