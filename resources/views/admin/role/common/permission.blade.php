@@ -1,61 +1,49 @@
-
-{{-- <ul class="nav nav-tabs" id="myTab" role="tablist">
-    @foreach($permissions as $key => $permissionGroupType)
-        <li class="nav-item" role="presentation">
-            <button class="nav-link {{ $key == 0 ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#tab-{{ $permissionGroupType->slug }}" type="button" role="tab" aria-controls="tab-{{ $permissionGroupType->slug }}" aria-selected="{{ $key == 0 ? 'true' : 'false' }}" id="{{$permissionGroupType->slug}}">
-                {{$permissionGroupType->name}} @lang('index.permissions')
-            </button>
-        </li>
-    @endforeach
-</ul> --}}
-
-<div class="tab-content mt-4 px-4" id="myTabContent">
-    @foreach($permissions as $group => $permission)
+<div class="tab-content mt-2" id="myTabContent">
+    @foreach($permissions as $group => $permissionList)
     
         @php
-            $allChecked = collect($permission)->every(function($per) use ($role_permission) {
-                return in_array($per->name, $role_permission ?? []);
+            $role_permission = $role_permission ?? [];
+            $allChecked = collect($permissionList)->every(function($per) use ($role_permission) {
+                return in_array($per->name, $role_permission);
             });
         @endphp
 
-        <div class="row mb-2 {{ $group }}">
-            <div class="col-lg-12">
-                <div class="group-checkbox border-bottom pb-3 mb-4 w-100">
-                    <div class="title-ch mb-2 permission-group" data-group="{{ \Illuminate\Support\Str::slug($group) }}">
-                        <h5 style="color:#e82e5f;">{{$group}} @lang('index.module'):</h5>
-                    </div>
-                    <div class="head-checkbox d-flex align-items-center gap-3 flex-wrap">
+        <div class="group-checkbox mb-4 border rounded-3 bg-white shadow-sm overflow-hidden">
+            {{-- Module Header --}}
+            <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-light">
+                <h5 class="mb-0 text-dark fw-bold">
+                    <i class="fa fa-cube text-primary me-2"></i>
+                    {{ $group }} @lang('index.module')
+                </h5>
+                
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input js-check-all" type="checkbox" id="checkAll_{{ Str::slug($group) }}" {{ $allChecked ? 'checked' : '' }}>
+                    <label class="form-check-label fw-bold text-primary" for="checkAll_{{ Str::slug($group) }}">
+                        @lang('index.check_all')
+                    </label>
+                </div>
+            </div>
 
-                        <div class="checkAll">
-                            <label class="label-ch lh-1">
-                                <input class="js-check-all check-all" type="checkbox" name="" {{ $allChecked ? 'checked' : '' }}>
-                                <span class="text fw-bold">@lang('index.check_all')</span>
-                            </label>
-                        </div>
-                        <ul class="js-check-all-target list-ch d-flex align-items-center justify-content-start gap-3 p-0 flex-wrap" data-check-all="website">
-                            @foreach($permission as $keys => $per)
-                            
-                                <li class="item">
-                                    <label class="label lh-1">
-                                        <input class="module_checkbox permission-item" type="checkbox"
-                                            {{ in_array($per->name, $role_permission ?? []) ? 'checked' : '' }}
-                                            name="permission_value[]" value="{{$per->name}}">
-                                        <span class="text">{{ ucwords(str_replace('_', ' ', $per->name)) }}</span>
+            {{-- Permissions List --}}
+            <div class="p-4">
+                <div class="row g-3">
+                    @foreach($permissionList as $per)
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="permission-item-box p-2 border rounded-2 d-flex align-items-center hover-shadow transition">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input module_checkbox" type="checkbox"
+                                           {{ in_array($per->name, $role_permission) ? 'checked' : '' }}
+                                           name="permission_value[]" value="{{ $per->name }}"
+                                           id="perm_{{ $per->id }}">
+                                    <label class="form-check-label text-secondary ms-2 cursor-pointer" for="perm_{{ $per->id }}">
+                                        {{ ucwords(str_replace('_', ' ', $per->name)) }}
                                     </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     @endforeach
 </div>
-
-<div class="text-start">
-    <button type="submit" class="btn btn-success btn-md">
-        Update
-        {{-- {{$isEdit ? __('index.update'): __('index.save') }} --}}
-    </button>
-</div>
-
