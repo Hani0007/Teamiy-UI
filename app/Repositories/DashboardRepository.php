@@ -209,28 +209,26 @@ class DashboardRepository
 
     public function getProjectStats($companyId)
     {
-        // Fetch real project statistics
+        // Count projects linked to the specific branches of that company
+        $companyBranches = AppHelper::getCompanyBranches();
+        
         $notStarted = DB::table('projects')
-            ->join('users', 'projects.created_by', '=', 'users.id')
-            ->where('users.company_id', $companyId)
+            ->whereIn('branch_id', $companyBranches)
             ->where('projects.status', 'not_started')
             ->count();
 
         $inProgress = DB::table('projects')
-            ->join('users', 'projects.created_by', '=', 'users.id')
-            ->where('users.company_id', $companyId)
+            ->whereIn('branch_id', $companyBranches)
             ->where('projects.status', 'in_progress')
             ->count();
 
         $late = DB::table('projects')
-            ->join('users', 'projects.created_by', '=', 'users.id')
-            ->where('users.company_id', $companyId)
+            ->whereIn('branch_id', $companyBranches)
             ->where('projects.status', 'late')
             ->count();
 
         $completed = DB::table('projects')
-            ->join('users', 'projects.created_by', '=', 'users.id')
-            ->where('users.company_id', $companyId)
+            ->whereIn('branch_id', $companyBranches)
             ->where('projects.status', 'completed')
             ->count();
 
@@ -240,6 +238,23 @@ class DashboardRepository
             'late' => $late,
             'completed' => $completed
         ];
+    }
+
+    public function getRecentLeaveRequests($companyId)
+    {
+        $companyBranches = AppHelper::getCompanyBranches();
+        
+        return \App\Models\LeaveRequestMaster::query()
+            ->withoutGlobalScope('branch')
+            ->with([
+                'employee:id,name,employee_code',
+                'department:id,dept_name',
+                'leaveType:id,name'
+            ])
+            ->whereIn('branch_id', $companyBranches)
+            ->latest('leave_requested_date')
+            ->take(5)
+            ->get();
     }
 
 }

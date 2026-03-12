@@ -74,6 +74,9 @@ class DashboardController extends Controller
                 $recentProjects = $this->projectService
                     ->getRecentProjectListsForDashboard($projectSelect, $withProject);
 
+                // Get recent leave requests
+                $recentLeaveRequests = $this->dashboardRepo->getRecentLeaveRequests($companyId);
+
                 $multipleAttendance = AppHelper::getAttendanceLimit();
             }
 
@@ -83,6 +86,7 @@ class DashboardController extends Controller
                 'taskPieChartData',
                 'projectCardDetail',
                 'recentProjects',
+                'recentLeaveRequests',
                 'appTimeSetting',
                 'multipleAttendance',
                 'employeeStats',
