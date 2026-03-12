@@ -10,7 +10,8 @@
                         <i data-feather="clock" style="color: white; width: 22px;"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title text-white fw-bold mb-0" id="addsliderLabel">{{ __('index.time_leave_details') }}</h5>
+                        <h5 class="modal-title text-white fw-bold mb-0" id="addsliderLabel">Time Leave Request
+</h5>
                         <p class="text-white-50 mb-0 small" style="font-size: 11px;">Reviewing time-based request</p>
                     </div>
                 </div>

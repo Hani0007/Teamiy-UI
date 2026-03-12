@@ -18,7 +18,7 @@
         
         @can('create_branch')
             <a href="{{ route('admin.branch.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_branch') }}</span>
                 </button>

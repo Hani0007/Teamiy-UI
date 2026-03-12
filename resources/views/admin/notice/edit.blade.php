@@ -57,7 +57,7 @@
                 <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save me-1"></i> {{ __('index.update') }}
+                 {{ __('index.update') }}
             </button>
         </div>
     </form>

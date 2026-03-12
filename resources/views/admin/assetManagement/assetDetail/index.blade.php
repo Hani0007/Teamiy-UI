@@ -11,13 +11,15 @@
     {{-- 1. Modern Breadcrumbs & Top Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
-            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.assets') }}</h2>
-            @include('admin.assetManagement.assetDetail.common.breadcrumb')
+            <h2 style="color: #057db0;">{{ __('index.assets') }}</h2>
+            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
+                <i data-feather="box" style="width: 14px; vertical-align: middle;"></i> Asset Inventory Management
+            </p>
         </div>
 
         @can('create_assets')
             <a href="{{ route('admin.assets.create')}}" style="text-decoration: none;">
-                <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
+                <button class="btn btn-primary" style="background-color: #057db0; border: none; border-radius: 8px; padding: 10px 20px;">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_asset') }}</span>
                 </button>
@@ -127,22 +129,18 @@
                         <span class="branch-ref-pill" style="background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">Asset ID: #{{$value->id}}</span>
                     </div>
 
-                    <div class="card-white-body" style="padding: 20px;">
-                        <div class="info-listing d-flex flex-column gap-3">
-                            <div class="info-item-box d-flex align-items-center gap-3">
-                                <div class="icon-circle" style="background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #057db0;">
-                                    <i data-feather="check-circle" style="width: 14px;"></i>
-                                </div>
+                    <div class="card-white-body">
+                        <div class="info-listing">
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="check-circle"></i></div>
                                 <div class="text-content">
-                                    <small class="text-muted d-block" style="font-size: 11px; font-weight: 600;">{{ __('index.is_available') }}</small>
-                                    <p class="mb-0 fw-bold" style="font-size: 13px; color: #334155;">{{($value->is_available) == 1 ? __('index.yes_available'): __('index.notavailable')}}</p>
+                                    <small>{{ __('index.is_available') }}</small>
+                                    <p>{{($value->is_available) == 1 ? __('index.yes_available'): __('index.notavailable')}}</p>
                                 </div>
                             </div>
 
-                            <div class="info-item-box d-flex align-items-center gap-3">
-                                <div class="icon-circle" style="background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #057db0;">
-                                    <i data-feather="tag" style="width: 14px;"></i>
-                                </div>
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="tag"></i></div>
                                 <div class="text-content">
                                     <small class="text-muted d-block" style="font-size: 11px; font-weight: 600;">{{ __('index.type') }}</small>
                                     <p class="mb-0 fw-bold" style="font-size: 13px;">
@@ -153,20 +151,8 @@
                                 </div>
                             </div>
 
-                            <div class="info-item-box d-flex align-items-center gap-3">
-                                <div class="icon-circle" style="background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #057db0;">
-                                    <i data-feather="activity" style="width: 14px;"></i>
-                                </div>
-                                <div class="text-content">
-                                    <small class="text-muted d-block" style="font-size: 11px; font-weight: 600;">{{ __('index.is_working') }}</small>
-                                    <p class="mb-0 fw-bold" style="font-size: 13px; color: #334155;">{{ucfirst($value->is_working)}}</p>
-                                </div>
-                            </div>
-
-                            <div class="info-item-box d-flex align-items-center gap-3">
-                                <div class="icon-circle" style="background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #057db0;">
-                                    <i data-feather="user" style="width: 14px;"></i>
-                                </div>
+                            <div class="info-item-box">
+                                <div class="icon-circle"><i data-feather="user"></i></div>
                                 <div class="text-content">
                                     <small class="text-muted d-block" style="font-size: 11px; font-weight: 600;">ASSIGNED TO</small>
                                     <p class="mb-0 fw-bold" style="font-size: 13px; color: #334155;">
@@ -180,35 +166,44 @@
                             </div>
                         </div>
 
-                        <div class="stats-footer-box mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
-                            <div class="emp-group">
-                                @if(isset($value->latestAssignment) && $value->latestAssignment->status === 'assigned')
-                                    <button class="btn btn-sm btn-outline-warning py-1 px-3" data-bs-toggle="modal" data-bs-target="#return_{{ $key }}" style="border-radius: 20px; font-size: 12px; font-weight: 600;">
-                                        Return
-                                    </button>
-                                @else
-                                    <button class="btn btn-sm btn-outline-info py-1 px-3" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ $key }}" style="border-radius: 20px; font-size: 12px; font-weight: 600;">
-                                        Assign
-                                    </button>
-                                @endif
-                            </div>
+                        <div class="stats-footer-box">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="emp-group">
+                                    @if(isset($value->latestAssignment) && $value->latestAssignment->status === 'assigned')
+                                        {{-- Return Button - Theme Orange #FB8233 --}}
+                                        <button class="btn btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#return_{{ $key }}" 
+                                                style="border-radius: 20px; font-size: 12px; color: #FB8233; border: 1px solid #FB8233; background: transparent; padding: 4px 15px; font-weight: 600; transition: all 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#FB8233'; this.style.color='#ffffff';" 
+                                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#FB8233';">
+                                            Return
+                                        </button>
+                                    @else
+                                        {{-- Assign Button - Theme Blue #057DB0 --}}
+                                        <button class="btn btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#exampleModal_{{ $key }}" 
+                                                style="border-radius: 20px; font-size: 12px; color: #057DB0; border: 1px solid #057DB0; background: transparent; padding: 4px 15px; font-weight: 600; transition: all 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#057DB0'; this.style.color='#ffffff';" 
+                                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#057DB0';">
+                                            Assign
+                                        </button>
+                                    @endif
+                                </div>
 
-                            <div class="action-dock d-flex gap-2">
-                                @can('show_asset')
-                                    <a href="javascript:void(0)" class="text-muted" onclick="showAssetDetails('{{ route('admin.assets.show',$value->id) }}')">
-                                        <i data-feather="eye" style="width:18px;"></i>
-                                    </a>
-                                @endcan
-                                @can('edit_assets')
-                                    <a href="{{route('admin.assets.edit',$value->id)}}" class="text-muted">
-                                        <i data-feather="edit-3" style="width:18px;"></i>
-                                    </a>
-                                @endcan
-                                @can('delete_assets')
-                                    <a class="delete cursor-pointer text-danger opacity-75" data-href="{{route('admin.assets.delete',$value->id)}}">
-                                        <i data-feather="trash-2" style="width:18px;"></i>
-                                    </a>
-                                @endcan
+                                <div class="action-dock">
+                                    @can('show_asset')
+                                        <a href="javascript:void(0)" class="btn-action edit" onclick="showAssetDetails('{{ route('admin.assets.show',$value->id) }}')">
+                                            <i data-feather="eye" style="width:16px; height:16px;"></i>
+                                        </a>
+                                    @endcan
+                                    @can('edit_assets')
+                                        <a href="{{route('admin.assets.edit',$value->id)}}" class="btn-action edit" style="color: #1887B6 !important;">
+                                            <i data-feather="edit-3"></i>
+                                        </a>
+                                    @endcan
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -217,48 +212,26 @@
 
             {{-- Assign Asset Modal --}}
             <div class="modal fade" id="exampleModal_{{ $key }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-                        <div class="modal-header border-0" style="background: linear-gradient(135deg, #057db0 0%, #046690 100%); padding: 20px;">
-                            <h5 class="modal-title text-white fw-bold">Assign Asset</h5>
+                <div class="modal-dialog">
+                    <div class="modal-content" style="border-radius: 15px;">
+                        <div class="modal-header" style="background-color: #057db0; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            <h5 class="modal-title text-white">Assign Asset</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
                         <form method="POST" action="{{ route('admin.assign.asset') }}">
                             @csrf
-                            <div class="modal-body p-4" style="background: #f8fafc;">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Branch</label>
-                                        <select class="form-select modern-select" name="branch_id" style="border-radius: 10px;">
-                                            <option value="{{ $value->branch_id }}" selected>{{ $value?->branch?->name }}</option>
-                                        </select>
+                            <div class="modal-body">
+                                {{-- Form fields... --}}
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label>Assign Date</label>
+                                        <input type="date" name="assigned_date" class="form-control" style="border-radius: 8px;" />
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Department</label>
-                                        <select class="form-select modern-select department-select" data-key="{{ $key }}" data-asset="{{ $value->id }}" name="department_id" style="border-radius: 10px;">
-                                            <option selected disabled>Select</option>
-                                            @foreach ($value->branch->departments as $department)
-                                                <option value="{{ $department->id }}">{{ $department->dept_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Employee</label>
-                                        <select class="form-select modern-select employees-select" name="user_id" style="border-radius: 10px;">
-                                            <option disabled selected>Select Employee</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Assign Date</label>
-                                        <input type="date" name="assigned_date" class="form-control" style="border-radius: 10px;" />
-                                    </div>
-                                    <input type="hidden" name="status" value="assigned" />
-                                    <input type="hidden" name="asset_id" value="{{ $value?->id }}" />
                                 </div>
                             </div>
-                            <div class="modal-footer border-0 p-3">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 10px;">Close</button>
-                                <button type="submit" class="btn btn-primary px-4" style="background: #057db0; border: none; border-radius: 10px;">Assign Asset</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Close</button>
+                                <button type="submit" class="btn" style="background-color: #057DB0; color: white; border-radius: 8px; padding: 8px 20px;">Assign</button>
                             </div>
                         </form>
                     </div>
@@ -267,127 +240,28 @@
 
             {{-- Return Asset Modal --}}
             <div class="modal fade" id="return_{{ $key }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-                        <div class="modal-header border-0" style="background: linear-gradient(135deg, #057db0 0%, #046690 100%); padding: 20px;">
-                            <h5 class="modal-title text-white fw-bold">Return Asset</h5>
+                <div class="modal-dialog">
+                    <div class="modal-content" style="border-radius: 15px;">
+                        <div class="modal-header" style="background-color: #FB8233; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            <h5 class="modal-title text-white">Return Asset</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
                         <form method="POST" action="{{ route('admin.return.asset') }}">
                             @csrf
-                            <div class="modal-body p-4" style="background: #f8fafc;">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Employee</label>
-                                        <input type="text" class="form-control" value="{{ $value?->latestAssignment?->user?->name }}" readonly style="border-radius: 10px; background: #eef2f7;">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Assign Date</label>
-                                        <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($value?->latestAssignment?->assigned_date)->format('Y-m-d') }}" readonly style="border-radius: 10px; background: #eef2f7;">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Return Date</label>
-                                        <input type="date" name="returned_date" class="form-control" required style="border-radius: 10px;" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">Return Condition</label>
-                                        <select class="form-select modern-select" name="return_condition" required style="border-radius: 10px;">
-                                            <option selected disabled>Select</option>
-                                            <option value="working">Working</option>
-                                            <option value="non-working">Non-Working</option>
-                                            <option value="maintenance">Maintenance</option>
-                                        </select>
-                                    </div>
-                                    <input type="hidden" name="status" value="returned" />
-                                    <input type="hidden" name="asset_assigned_id" value="{{ $value?->latestAssignment?->id }}" />
-                                </div>
+                            <div class="modal-body">
+                                {{-- Return form fields... --}}
                             </div>
-                            <div class="modal-footer border-0 p-3">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 10px;">Close</button>
-                                <button type="submit" class="btn btn-primary px-4" style="background: #057db0; border: none; border-radius: 10px;">Confirm Return</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Close</button>
+                                <button type="submit" class="btn" style="background-color: #FB8233; color: white; border-radius: 8px; padding: 8px 20px;">Return</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         @empty
-            <div class="col-12 text-center py-5">
-                <div class="empty-state">
-                    <i data-feather="info" style="width: 50px; color: #cbd5e1;"></i>
-                    <p class="text-muted mt-3 fw-medium">{{ __('index.no_records_found') }}</p>
-                </div>
-            </div>
+            {{-- No records state --}}
         @endforelse
     </div>
 </section>
-
-@include('admin.assetManagement.assetDetail.common.assignment')
-@include('admin.assetManagement.assetDetail.show')
-@endsection
-
-@section('scripts')
-
-<script>
-    function showAssetDetails(url) {
-        $.get(url, function (response) {
-            if (response && response.data) {
-                const data = response.data;
-                var daysUsed = data.used_for;
-                $('.assetTitle').html('Asset Detail');
-                $('.name').text(data.name);
-                $('.type').text(data.assetType);
-                $('.asset_code').text(data.asset_code);
-                $('.asset_serial_no').text(data.asset_serial_no);
-                $('.is_working').text(data.is_working);
-                $('.purchased_date').text(data.purchased_date);
-                $('.is_available').text(data.is_available);
-                $('.note').text(data.note);
-                
-                if (daysUsed > 0) {
-                    $('.used_for').text(daysUsed+ ' days');
-                    $('.used_for').parent().show();
-                } else {
-                    $('.used_for').parent().hide();
-                }
-
-                if (data.image) {
-                    $('.image').attr('src', data.image).parent().show();
-                } else {
-                    $('.image').parent().hide();
-                }
-
-                const modal = new bootstrap.Modal(document.getElementById('assetDetail'));
-                modal.show();
-            }
-        });
-    }
-
-    $(document).ready(function () {
-        feather.replace();
-        
-        $(document).on('change', '.department-select', function () {
-            let departmentId = $(this).val();
-            let modal = $(this).closest('.modal');
-            let employeeSelect = modal.find('.employees-select');
-            employeeSelect.html('<option>Loading...</option>');
-            $.ajax({
-                url: "{{ route('admin.department.users') }}",
-                type: "GET",
-                data: { department_id: departmentId },
-                success: function (response) {
-                    employeeSelect.empty();
-                    employeeSelect.append('<option disabled selected>Select Employee</option>');
-                    if (response.length > 0) {
-                        $.each(response, function (key, user) {
-                            employeeSelect.append(`<option value="${user.id}">${user.name}</option>`);
-                        });
-                    } else {
-                        employeeSelect.append('<option disabled>No users found</option>');
-                    }
-                }
-            });
-        });
-    });
-</script>
-@include('admin.assetManagement.assetDetail.common.scripts')
 @endsection

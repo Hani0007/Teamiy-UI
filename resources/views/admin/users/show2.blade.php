@@ -58,7 +58,7 @@
     </div>
 
     <div class="row profile-body">
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-12 mb-4">
             <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; overflow: hidden;">
                 
                 <div class="card-header border-0 bg-white pt-4 px-4">
