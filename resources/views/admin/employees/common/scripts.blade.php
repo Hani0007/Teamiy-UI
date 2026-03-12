@@ -36,6 +36,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                icon:'warning',
+confirmButtonColor: `#057DB0`,
+denyButtonColor: `#E1752E`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
@@ -57,6 +60,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                icon:'warning',
+confirmButtonColor: `#057DB0`,
+denyButtonColor: `#E1752E`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
@@ -76,6 +82,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                icon:'warning',
+confirmButtonColor: `#057DB0`,
+denyButtonColor: `#E1752E`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
@@ -93,6 +102,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                icon:'warning',
+confirmButtonColor: `#057DB0`,
+denyButtonColor: `#E1752E`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {
@@ -110,6 +122,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
+                icon:'warning',
+confirmButtonColor: `#057DB0`,
+denyButtonColor: `#E1752E`,
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false
             }).then((result) => {

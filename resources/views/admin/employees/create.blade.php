@@ -1,4 +1,4 @@
-@extends('layouts.master')
+{{--@extends('layouts.master')
 
 @section('title', __('index.create_employee'))
 
@@ -391,4 +391,142 @@
 
 </script>
 
+@endsection
+--}}
+
+@extends('layouts.master')
+
+@section('title', __('index.create_employee'))
+
+@section('button')
+    <a href="{{ route('admin.employees.index') }}">
+        <button class="btn btn-sm btn-primary">
+            <i class="link-icon" data-feather="arrow-left"></i> {{ __('index.back') }}
+        </button>
+    </a>
+@endsection
+
+@section('main-content')
+
+<div class="teamy-body-wrapper">
+    {{-- Modern Header --}}
+    <div class="teamy-top-header">
+        <div>
+            <h2>{{ __('index.employee_management') }}</h2>
+            <div class="header-info-row">
+                <div class="header-info-item">
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">New</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fa fa-user-plus"></i> {{ __('index.create_employee') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @include('admin.section.flash_message')
+
+    {{-- Form Start --}}
+    <form class="forms-sample" id="employeeDetail" action="{{ route('admin.employees.store') }}" enctype="multipart/form-data" method="POST">
+        @csrf
+        
+        @include('admin.employees.common.form')
+
+        {{-- Footer Buttons --}}
+        <!-- <div class="branch-footer-actions">
+            <a href="{{ route('admin.employees.index') }}" class="branch-back-btn">
+                <i class="fa fa-times"></i> {{ __('index.cancel') }}
+            </a>
+            <button type="submit" class="btn btn-primary">
+                {{ __('index.add_employee') }}
+            </button>
+        </div> -->
+    </form>
+</div>
+
+@endsection
+
+@section('scripts')
+    @include('admin.employees.common.scripts')
+
+    <script>
+        $(document).ready(function() {
+            // Reusable select reset
+            const resetDropdown = (el, text) => {
+                $(el).empty().append(`<option value="" disabled selected>${text}</option>`);
+            };
+
+            // 1. Branch Change logic
+            $(document).on('change', '#branch', function() {
+                var branchId = $(this).val();
+                if (!branchId) return;
+
+                // Fetch Departments
+                $.ajax({
+                    url: '{{ route("admin.fetch.departments") }}',
+                    type: 'GET',
+                    data: { branchId: branchId },
+                    success: function(response) {
+                        var $dept = $('#department');
+                        resetDropdown($dept, "{{ __('index.select_department') }}");
+                        if (response.status && response.data.length > 0) {
+                            $.each(response.data, function(i, d) {
+                                $dept.append(`<option value="${d.id}">${d.dept_name}</option>`);
+                            });
+                        }
+                    }
+                });
+
+                // Fetch Office Timings
+                $.ajax({
+                    url: '{{ route("admin.fetch.office.timings") }}',
+                    type: 'GET',
+                    data: { branchId: branchId },
+                    success: function(response) {
+                        var $time = $('#officeTime');
+                        resetDropdown($time, "{{ __('index.select_office_timing') }}");
+                        if (response.status && response.data.length > 0) {
+                            $.each(response.data, function(i, t) {
+                                $time.append(`<option value="${t.id}">${t.opening_time} - ${t.closing_time}</option>`);
+                            });
+                        }
+                    }
+                });
+            });
+
+            // 2. Department Change logic
+            $(document).on('change', '#department', function() {
+                var deptId = $(this).val();
+                var branchId = $('#branch').val();
+                if (!deptId) return;
+
+                $.ajax({
+                    url: '{{ route("admin.fetch.designations") }}',
+                    type: 'GET',
+                    data: { branchId: branchId, departmentId: deptId },
+                    success: function(response) {
+                        var $post = $('#post');
+                        resetDropdown($post, "Select Designation");
+                        if (response.status && response.data.length > 0) {
+                            $.each(response.data, function(i, p) {
+                                $post.append(`<option value="${p.id}">${p.post_name}</option>`);
+                            });
+                        }
+                    }
+                });
+            });
+
+            // 3. Dynamic Document Addition
+            $('#add-document').on('click', function() {
+                let container = $('#document-container');
+                let newField = `
+                    <div class="col-lg-6 col-md-6 mb-3 document-field">
+                        <label class="form-label">Upload Document</label>
+                        <input type="file" class="form-control" name="employee_document[]" 
+                               accept=".pdf,.doc,.docx,.jpg,.jpeg">
+                    </div>`;
+                container.append(newField);
+            });
+        });
+    </script>
 @endsection

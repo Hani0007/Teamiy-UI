@@ -3,13 +3,14 @@
         <div class="modal-content border-0 shadow-lg" style="border-radius: 10px;">
             
             {{-- Modal Header: Clean & Standard with Fixed Close Button --}}
-            <div class="modal-header border-bottom py-3 px-4 d-flex align-items-center justify-content-between">
-                <h6 class="modal-title fw-bold text-dark mb-0" id="exampleModalLabel">
+            <div class="modal-header border-bottom py-3 px-4 d-flex align-items-center justify-content-between " style="background:#057DB0;color:white">
+                <h6 class="modal-title fw-bold text-white mb-0" id="exampleModalLabel">
                     <i class="link-icon me-2" data-feather="clock" style="width: 16px; height: 16px; vertical-align: middle;"></i>
                     {{ __('index.office_time_details') }}
                 </h6>
                 {{-- Fixed Close Button --}}
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close" style="padding: 0.5rem; margin: -0.5rem -0.5rem -0.5rem auto;"></button>
+                <button type="button" class="btn-close shadow-none text-white" data-bs-dismiss="modal" aria-label="Close"         style="filter: invert(1); padding: 0.5rem; margin: -0.5rem -0.5rem -0.5rem auto;">
+></button>
             </div>
 
             <div class="modal-body p-4">
@@ -68,7 +69,7 @@
             </div>
 
             <div class="modal-footer border-0 pt-0 px-4 pb-4">
-                <button type="button" class="btn btn-primary shadow-sm" data-bs-dismiss="modal">
+                <button type="button" class="btn branch-back-btn shadow-sm w-100" data-bs-dismiss="modal">
                     {{ __('index.close') }}
                 </button>
             </div>

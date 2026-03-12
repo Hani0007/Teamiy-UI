@@ -29,7 +29,7 @@
             <h2>{{ __('index.edit_user_detail') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge">@yield('action')</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">@yield('action')</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-user-circle"></i> {{ $userDetail->name }}

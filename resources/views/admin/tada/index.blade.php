@@ -79,9 +79,9 @@
                     <div class="col-lg mb-4">
                         <div class="d-flex">
                             <button type="submit"
-                                    class="btn btn-block btn-success me-2">{{  __('index.filter') }}</button>
+                                    class="btn  text-white me-2" style="background:#057DB0">{{  __('index.filter') }}</button>
                             <a href="{{route('admin.tadas.index')}}"
-                               class="btn btn-block btn-primary">{{  __('index.reset') }}</a>
+                               class="btn btn-block branch-back-btn">{{  __('index.reset') }}</a>
                         </div>
                     </div>
                 </div>

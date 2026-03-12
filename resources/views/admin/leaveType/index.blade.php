@@ -20,7 +20,7 @@
         </div>
 
         @canany(['leave_type_create','access_admin_leave'])
-            <button class="btn-premium-add create-leaveType shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn-primary create-leaveType">
                 <i data-feather="plus" style="width: 20px;"></i>
                 <span>{{ __('index.add_leave_type') }}</span>
             </button>
@@ -95,20 +95,22 @@
                             
                             <div class="d-flex gap-3">
                                 @canany(['leave_type_edit','access_admin_leave'])
-                                    <a href="javascript:void(0)" class="edit-leaveType text-white opacity-75" 
+                                    <a href="javascript:void(0)" class="edit-leaveType p-1" 
                                        data-id="{{ $value->id }}" 
                                        data-href="{{ route('admin.leaves.edit', $value->id) }}" 
-                                       title="Edit">
-                                        <i data-feather="edit-3" style="width: 16px;"></i>
+                                       title="Edit"
+                                       style="background:#FFFF;color:#057DB0;border-radius:20%">
+                                        <i data-feather="edit-3" style="width: 15px; height: 15px;"></i>
                                     </a>
                                 @endcanany
                                 
                                 @canany(['leave_type_delete','access_admin_leave'])
                                     <a href="javascript:void(0)" 
                                        data-href="{{route('admin.leaves.delete',$value->id)}}" 
-                                       class="deleteLeaveType cursor-pointer text-white opacity-75" 
-                                       title="Delete">
-                                        <i data-feather="trash-2" style="width: 16px;"></i>
+                                       class="deleteLeaveType cursor-pointer p-1" 
+                                       title="Delete"
+                                       style="background:#FFFF;color:#FB8233;border-radius:20%">
+                                        <i data-feather="trash-2" style="width: 15px; height: 15px;"></i>
                                     </a>
                                 @endcanany
                             </div>
@@ -166,7 +168,7 @@
                         <p class="text-white-50 mb-0 small" style="font-size: 11px;">Configure your company's leave policies</p>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body p-4" style="background: #f8fafc;">
@@ -221,11 +223,10 @@
                     </div>
 
                     <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal" style="border-radius: 12px; color: #64748b; border: 1px solid #e2e8f0;">
+                        <button type="button" class="btn btn-secondary px-4 fw-bold text-white" data-bs-dismiss="modal" style="border-radius: 12px; color: #64748b; border: 1px solid #e2e8f0;">
                             {{ __('index.cancel') }}
                         </button>
                         <button type="submit" class="btn btn-primary px-4 fw-bold" style="background: linear-gradient(135deg, #057db0 0%, #046690 100%); border: none; border-radius: 12px; min-width: 140px; box-shadow: 0 4px 15px rgba(5, 125, 176, 0.2);">
-                            <i data-feather="save" style="width: 16px; margin-right: 5px; vertical-align: middle;"></i> 
                             <span id="submitButtonText">{{ __('index.save') }}</span>
                         </button>
                     </div>
