@@ -7,6 +7,7 @@ use App\Enum\ShiftTypeEnum;
 use App\Helpers\SMPush\SMPushHelper;
 use App\Models\AppSetting;
 use App\Models\Attendance;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Department;
@@ -249,6 +250,20 @@ class AppHelper
            return Company::first()->name;
         }
 
+    }
+
+    public static function getCompanyBranches()
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('super-admin')) {
+            $company = $user->company()->first();
+        } else {
+            $company = Company::where('admin_id', $user->parent_id)->first();
+        }
+
+        $branches = Branch::where('company_id', $company->id)->pluck('id')->toArray();
+        return $branches;
     }
 
     public static function getCompanyLogo()
