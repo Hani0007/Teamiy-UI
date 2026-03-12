@@ -57,10 +57,10 @@ class DashboardController extends Controller
                 $topClients = $this->clientService->getTopClientsOfCompany();
                 $taskPieChartData = $this->taskService->getTaskDataForPieChart();
                 $projectCardDetail = $this->projectService->getProjectCardData();
-                
+
                 // Get employee statistics
                 $employeeStats = $this->dashboardRepo->getEmployeeStats($companyId);
-                
+
                 // Get project statistics
                 $projectStats = $this->dashboardRepo->getProjectStats($companyId);
 

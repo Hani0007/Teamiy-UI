@@ -21,37 +21,37 @@
         @php
             $topStats = [
                 [
-                    'label' => 'Total Employees', 
-                    'value' => $employeeStats['total_employees'] ?? 0, 
-                    'percentage' => '+12%', 
+                    'label' => 'Total Employees',
+                    'value' => $employeeStats['total_employees'] ?? 0,
+                    'percentage' => '+12%',
                     'description' => 'Employee count includes all staff',
                     'icon' => 'fas fa-users'
                 ],
                 [
-                    'label' => 'Branches', 
-                    'value' => $employeeStats['total_branches'] ?? 0, 
-                    'percentage' => '+05%', 
+                    'label' => 'Branches',
+                    'value' => $employeeStats['total_branches'] ?? 0,
+                    'percentage' => '+05%',
                     'description' => 'Total branches in company',
                     'icon' => 'fas fa-building'
                 ],
                 [
-                    'label' => 'Today Presents', 
-                    'value' => $employeeStats['today_presents'] ?? 0, 
-                    'percentage' => '+54%', 
+                    'label' => 'Today Presents',
+                    'value' => $employeeStats['today_presents'] ?? 0,
+                    'percentage' => '+54%',
                     'description' => 'Total employees presents today',
                     'icon' => 'fas fa-user-check'
                 ],
                 [
-                    'label' => 'Today Absents', 
-                    'value' => $employeeStats['today_absents'] ?? 0, 
-                    'percentage' => '+11%', 
+                    'label' => 'Today Absents',
+                    'value' => $employeeStats['today_absents'] ?? 0,
+                    'percentage' => '+11%',
                     'description' => 'Total employees absent today',
                     'icon' => 'fas fa-user-times'
                 ],
                 [
-                    'label' => 'Today Lates', 
-                    'value' => $employeeStats['today_lates'] ?? 0, 
-                    'percentage' => '-04%', 
+                    'label' => 'Today Lates',
+                    'value' => $employeeStats['today_lates'] ?? 0,
+                    'percentage' => '-04%',
                     'description' => 'Total employees late today',
                     'icon' => 'fas fa-clock'
                 ]
@@ -130,7 +130,7 @@
                     </tr>
                     @endforeach
                     @else
-                    @for($i=1; $i<=3; $i++)
+                    {{-- @for($i=1; $i<=3; $i++)
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
@@ -155,7 +155,7 @@
                         </td>
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
-                    @endfor
+                    @endfor --}}
                     @endif
                 </tbody>
             </table>
