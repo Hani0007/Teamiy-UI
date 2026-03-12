@@ -28,8 +28,8 @@
             </div>
         </div>
         <a href="{{ route('admin.company.edit', $companyDetail->id) }}">
-            <button class="btn btn-edit-glow d-flex align-items-center gap-2">
-                <i data-feather="edit-2" style="width: 16px;"></i> {{ __('edit') }}
+            <button class="btn-premium-add">
+                <i data-feather="edit-2" style="width: 16px;"></i><span>{{ __('edit') }}</span>
             </button>
         </a>
     </div>
@@ -60,7 +60,7 @@
                         <div class="info-icon"><i data-feather="globe" style="width:16px;"></i></div>
                         <div class="info-content">
                             <label>{{ __('website_url') }}</label>
-                            <a href="{{ $companyDetail->website_url }}" target="_blank" class="text-primary">{{ $companyDetail->website_url ?? 'N/A' }}</a>
+                            <a href="{{ $companyDetail->website_url }}" target="_blank">{{ $companyDetail->website_url ?? 'N/A' }}</a>
                         </div>
                     </div>
                     <div class="col-md-6 info-item">
@@ -116,7 +116,7 @@
                         <div class="info-icon" style="background: rgba(251, 130, 51, 0.1); color: #fb8233;"><i data-feather="calendar" style="width:16px;"></i></div>
                         <div class="info-content">
                             <label>{{ __('weekend') }}</label>
-                            <div class="mt-1">
+                            <div class="mt-1" style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 @if($companyDetail->weekend && is_array($companyDetail->weekend))
                                     @foreach($companyDetail->weekend as $day)
                                         @php $days = [0=>__('sunday'), 1=>__('monday'), 2=>__('tuesday'), 3=>__('wednesday'), 4=>__('thursday'), 5=>__('friday'), 6=>__('saturday')]; @endphp
