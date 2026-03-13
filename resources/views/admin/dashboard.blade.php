@@ -262,7 +262,7 @@
                                         {{ \Carbon\Carbon::parse($meeting->meeting_date)->isPast() ? 'Completed' : 'Scheduled' }}
                                     </span>
                                 </td>
-                                <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                                <td><a href="{{ route('admin.team-meetings.index') }}" class="btn btn-sm btn-outline-primary">View Details</a></td>
                             </tr>
                             @endforeach
                         @else
