@@ -521,7 +521,10 @@
                 </div>
 
                 <div class="col-lg-6 col-md-6 mb-3">
-                    <label for="upload_contract" class="form-label">Upload Contract</label>
+                    <label for="upload_contract" class="form-label">Upload Contract <i data-feather="image" class="text-primary" style="width: 18px; height: 18px;"></i>
+        <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+            ( .jpg, .jpeg, .png )
+        </span></label>
                     <input type="file" class="form-control" id="upload_contract" name="upload_contract"
                         value="{{ old('upload_contract') }}" autocomplete="off">
                     {{-- <p>{{ $userDetail->employeeDocuments->employee_contract ?? '' }}</p> --}}
@@ -570,7 +573,10 @@
             <div class="row" id="document-container">
 
                 <div class="col-lg-6 col-md-6 mb-3 document-field">
-                    <label class="form-label">Upload Document</label>
+                    <label class="form-label">Upload Document <span><i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
+<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+</span></span></label>
                     <input type="file" class="form-control" name="employee_document[]"
                         accept="application/pdf,
                     application/msword,

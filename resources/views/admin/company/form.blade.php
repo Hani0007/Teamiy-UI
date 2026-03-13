@@ -67,7 +67,12 @@
                     @endif
                 </div>
                 <div class="logo-meta">
-                    <label class="teamy-label">{{ __('company_logo') }}</label>
+                    <label class="teamy-label"><i data-feather="image" class="text-primary" style="width: 18px; height: 18px;"></i> {{ __('company_logo') }}     <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+            ( .jpg, .jpeg, .png )
+        </span>
+    </label>
+        
+    
                     <input type="file" name="logo" id="logo-input" style="display:none" onchange="previewFile(this)">
                     <button type="button" class="btn btn-sm" onclick="document.getElementById('logo-input').click()"
                         style="background:var(--teamy-orange); color:white; border-radius:6px; padding:6px 15px; border:none;">{{ __('index.upload_logo') }}</button>
