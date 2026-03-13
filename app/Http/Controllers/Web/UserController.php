@@ -208,10 +208,12 @@ class UserController extends Controller
                 'department:id,dept_name',
                 'role:id,name',
                 'accountDetail',
-                'employeeDocuments'
+                'employeeDocuments',
+                'officeTime',
             ];
-            $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
+            $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id',];
             $userDetail = $this->userRepo->findUserDetailById($id, $select, $with);
+            // dd($userDetail);
 
             return view($this->view . 'show2', compact('userDetail'));
         } catch (Exception $exception) {

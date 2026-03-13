@@ -214,21 +214,6 @@
     .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #057db0; }
     input:checked + .slider:before { transform: translateX(18px); }
-    /* Modal ke andar table cells ke borders hatane ke liye */
-#assignmentDetail .table td, 
-#repairDetail .table td, 
-#assignmentDetail .table th, 
-#repairDetail .table th {
-    border: none !important;
-    border-top: none !important;
-}
-
-/* Modal content ka focus border khatam karne ke liye */
-.modal-content {
-    outline: none !important;
-    border: none !important;
-}
-
 </style>
 
 <script>

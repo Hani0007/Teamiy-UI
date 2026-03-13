@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Helpers\AppHelper;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Helpers\AppHelper;
 
 class ProjectRepository
 {
@@ -96,9 +96,9 @@ class ProjectRepository
     public function getRecentProjectListsForDashboard($select=['*'],$with=[])
     {
         return Project::query()
-            ->withoutGlobalScope('branch')
             ->select($select)
             ->with($with)
+            ->withoutGlobalScope('branch')
             ->whereIn('branch_id', AppHelper::getCompanyBranches())
             ->latest()
             ->take(5)

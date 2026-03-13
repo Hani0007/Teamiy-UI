@@ -99,11 +99,12 @@ class  TaskController extends Controller
     {
         $this->authorize('create_task');
         try {
-            $select = ['name', 'id'];
-            $with = ['assignedMembers.user:id,name'];
+            $select = ['name', 'id','branch_id'];
+            $with = ['assignedMembers.user:id,name','branch'];
             $project = $this->projectService->findProjectDetailById($projectId,$with,$select);
             $projectMember = $project->assignedMembers;
             $isBsEnabled = AppHelper::ifDateInBsEnabled();
+            // dd($projectMember,$project);
 
             return view($this->view . 'create',compact('project','projectMember','isBsEnabled'));
         } catch (Exception $exception) {
