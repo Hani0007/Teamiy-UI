@@ -131,13 +131,6 @@
                         </form>
                     </div>
                     <ul class="list-unstyled p-1">
-                        <li class="dropdown-item py-2">
-                            <a href="{{ route('admin.profile_edit', $authUser->id) }}" class="text-body"><i class="me-2 icon-md" data-feather="user"></i> {{ __('index.profile') }}</a>
-                        </li>
-                        <li class="dropdown-item py-2">
-                            <a href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-body"><i class="me-2 icon-md" data-feather="log-out"></i> {{ __('index.log_out') }}</a>
-                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">@csrf</form>
-                        </li>
                     </ul>
                 </div>
             </li>
