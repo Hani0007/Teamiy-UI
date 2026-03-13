@@ -69,7 +69,7 @@
             </div>
 
             <div class="modal-footer border-0 pt-0 px-4 pb-4">
-                <button type="button" class="btn branch-back-btn shadow-sm " data-bs-dismiss="modal">
+                <button type="button" class="btn branch-back-btn shadow-sm w-100" data-bs-dismiss="modal">
                     {{ __('index.close') }}
                 </button>
             </div>
