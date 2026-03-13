@@ -12,6 +12,7 @@
     <meta name="description" content="Digital HR Complete HR Attendance System">
     <meta name="author" content="Digital HR">
     <meta name="keywords" content="Digital HR">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.5/build/css/intlTelInput.css"/>
 
     <title>@yield('title')</title>
     <style>
@@ -79,6 +80,7 @@
     @include('admin.section.head_links')
     @yield('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.11.0/css/flag-icons.min.css">
+    {{-- fontawosome icon --}}
 </head>
 
 <body>

@@ -14,6 +14,7 @@
 
 @section('main-content')
 
+{{-- @dd($userDetail) --}}
     <section class="content">
 
         @include('admin.section.flash_message')

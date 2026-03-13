@@ -302,6 +302,8 @@ Route::group([
 
             /** Employees route */
             Route::resource('employees', UserController::class);
+            Route::post('/employee-document-delete', [UserController::class,'deleteDocument'])->name('employee.document.delete');
+            Route::post('/employee-contract-delete', [UserController::class,'deleteContract'])->name('employee.contract.delete');
             Route::get('employees/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('employees.toggle-status');
             Route::get('employees/toggle-holiday-checkin/{id}', [UserController::class, 'toggleHolidayCheckIn'])->name('employees.toggle-holiday-checkin');
             Route::get('employees/delete/{id}', [UserController::class, 'delete'])->name('employees.delete');

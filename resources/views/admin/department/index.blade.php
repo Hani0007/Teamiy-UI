@@ -93,19 +93,19 @@
                                 </div>
                             </div>
                             <div class="info-item-box">
-                                <div class="icon-circle"><i data-feather="map-pin"></i></div>
+                                <div class="icon-circle"><i data-feather="server"></i></div>
                                 <div class="text-content">
-                                    <small>{{ __('index.address') }}</small>
-                                    <p>{{ $value->address ?: 'N/A' }}</p>
+                                    <small>{{ __('index.branch') }}</small>
+                                    <p>{{ $value->branch->name ?: 'N/A' }}</p>
                                 </div>
                             </div>
-                            <div class="info-item-box">
+                            {{-- <div class="info-item-box">
                                 <div class="icon-circle"><i data-feather="phone"></i></div>
                                 <div class="text-content">
                                     <small>{{ __('index.phone') }}</small>
                                     <p>{{ $value->phone ?: 'N/A' }}</p>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="stats-footer-box">

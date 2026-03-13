@@ -103,7 +103,7 @@
 
     <div class="col-lg-6 col-md-6 mb-4">
         <label for="image" class="form-label">{{ __('index.upload_attachment') }}</label>
-        <input class="form-control" type="file" accept="image/png, image/jpeg,image/jpg, image/svg,"   id="image" name="attachment" />
+        <input class="form-control" type="file" accept="image/png, image/jpeg,image/jpg, image/svg, application/pdf, application/msword,text/plain"   id="image" name="attachment" />
 
         @if(isset($eventDetail) && $eventDetail->attachment)
             <div class="img-wrap mt-3" style="object-fit: contain">
