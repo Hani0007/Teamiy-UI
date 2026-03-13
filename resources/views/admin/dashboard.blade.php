@@ -213,44 +213,33 @@
             <div class="tab-pane fade" id="tab-attendance">
                 <table class="table mb-0 mt-3">
                     <thead>
-                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th><th>Action</th></tr>
+                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>John Smith</strong></td>
-                            <td>8.5 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Sarah Johnson</strong></td>
-                            <td>8.0 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mike Wilson</strong></td>
-                            <td>7.5 hrs</td>
-                            <td><span class="status-pill sp-pending bg-soft-warning text-warning">Late</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-warning" disabled>Checked In Late</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Emily Davis</strong></td>
-                            <td>0.0 hrs</td>
-                            <td><span class="status-pill sp-rejected bg-soft-danger text-danger">Absent</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-warning">Check In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Robert Brown</strong></td>
-                            <td>9.0 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Evening (2PM-10PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
-                        </tr>
+                        @if(isset($recentAttendance) && $recentAttendance->count() > 0)
+                            @foreach($recentAttendance as $attendance)
+                            <tr>
+                                <td><strong>{{ $attendance->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ number_format($attendance->worked_hour ?? 0, 1) }} hrs</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($attendance->attendance_status == 'present') sp-approved bg-soft-success text-success
+                                        @elseif($attendance->attendance_status == 'late') sp-pending bg-soft-warning text-warning
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ ucfirst($attendance->attendance_status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td>{{ $attendance->officeTime->shift ?? 'General Shift' }}</td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent attendance records found.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -258,49 +247,31 @@
             <div class="tab-pane fade" id="tab-meetings">
                 <table class="table mb-0 mt-3">
                     <thead>
-                        <tr><th>Meeting Title</th><th>Date & Time</th><th>Duration</th><th>Attendees</th><th>Status</th><th>Action</th></tr>
+                        <tr><th>Title</th><th>Meeting Date</th><th>Start Time</th><th>Participators</th><th>Status</th><th>Action</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Weekly Team Standup</strong></td>
-                            <td>Today, 10:00 AM</td>
-                            <td>30 mins</td>
-                            <td>12 participants</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Completed</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">View Notes</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Project Review Meeting</strong></td>
-                            <td>Today, 2:00 PM</td>
-                            <td>1 hour</td>
-                            <td>8 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-primary text-primary">In Progress</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Join Meeting</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Client Presentation</strong></td>
-                            <td>Tomorrow, 11:00 AM</td>
-                            <td>2 hours</td>
-                            <td>6 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Prepare</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Quarterly Planning</strong></td>
-                            <td>Dec 15, 9:00 AM</td>
-                            <td>3 hours</td>
-                            <td>25 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Upcoming</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Set Reminder</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Training Session</strong></td>
-                            <td>Dec 18, 3:00 PM</td>
-                            <td>1.5 hours</td>
-                            <td>15 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Register</button></td>
-                        </tr>
+                        @if(isset($recentTeamMeetings) && $recentTeamMeetings->count() > 0)
+                            @foreach($recentTeamMeetings as $meeting)
+                            <tr>
+                                <td><strong>{{ $meeting->title ?? 'N/A' }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_start_time)->format('h:i A') }}</td>
+                                <td>{{ $meeting->teamMeetingParticipator->count() }} participators</td>
+                                <td>
+                                    <span class="status-pill sp-pending bg-soft-secondary text-muted">
+                                        {{ \Carbon\Carbon::parse($meeting->meeting_date)->isPast() ? 'Completed' : 'Scheduled' }}
+                                    </span>
+                                </td>
+                                <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent team meetings found.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
