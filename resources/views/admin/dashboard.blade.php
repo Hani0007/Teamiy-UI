@@ -21,37 +21,37 @@
         @php
             $topStats = [
                 [
-                    'label' => 'Total Employees',
-                    'value' => $employeeStats['total_employees'] ?? 0,
-                    'percentage' => ($employeeStats['employees_change'] ?? '0.0') . '%',
+                    'label' => 'Total Employees', 
+                    'value' => $employeeStats['total_employees'] ?? 0, 
+                    'percentage' => '+12%', 
                     'description' => 'Employee count includes all staff',
                     'icon' => 'fas fa-users'
                 ],
                 [
-                    'label' => 'Branches',
-                    'value' => $employeeStats['total_branches'] ?? 0,
-                    'percentage' => ($employeeStats['branches_change'] ?? '0.0') . '%',
+                    'label' => 'Branches', 
+                    'value' => $employeeStats['total_branches'] ?? 0, 
+                    'percentage' => '+05%', 
                     'description' => 'Total branches in company',
                     'icon' => 'fas fa-building'
                 ],
                 [
-                    'label' => 'Today Presents',
-                    'value' => $employeeStats['today_presents'] ?? 0,
-                    'percentage' => ($employeeStats['presents_change'] ?? '0.0') . '%',
+                    'label' => 'Today Presents', 
+                    'value' => $employeeStats['today_presents'] ?? 0, 
+                    'percentage' => '+54%', 
                     'description' => 'Total employees presents today',
                     'icon' => 'fas fa-user-check'
                 ],
                 [
-                    'label' => 'Today Absents',
-                    'value' => $employeeStats['today_absents'] ?? 0,
-                    'percentage' => ($employeeStats['absents_change'] ?? '0.0') . '%',
+                    'label' => 'Today Absents', 
+                    'value' => $employeeStats['today_absents'] ?? 0, 
+                    'percentage' => '+11%', 
                     'description' => 'Total employees absent today',
                     'icon' => 'fas fa-user-times'
                 ],
                 [
-                    'label' => 'Today Lates',
-                    'value' => $employeeStats['today_lates'] ?? 0,
-                    'percentage' => ($employeeStats['lates_change'] ?? '0.0') . '%',
+                    'label' => 'Today Lates', 
+                    'value' => $employeeStats['today_lates'] ?? 0, 
+                    'percentage' => '-04%', 
                     'description' => 'Total employees late today',
                     'icon' => 'fas fa-clock'
                 ]
@@ -130,7 +130,7 @@
                     </tr>
                     @endforeach
                     @else
-                    {{-- @for($i=1; $i<=3; $i++)
+                    @for($i=1; $i<=3; $i++)
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
@@ -155,12 +155,12 @@
                         </td>
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
-                    @endfor --}}
+                    @endfor
                     @endif
                 </tbody>
             </table>
         </div>
-        <div class="text-center py-3 border-top"><a href="{{ route('admin.projects.index') }}" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
+        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
     </div>
 
     <div class="section-card">
@@ -174,7 +174,7 @@
                 <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-meetings">Team Meetings</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-payroll">Payroll</button>
                 </div>
             </div>
         </div>
@@ -186,26 +186,25 @@
                         <tr><th>ID Employee</th><th>Name</th><th>Department</th><th>Leave Type</th><th>Reason</th><th>Date/Time</th><th>Status</th><th></th></tr>
                     </thead>
                     <tbody>
-                        @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
-                        @foreach($recentLeaveRequests as $leaveRequest)
+                        @php
+                            $leaves = [
+                                ['id' => 'FCD-154', 'n' => 'Pietro La Torre', 'd' => 'Inbound Sales', 't' => 'Full Day', 'r' => 'Doctor Appointment...', 'dt' => '02 Feb, 2026', 's' => 'Not Approved'],
+                                ['id' => 'FCD-155', 'n' => 'Benjamin', 'd' => 'PHP (Laravel)', 't' => 'Full Day', 'r' => 'Accident Emergency...', 'dt' => '24 Feb, 2026', 's' => 'Pending'],
+                                ['id' => 'FCD-156', 'n' => 'Jone Snow', 'd' => 'Flutter (Dart)', 't' => 'Short Leave', 'r' => 'Stuck in Traffic...', 'dt' => '9:30 AM to 12:00 PM', 's' => 'Approved']
+                            ];
+                        @endphp
+                        @foreach($leaves as $lv)
                         <tr>
-                            <td>{{ $leaveRequest->employee->employee_code ?? 'FCD-' . $leaveRequest->id }}</td>
-                            <td><strong>{{ $leaveRequest->employee->name ?? 'N/A' }}</strong></td>
-                            <td>{{ $leaveRequest->department->dept_name ?? 'N/A' }}</td>
-                            <td>{{ $leaveRequest->leaveType->name ?? 'N/A' }}</td>
-                            <td>{{ Str::limit($leaveRequest->reasons ?? 'N/A', 30) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($leaveRequest->leave_requested_date)->format('d M, Y') }}</td>
-                            <td><span class="status-pill {{ $leaveRequest->status == 'approved' ? 'sp-approved' : ($leaveRequest->status == 'pending' ? 'sp-pending' : 'sp-rejected') }}">{{ ucfirst($leaveRequest->status ?? 'Pending') }}</span></td>
+                            <td>{{ $lv['id'] }}</td>
+                            <td><strong>{{ $lv['n'] }}</strong></td>
+                            <td>{{ $lv['d'] }}</td>
+                            <td>{{ $lv['t'] }}</td>
+                            <td>{{ $lv['r'] }}</td>
+                            <td>{{ $lv['dt'] }}</td>
+                            <td><span class="status-pill {{ $lv['s']=='Approved' ? 'sp-approved' : ($lv['s']=='Pending' ? 'sp-pending' : 'sp-rejected') }}">{{ $lv['s'] }}</span></td>
                             <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                         </tr>
                         @endforeach
-                        @else
-                        <tr>
-                            <td colspan="8" class="text-center text-muted py-3">
-                                <p class="mb-0">No recent leave requests found.</p>
-                            </td>
-                        </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
@@ -276,7 +275,7 @@
                 </table>
             </div>
         </div>
-        <div class="text-center py-3 border-top"><a href="{{ route('admin.leave-request.index') }}" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
+        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
     </div>
 </div>
 @endsection

@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Helpers\AppHelper;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Project;
@@ -14,6 +13,16 @@ class ProjectRepository
     const ASSIGNABLE_TYPE = 'project';
     public function getAllFilteredProjects($filterParameters,$select,$with): mixed
     {
+        $user = auth()->user();
+
+        if ($user->hasRole('super-admin')) {
+            $company = $user->company()->first();
+        } else {
+            $company = Company::where('admin_id', $user->parent_id)->first();
+        }
+
+        $branches = Branch::where('company_id', $company->id)->pluck('id')->toArray();
+
         return Project::query()->select($select)->with($with)
 
         ->when(isset($filterParameters['project_name']), function ($query) use ($filterParameters) {
@@ -34,7 +43,7 @@ class ProjectRepository
                 });
          })
          ->withoutGlobalScope('branch')
-         ->whereIn('branch_id', AppHelper::getCompanyBranches())
+         ->whereIn('branch_id', $branches)
         ->orderBy('deadline','desc')
         ->paginate( getRecordPerPage());
     }
@@ -96,10 +105,8 @@ class ProjectRepository
     public function getRecentProjectListsForDashboard($select=['*'],$with=[])
     {
         return Project::query()
-            ->withoutGlobalScope('branch')
             ->select($select)
             ->with($with)
-            ->whereIn('branch_id', AppHelper::getCompanyBranches())
             ->latest()
             ->take(5)
             ->get();

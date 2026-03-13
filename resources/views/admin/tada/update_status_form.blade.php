@@ -1,11 +1,9 @@
 
 <div class="modal fade" id="addslider" tabindex="-1" aria-labelledby="addslider" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content position-relative">
-            <div class="modal-header text-start text-white" style="background:#057DB0">
-                <h5 class="modal-title" id="exampleModalLabel">{{__('index.edit_status')}}</h5>
-                
-                <button type="button" class="btn-close btn-close-white " style="position: absolute; top: 11px; right: 11px; margin: 0;" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
             </div>
             <div class="modal-body">
                  <form class="forms-sample" id="updateTadaStatus" action=""  method="post" >
@@ -30,7 +28,7 @@
                         </div>
 
                         @can('edit_tada')
-                            <div class="col-lg-12 text-end">
+                            <div class="col-lg-12 text-center">
                                 <button type="submit" class="btn btn-primary update">{{__('index.update')}}</button>
                             </div>
                         @endcan
