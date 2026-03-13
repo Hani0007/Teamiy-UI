@@ -357,16 +357,14 @@ class DashboardRepository
 
     public function getRecentLeaveRequests($companyId)
     {
-        $companyBranches = AppHelper::getCompanyBranches();
         
         return \App\Models\LeaveRequestMaster::query()
-            ->withoutGlobalScope('branch')
             ->with([
                 'employee:id,name,employee_code',
                 'department:id,dept_name',
                 'leaveType:id,name'
             ])
-            ->whereIn('branch_id', $companyBranches)
+            ->where('company_id', $companyId)
             ->latest('leave_requested_date')
             ->take(5)
             ->get();
