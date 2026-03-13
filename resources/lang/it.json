@@ -1,7 +1,7 @@
 {
     "success": "Successo",
+    "dashboard": "Pannello di controllo",
     "subscription_plans": "Piani di abbonamento",
-    "dashboard": "Cruscotto",
     "record_not_found": "Record non trovato.",
     "no_branches_found": "Nessuna filiale trovata.",
     "record_deleted": "Il record è stato eliminato",
