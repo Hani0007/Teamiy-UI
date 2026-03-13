@@ -423,9 +423,7 @@
             </div>
         </div>
     </div>
-    
-    @section('action', __('index.create_employee'))
-    @include('admin.employees.common.breadcrumb')
+
     @include('admin.section.flash_message')
 
     {{-- Form Start --}}
