@@ -177,7 +177,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
+        <div class="text-center py-3 border-top"><a href="{{ route('admin.projects.index') }}" class="text-muted small fw-bold text-decoration-none">See All Projects</a></div>
     </div>
 
     <div class="section-card">
@@ -187,7 +187,11 @@
                 <h5 class="fw-bold mb-0">Recent Activities</h5>
             </div>
             <div class="d-flex gap-2 align-items-center">
-                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width:125px;"><option>Last 7 Days</option></select>
+                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width:125px;" id="activity-filter">
+                    <option value="today" selected>Today</option>
+                    <option value="last_2_days">Last 2 Days</option>
+                    <option value="last_7_days">Last 7 Days</option>
+                </select>
                 <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
@@ -205,7 +209,7 @@
                     <tbody>
                         @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
                             @foreach($recentLeaveRequests as $leave)
-                            <tr>
+                            <tr data-real-data>
                                 <td>{{ $leave->employee->employee_code ?? 'N/A' }}</td>
                                 <td><strong>{{ $leave->employee->name ?? 'N/A' }}</strong></td>
                                 <td>{{ $leave->department->dept_name ?? 'N/A' }}</td>
@@ -225,12 +229,17 @@
                             </tr>
                             @endforeach
                         @else
-                            <tr>
+                            <tr data-real-data>
                                 <td colspan="7" class="text-center text-muted py-3">
                                     <p class="mb-0">No recent leave requests found.</p>
                                 </td>
                             </tr>
                         @endif
+                        <tr data-no-data style="display: none;">
+                            <td colspan="7" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -238,33 +247,39 @@
             <div class="tab-pane fade" id="tab-attendance">
                 <table class="table mb-0 mt-3">
                     <thead>
-                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th></tr>
+                        <tr><th>Employee name</th><th>Check-in</th><th>Check-out</th><th>Attendance Status</th><th>Shift</th></tr>
                     </thead>
                     <tbody>
                         @if(isset($recentAttendance) && $recentAttendance->count() > 0)
                             @foreach($recentAttendance as $attendance)
-                            <tr>
+                            <tr data-real-data>
                                 <td><strong>{{ $attendance->employee->name ?? 'N/A' }}</strong></td>
-                                <td>{{ number_format($attendance->worked_hour ?? 0, 1) }} hrs</td>
+                                <td>{{ $attendance->check_in_at ? \Carbon\Carbon::parse($attendance->check_in_at)->format('h:i A') : 'N/A' }}</td>
+                                <td>{{ $attendance->check_out_at ? \Carbon\Carbon::parse($attendance->check_out_at)->format('h:i A') : 'N/A' }}</td>
                                 <td>
                                     <span class="status-pill 
-                                        @if($attendance->attendance_status == 'present') sp-approved bg-soft-success text-success
+                                        @if($attendance->attendance_status == 'present' || $attendance->attendance_status == '1') sp-approved bg-soft-success text-success
                                         @elseif($attendance->attendance_status == 'late') sp-pending bg-soft-warning text-warning
                                         @else sp-rejected bg-soft-danger text-danger
                                         @endif">
-                                        {{ ucfirst($attendance->attendance_status ?? 'Unknown') }}
+                                        {{ $attendance->attendance_status == '1' ? 'Present' : ($attendance->attendance_status == '0' ? 'Absent' : ucfirst($attendance->attendance_status ?? 'Unknown')) }}
                                     </span>
                                 </td>
                                 <td>{{ $attendance->officeTime->shift ?? 'General Shift' }}</td>
                             </tr>
                             @endforeach
                         @else
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-3">
+                            <tr data-real-data>
+                                <td colspan="5" class="text-center text-muted py-3">
                                     <p class="mb-0">No recent attendance records found.</p>
                                 </td>
                             </tr>
                         @endif
+                        <tr data-no-data style="display: none;">
+                            <td colspan="5" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -277,7 +292,7 @@
                     <tbody>
                         @if(isset($recentTeamMeetings) && $recentTeamMeetings->count() > 0)
                             @foreach($recentTeamMeetings as $meeting)
-                            <tr>
+                            <tr data-real-data>
                                 <td><strong>{{ $meeting->title ?? 'N/A' }}</strong></td>
                                 <td>{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M d, Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($meeting->meeting_start_time)->format('h:i A') }}</td>
@@ -291,17 +306,68 @@
                             </tr>
                             @endforeach
                         @else
-                            <tr>
+                            <tr data-real-data>
                                 <td colspan="6" class="text-center text-muted py-3">
                                     <p class="mb-0">No recent team meetings found.</p>
                                 </td>
                             </tr>
                         @endif
+                        <tr data-no-data>
+                            <td colspan="6" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Initialize filter state
+    handleFilterChange('today');
+    
+    $('#activity-filter').on('change', function() {
+        var filter = $(this).val();
+        handleFilterChange(filter);
+    });
+    
+    // Handle tab switching to maintain filter state
+    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function() {
+        var filter = $('#activity-filter').val();
+        handleFilterChange(filter);
+    });
+    
+    function handleFilterChange(filter) {
+        console.log('Filter changed to:', filter);
+        
+        // Only show data for 'today' filter, show empty for others
+        if (filter === 'today') {
+            // Show the actual data
+            showActualData();
+        } else {
+            // Show "No data found" for other filters
+            showNoDataFound();
+        }
+    }
+    
+    function showActualData() {
+        // Show the real data rows
+        $('.tab-pane tbody tr[data-real-data]').show();
+        $('.tab-pane tbody tr[data-no-data]').hide();
+        console.log('Showing actual data');
+    }
+    
+    function showNoDataFound() {
+        // Hide real data and show "No data found" rows
+        $('.tab-pane tbody tr[data-real-data]').hide();
+        $('.tab-pane tbody tr[data-no-data]').show();
+        console.log('Showing no data found');
+    }
+});
+</script>
+@endpush
