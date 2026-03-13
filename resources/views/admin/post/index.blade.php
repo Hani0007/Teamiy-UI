@@ -24,7 +24,7 @@
 
         @can('create_post')
             <a href="{{ route('admin.posts.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_post') }}</span>
                 </button>

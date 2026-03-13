@@ -1,45 +1,37 @@
-
-
-<div class="row">
-
+<div class="row px-2">
     <div class="col-lg-6 col-md-6 mb-4">
-        <label for="name" class="form-label"> @lang('index.role_name') <span style="color: red">*</span> </label>
-        <input type="text" class="form-control" id="name" required name="name" value="{{ ( isset($roleDetail) ? $roleDetail->name: '' )}}" autocomplete="off" placeholder="">
+        <label for="name" class="form-label fw-bold"> @lang('index.role_name') <span class="text-danger">*</span> </label>
+        <input type="text" class="form-control border-2" id="name" required name="name" 
+               value="{{ ( isset($roleDetail) ? $roleDetail->name: old('name') )}}" autocomplete="off">
     </div>
 
     <div class="col-lg-6 col-md-6 mb-4">
-        <label for="role_for" class="form-label"> Role For <span style="color: red">*</span> </label>
-        <select name="role_for" class="form-control" id="role_for" required>
+        <label for="role_for" class="form-label fw-bold"> Role For <span class="text-danger">*</span> </label>
+        <select name="role_for" class="form-select border-2" id="role_for" required>
             <option selected disabled>Select</option>
             <option value="admin" {{ ((isset($roleDetail) && $roleDetail->role_for == 'admin') ? 'selected' : '' )}}>Admin</option>
             <option value="employee" {{ ((isset($roleDetail) && $roleDetail->role_for == 'employee') ? 'selected' : '' )}}>Employee</option>
         </select>
-        {{-- <input type="text" class="form-control" id="name" required name="name" value="{{ ( isset($roleDetail) ? $roleDetail->name: '' )}}" autocomplete="off" placeholder=""> --}}
     </div>
 
-    {{-- <div class="col-lg-6 col-md-6 mb-4">
-        <label for="exampleFormControlSelect1" class="form-label">@lang('index.authorize_backend_login')</label>
-        <select class="form-select" id="exampleFormControlSelect1" name="backend_login_authorize">
-            <option value="" {{isset($roleDetail) ? '':'selected'}} >@lang('index.select_status')</option>
-            <option value="1" {{ isset($roleDetail) && ($roleDetail->backend_login_authorize ) == 1 ? 'selected': old('backend_login_authorize') }}>@lang('index.yes')</option>
-            <option value="0" {{ isset($roleDetail) && ($roleDetail->backend_login_authorize ) == 0 ? 'selected': old('backend_login_authorize') }}>@lang('index.no')</option>
-        </select>
-    </div>
-
-
-    <div class="col-lg-6 col-md-6 mb-4">
-        <label for="exampleFormControlSelect1" class="form-label">@lang('index.status')</label>
-        <select class="form-select" id="exampleFormControlSelect1" name="is_active">
-            <option value=""  disabled>@lang('index.select-status')</option>
-            <option value="1" {{ isset($roleDetail) && ($roleDetail->is_active ) == 1 ? 'selected': old('is_active') }}>@lang('index.active')</option>
-            <option value="0" {{ isset($roleDetail) && ($roleDetail->is_active ) == 0 ? 'selected': old('is_active') }}>@lang('index.inactive')</option>
-        </select>
-    </div> --}}
-
-
-
-    <div class="col-lg-6 col-md-6 text-start mb-4 mt-md-4">
-        <!-- <button type="submit" class="btn btn-primary"><i class="link-icon" data-feather="plus"></i> {{isset($roleDetail)? __('index.update'): __('index.create') }} @lang('index.role')</button> -->
-        <button type="submit" class="btn btn-primary"> {{isset($roleDetail)? __('index.update'): __('index.create') }} @lang('index.role')</button>
-    </div>
+    {{-- Permissions Section --}}
+    <!-- <div class="col-12 mt-3">
+        <h5 class="mb-3 text-primary"><i class="fa fa-list-check me-2"></i> Assign Permissions</h5>
+        <div class="row">
+            @if(isset($permissions))
+                @foreach($permissions as $permission)
+                    <div class="col-lg-3 col-md-4 mb-3">
+                        <div class="form-check form-switch p-2 border rounded shadow-sm bg-white">
+                            <input class="form-check-input ms-0 me-2" type="checkbox" name="permissions[]" 
+                                   value="{{ $permission->id }}" id="p_{{ $permission->id }}"
+                                   {{ (isset($roleDetail) && $roleDetail->permissions->contains($permission->id)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="p_{{ $permission->id }}">
+                                {{ ucwords(str_replace('_', ' ', $permission->name)) }}
+                            </label>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div> -->
 </div>

@@ -1,4 +1,4 @@
-<div class="row">
+{{--<div class="row">
 
     @if(isset($project))
         <div class="col-lg-6 col-md-6 mb-4">
@@ -208,3 +208,106 @@
     </div>
 </div>
 
+--}}
+
+<div class="row">
+    {{-- Project Selection --}}
+    @if(isset($project))
+        <div class="col-lg-6 col-md-6 mb-4">
+            <label class="form-label">@lang('index.project') <span style="color: red">*</span></label>
+            <select class="form-select" name="project_id">
+                <option value="{{$project->id}}" selected>{{ucfirst($project->name)}}</option>
+            </select>
+        </div>
+    @else
+        @if(!isset(auth()->user()->branch_id))
+            <div class="col-lg-6 col-md-6 mb-4">
+                <label for="branch_id" class="form-label">{{ __('index.branch') }} <span style="color: red">*</span></label>
+                <select class="form-select" id="branch_id" name="branch_id">
+                    <option {{!isset($taskDetail) ? 'selected': ''}} disabled>{{ __('index.select_branch') }}</option>
+                    @if(isset($companyDetail))
+                        @foreach($companyDetail->branches()->get() as $branch)
+                            <option value="{{$branch->id}}" {{ (isset($taskDetail) && $taskDetail->branch_id == $branch->id) ? 'selected': '' }}>
+                                {{ucfirst($branch->name)}}
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        @endif
+        <div class="col-lg-6 col-md-6 mb-4">
+            <label for="project" class="form-label">@lang('index.project') <span style="color: red">*</span></label>
+            <select class="form-select" id="project" name="project_id"></select>
+        </div>
+    @endif
+
+    {{-- Task Name --}}
+    <div class="col-lg-6 col-md-6 mb-4">
+        <label for="name" class="form-label">@lang('index.task_name') <span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="name" name="name" required value="{{ $taskDetail->name ?? old('name') }}" placeholder="@lang('index.enter_task_name')">
+    </div>
+
+    {{-- Dates --}}
+    <div class="col-lg-3 col-md-6 mb-4">
+        <label class="form-label">@lang('index.task_start_date') <span style="color: red">*</span></label>
+        <input type="text" class="form-control {{ $isBsEnabled ? 'startNpDate' : '' }}" 
+               {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="start_date" required 
+               value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->start_date) : $taskDetail->start_date) : old('start_date') }}">
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+        <label class="form-label">@lang('index.task_end_date') <span style="color: red">*</span></label>
+        <input type="text" class="form-control {{ $isBsEnabled ? 'npDeadline' : '' }}" 
+               {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="end_date" required 
+               value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->end_date) : $taskDetail->end_date) : old('end_date') }}">
+    </div>
+
+    {{-- Priority & Status --}}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <label class="form-label">@lang('index.priority')</label>
+        <select class="form-select" name="priority">
+            <option value="" disabled {{!isset($taskDetail) ? 'selected' : ''}}>@lang('index.select_priority')</option>
+            @foreach(\App\Models\Task::PRIORITY as $value)
+                <option value="{{$value}}" {{ (isset($taskDetail) && $taskDetail->priority == $value) ? 'selected': '' }}>{{ucfirst($value)}}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <label class="form-label">@lang('index.task_status')</label>
+        <select class="form-select" name="status">
+            <option value="" disabled {{!isset($taskDetail) ? 'selected' : ''}}>@lang('index.select_task_status')</option>
+            @foreach(\App\Models\Task::STATUS as $value)
+                <option value="{{$value}}" {{ (isset($taskDetail) && $taskDetail->status == $value) ? 'selected': '' }}>{{\App\Helpers\PMHelper::STATUS[$value]}}</option>
+            @endforeach
+        </select>
+    </div>
+
+    {{-- Assign Member --}}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <label class="form-label">@lang('index.assign_member') <span style="color: red">*</span></label>
+        <select class="form-select" id="{{ isset($projectMember) ? 'assignedMember' : 'taskMember' }}" name="assigned_member[]" multiple="multiple" required>
+            @if(isset($projectMember))
+                @foreach($projectMember as $datum)
+                    <option value="{{$datum->user->id}}">{{ucfirst($datum->user->name)}}</option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+
+    {{-- Description --}}
+    <div class="col-lg-12 mb-4">
+        <label class="form-label">@lang('index.description')</label>
+        <textarea class="form-control" name="description" id="tinymceExample" rows="3">{{ $taskDetail->description ?? old('description') }}</textarea>
+    </div>
+
+    {{-- Attachments Section --}}
+    <div class="col-lg-12 mb-4">
+        <label class="form-label">@lang('index.task_attachments')</label>
+        <div class="uploadify-wrapper p-3 border rounded bg-light">
+            <input id="image-uploadify" type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="notification" id="taskNotification" value="0">

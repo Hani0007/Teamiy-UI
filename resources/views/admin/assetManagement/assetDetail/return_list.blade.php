@@ -159,9 +159,9 @@
 <div class="modal fade" id="repairDetail" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0">
-            <div class="modal-header">
+            <div class="modal-header position-relative">
                 <h5 class="modal-title repairTitle"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <table class="table table-borderless">
@@ -187,7 +187,7 @@
     .custom-pill { border-radius: 20px !important; padding: 8px 25px !important; font-weight: 600; color: #64748b; background: #f1f5f9; border:none; }
     .nav-pills .nav-link.active { background-color: #057db0 !important; color: white; }
 
-    .btn-view-circle { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; backdrop-filter: blur(5px); transition: 0.3s; }
+    .btn-view-circle { width: 32px; height: 32px; background: #FFFF; border-radius: 20%; display: flex; align-items: center; justify-content: center; color: #057db0; backdrop-filter: blur(5px); transition: 0.3s; }
     .btn-view-circle:hover { background: white; color: #057db0; transform: scale(1.1); }
     
     .branch-icon-square { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); margin-bottom: 12px; }
@@ -214,6 +214,21 @@
     .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #057db0; }
     input:checked + .slider:before { transform: translateX(18px); }
+    /* Modal ke andar table cells ke borders hatane ke liye */
+#assignmentDetail .table td, 
+#repairDetail .table td, 
+#assignmentDetail .table th, 
+#repairDetail .table th {
+    border: none !important;
+    border-top: none !important;
+}
+
+/* Modal content ka focus border khatam karne ke liye */
+.modal-content {
+    outline: none !important;
+    border: none !important;
+}
+
 </style>
 
 <script>

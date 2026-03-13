@@ -2,15 +2,7 @@
 @section('title', __('index.termination'))
 @section('action', __('index.show_detail'))
 
-@section('button')
-    <div class="float-md-end">
-        <a href="{{route('admin.termination.index')}}">
-            <button class="btn btn-primary shadow-sm px-4" style="border-radius: 10px; background: linear-gradient(135deg, #057db0 0%, #046690 100%); border: none;">
-                <i class="link-icon" data-feather="arrow-left" style="width: 18px;"></i> {{ __('index.back') }}
-            </button>
-        </a>
-    </div>
-@endsection
+{{-- Top section se button hata diya hai kyunki hum end par add kar rahe hain --}}
 
 @section('main-content')
 <style>
@@ -42,15 +34,19 @@
                 </div>
                 <div class="ms-auto">
                     @php
+                        $status = $terminationDetail->status;
+                        $isApproved = ($status == \App\Enum\TerminationStatusEnum::approved->value);
                         $color = [
-                            \App\Enum\TerminationStatusEnum::approved->value => 'info',
-                            \App\Enum\TerminationStatusEnum::onReview->value => 'info',
+                            \App\Enum\TerminationStatusEnum::approved->value => 'primary',
+                            \App\Enum\TerminationStatusEnum::onReview->value => 'primary',
                             \App\Enum\TerminationStatusEnum::pending->value => 'secondary',
                             \App\Enum\TerminationStatusEnum::cancelled->value => 'warning',
                         ];
                     @endphp
-                    <span class="status-badge-lg bg-white text-{{ $color[$terminationDetail->status] }} shadow-sm">
-                        {{ ucfirst($terminationDetail->status) }}
+                    <span class="status-badge-lg bg-white shadow-sm" style="color: {{ $isApproved ? '#057DB0' : '' }}">
+                        <span class="{{ !$isApproved ? 'text-'.$color[$status] : '' }}">
+                            {{ ucfirst($status) }}
+                        </span>
                     </span>
                 </div>
             </div>
@@ -61,7 +57,7 @@
                 {{-- Date Information --}}
                 <div class="col-md-4">
                     <div class="info-box shadow-sm text-center">
-                        <div class="label-text text-primary">{{ __('index.notice_date') }}</div>
+                        <div class="label-text" style="color:#057DB0">{{ __('index.notice_date') }}</div>
                         <div class="value-text">
                             <i data-feather="calendar" class="me-1 text-muted" style="width: 16px;"></i>
                             {{ \App\Helpers\AppHelper::formatDateForView($terminationDetail->notice_date) }}
@@ -70,8 +66,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="info-box shadow-sm text-center border-danger">
-                        <div class="label-text text-danger">{{ __('index.termination_date') }}</div>
-                        <div class="value-text text-danger">
+                        <div class="label-text" style="color:#FB8233">{{ __('index.termination_date') }}</div>
+                        <div class="value-text" style="color:#FB8233">
                             <i data-feather="clock" class="me-1 text-danger" style="width: 16px;"></i>
                             {{ \App\Helpers\AppHelper::formatDateForView($terminationDetail->termination_date) }}
                         </div>
@@ -124,6 +120,17 @@
                         @endif
                     </div>
                 </div>
+            </div>
+
+            <hr class="mt-5 mb-3 opacity-25">
+
+            {{-- Back Button at the end, right aligned --}}
+            <div class="d-flex justify-content-end">
+                <a href="{{route('admin.termination.index')}}">
+                    <button class="btn branch-back-btn text-decoration-none shadow-sm px-5" style="border-radius: 10px; border: none; padding: 10px 30px;">
+                        <i class="link-icon" data-feather="arrow-left" style="width: 18px; margin-bottom: 2px;"></i> {{ __('index.back') }}
+                    </button>
+                </a>
             </div>
         </div>
     </div>

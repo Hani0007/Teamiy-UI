@@ -2,7 +2,7 @@
 <div class="modal fade" id="assetDetail" tabindex="-1" aria-labelledby="assetDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-sm">
-            <div class="modal-header text-center">
+            <div class="modal-header text-white" style="background:#057DB0">
                 <h5 class="modal-title assetTitle" id="assetDetailLabel"></h5>
             </div>
             <div class="modal-body p-4">

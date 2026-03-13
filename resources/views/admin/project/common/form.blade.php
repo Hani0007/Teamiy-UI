@@ -202,7 +202,7 @@
 
     <input type="hidden" readonly id="projectNotification" name="notification" value="0">
 
-    <div class="col-lg-12 text-center text-md-start">
+    {{--<div class="col-lg-12 text-center text-md-start">
         <button type="submit" class="btn btn-primary mb-2">
             <!-- <i class="link-icon" data-feather="{{isset($projectDetail) ? 'edit-2' : 'plus'}}"></i> -->
             {{isset($projectDetail) ? __('index.update') : __('index.create')}}
@@ -212,5 +212,5 @@
             <!-- <i class="link-icon" data-feather="{{isset($projectDetail)? 'edit-2':'plus'}}"></i> -->
             {{isset($projectDetail)?  __('index.update_send'): __('index.create_send')}}
         </button>
-    </div>
+    </div>--}}
 </div>

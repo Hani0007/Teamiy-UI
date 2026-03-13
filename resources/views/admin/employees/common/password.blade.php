@@ -1,8 +1,8 @@
 <div class="modal fade" id="statusUpdate" tabindex="-1" aria-labelledby="addslider" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header text-center">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('index.add_branch') }}</h5>
+            <div class="modal-header text-start text-white" style="background:#057DB0">
+                <h5 class="modal-title "  id="exampleModalLabel">{{ __('index.add_branch') }}</h5>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -18,7 +18,7 @@
                                 <input type="text" class="form-control" id="confirmPassword" name="confirm_password" value="" autocomplete="off" placeholder="{{ __('index.confirm_password_placeholder') }}" required>
                             </div>
                         </div>
-                        <div class="text-center">
+                        <div class="text-end">
                             <button type="submit" id="submit-btn" class="btn btn-primary btn-xs">{{ __('index.submit') }}</button>
                         </div>
                     </form>

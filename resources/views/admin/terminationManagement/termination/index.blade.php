@@ -12,13 +12,15 @@
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.termination') }}</h2>
             @include('admin.terminationManagement.termination.common.breadcrumb')
         </div>
-
-        <a href="{{ route('admin.termination.create') }}" style="text-decoration: none;">
-            <button class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
-                <i data-feather="plus" style="width: 20px;"></i>
-                <span>{{ __('index.add_termination') }}</span>
-            </button>
-        </a>
+        
+        @can('create_termination')
+            <a href="{{ route('admin.termination.create') }}" style="text-decoration: none;">
+                <button class="btn btn-primary">
+                    <i data-feather="plus" style="width: 20px;"></i>
+                    <span>{{ __('index.add_termination') }}</span>
+                </button>
+            </a>
+        @endcan
     </div>
 
     {{-- 2. Glass-morphism Filter Panel --}}
@@ -88,7 +90,7 @@
                 'rejected'  => ['bg' => '#ef4444', 'text' => '#fff'],
                 'cancelled' => ['bg' => '#ef4444', 'text' => '#fff'],
                 'pending'   => ['bg' => '#FB8233', 'text' => '#fff'],
-                'on_review' => ['bg' => '#0ea5e9', 'text' => '#fff'],
+                'on_review' => ['bg' => '#F8FAFC', 'text' => '#fff'],
             ];
         @endphp
 

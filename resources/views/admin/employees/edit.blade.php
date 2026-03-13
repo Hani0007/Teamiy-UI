@@ -15,7 +15,19 @@
 @section('main-content')
 
     <section class="content">
-
+<div class="teamy-top-header">
+        <div>
+            <h2>{{ __('index.employee_management') }}</h2>
+            <div class="header-info-row">
+                <div class="header-info-item">
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">Update</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fa fa-user-plus"></i> Update Employee
+                </div>
+            </div>
+        </div>
+    </div>
         @include('admin.section.flash_message')
 
         @include('admin.employees.common.breadcrumb')
