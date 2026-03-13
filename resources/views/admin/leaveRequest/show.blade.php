@@ -95,7 +95,7 @@
             </div>
 
             <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fafc;">
-                <button type="button" class="btn w-100 py-2 fw-bold" data-bs-dismiss="modal" 
+                <button type="button" class="btn  py-2 fw-bold" data-bs-dismiss="modal" 
                         style=" border: 1px solid #e2e8f0; border-radius: 12px; transition: all 0.3s; branch-back-btn">
                     {{ __('index.close') }}
                 </button>
