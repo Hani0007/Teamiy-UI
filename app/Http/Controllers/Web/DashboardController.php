@@ -83,7 +83,7 @@ class DashboardController extends Controller
                 $recentLeaveRequests = $this->dashboardRepo->getRecentLeaveRequests($companyId);
 
                 // $multipleAttendance = AppHelper::getAttendanceLimit();
-                $recentAttendance = Attendance::select('id','worked_hour','attendance_status', 'user_id','office_time_id')->with('employee:id,name', 'officeTime:id,opening_time,closing_time,shift')->where('company_id', $companyId)->take(5)->latest()->get();
+                $recentAttendance = Attendance::select('id','worked_hour','attendance_status', 'user_id','office_time_id','check_in_at','check_out_at')->with('employee:id,name', 'officeTime:id,opening_time,closing_time,shift')->where('company_id', $companyId)->take(5)->latest()->get();
                 $recentTeamMeetings = TeamMeeting::select('id','title','meeting_start_time', 'meeting_date')->with('teamMeetingParticipator.participator:id,name')->take(5)->latest()->get();
                 
             }
