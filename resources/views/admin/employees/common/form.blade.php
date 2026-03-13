@@ -46,12 +46,12 @@
     <div class="card-body pb-2 ">
         <div class="profile-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-3">
-        <div class="section-icon"><i class="fa fa-user"></i></div>
-        <div class="section-heading-text ">
-            <h4>{{ __('index.personal_detail') }}</h4>
-            <p>Basic identity and contact information</p>
-        </div>
-    </div>
+                <div class="section-icon"><i class="fa fa-user"></i></div>
+                <div class="section-heading-text ">
+                    <h4>{{ __('index.personal_detail') }}</h4>
+                    <p>Basic identity and contact information</p>
+                </div>
+            </div>
             <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.personal_detail') }}</h5> -->
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3 @if (isset($userDetail) && $userDetail->role_id == 1) d-none @endif">
@@ -296,14 +296,14 @@
     <div class="card-body pb-2">
         <div class="company-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-4">
-        <div class="section-icon">
-            <i class="fa fa-building"></i>
-        </div>
-        <div class="section-heading-text">
-            <h4>{{ __('index.company_detail') }}</h4>
-            <p>Define the employee's role, department, and work timings</p>
-        </div>
-    </div>
+                <div class="section-icon">
+                    <i class="fa fa-building"></i>
+                </div>
+                <div class="section-heading-text">
+                    <h4>{{ __('index.company_detail') }}</h4>
+                    <p>Define the employee's role, department, and work timings</p>
+                </div>
+            </div>
             <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.company_detail') }}</h5> -->
             <div class="row">
                 @if (!isset(auth()->user()->branch_id))
@@ -452,15 +452,15 @@
     <div class="card-body pb-2 teamy-main-card px-5">
         <div class="profile-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-4">
-        <div class="section-icon"><i class="fa fa-file-contract"></i></div>
-        <div class="section-heading-text">
-            <h4>Employee Contract & Documents</h4>
-            <p>Manage tenure, pay grade, and legal documents</p>
-            
-        </div>
-        
-    </div>
-    
+                <div class="section-icon"><i class="fa fa-file-contract"></i></div>
+                <div class="section-heading-text">
+                    <h4>Employee Contract & Documents</h4>
+                    <p>Manage tenure, pay grade, and legal documents</p>
+
+                </div>
+
+            </div>
+
             <!-- <h5 class="mb-3 border-bottom pb-3">Employee Contract</h5> -->
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3">
@@ -553,20 +553,20 @@
     <div class="card-body pb-2 teamy-main-card px-5">
         <div class="profile-detail">
             <!-- <h5 class="mb-3 border-bottom pb-3">Employee Document</h5> -->
-<div class="section-title-wrapper mb-4 border-bottom w-100 pb-4">
-    <div class="d-flex align-items-center">
-        <div class="section-icon bg-light-primary text-primary p-2 rounded-circle me-3">
-            <i class="fa fa-file-text"></i>
-        </div>
-        <div class="section-heading-text">
-            <h4  >Employee Document</h4>
-            <p class="text-muted small mb-0">Identity proofs and employment related files</p>
-        </div>
-        
-    </div>
-    
-</div>
-            
+            <div class="section-title-wrapper mb-4 border-bottom w-100 pb-4">
+                <div class="d-flex align-items-center">
+                    <div class="section-icon bg-light-primary text-primary p-2 rounded-circle me-3">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <div class="section-heading-text">
+                        <h4>Employee Document</h4>
+                        <p class="text-muted small mb-0">Identity proofs and employment related files</p>
+                    </div>
+
+                </div>
+
+            </div>
+
             <div class="row" id="document-container">
 
                 <div class="col-lg-6 col-md-6 mb-3 document-field">
@@ -680,16 +680,16 @@
         <div class="card mb-4 w-100 teamy-main-card">
             <div class="card-body pb-0">
                 <div class="bank-detail ">
-                    <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.bank_detail')}}</h5> -->
-                     <div class="section-title-wrapper border-bottom w-100 pb-4">
-        <div class="section-icon"><i class="fa fa-university"></i></div>
-        <div class="section-heading-text ">
-            <h4>{{ __('index.bank_detail') }}</h4>
-            <p>Salary disbursement and banking information</p>
-        </div>
-        
-    </div>
-    
+                    <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.bank_detail') }}</h5> -->
+                    <div class="section-title-wrapper border-bottom w-100 pb-4">
+                        <div class="section-icon"><i class="fa fa-university"></i></div>
+                        <div class="section-heading-text ">
+                            <h4>{{ __('index.bank_detail') }}</h4>
+                            <p>Salary disbursement and banking information</p>
+                        </div>
+
+                    </div>
+
                     <div class="row">
                         <div class="col-lg-6 col-md-6 mb-4">
                             <label for="bank_name" class="form-label">{{ __('index.bank_name') }} </label>
@@ -743,7 +743,7 @@
                 <i class="link-icon" data-feather="arrow-left me-3"></i> {{ __('index.back') }}
             </a>
 <button type="submit" class="btn btn-primary ">
-    {{isset($userDetail)? __('index.update_employee'):__('index.add_employee')}}
+    {{isset($userDetail)? "Update Employee":__('index.add_employee')}}
 </button>
 </div>
 

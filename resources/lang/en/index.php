@@ -314,6 +314,12 @@ return [
     'account_type' => 'Account Type',
     'account_holder' => 'Account Holder',
     'not_available' => 'N/A',
+    'employee_list' => 'Employee List',
+    'work_email' => 'Work Email',
+    'personal_email' => 'Personal Email',
+    'place_of_birth' => 'Place of Birth',
+    'nationality' => 'Nationality',
+
 
     /** logout requests */
     'logout_request_status' => 'Logout Request Status',

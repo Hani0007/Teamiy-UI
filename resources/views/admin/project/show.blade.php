@@ -22,6 +22,7 @@
 @endsection
 
 @section('button')
+{{-- @dd($projectDetail) --}}
     <div class="float-md-end d-md-flex align-items-center mb-4">
         @can('edit_project')
             <!-- <a href="{{ route('admin.projects.edit', $projectDetail->id) }}" >
