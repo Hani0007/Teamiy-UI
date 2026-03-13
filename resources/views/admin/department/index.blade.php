@@ -18,7 +18,7 @@
         
         @can('create_department')
             <a href="{{ route('admin.departments.create')}}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_department') }}</span>
                 </button>
@@ -173,7 +173,9 @@
                 showDenyButton: true,
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
-                confirmButtonColor: '#057db0',
+                icon:'warning',
+                confirmButtonColor: `#057DB0`,
+                denyButtonColor: `#E1752E`,
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -194,6 +196,9 @@
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
                 confirmButtonColor: '#fb8233',
+                icon:'warning',
+                confirmButtonColor: `#057DB0`,
+                denyButtonColor: `#E1752E`,
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.isConfirmed) {

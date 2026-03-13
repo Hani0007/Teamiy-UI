@@ -8,6 +8,7 @@
 
 @section('main-content')
 
+</style>
 <section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')
 
@@ -23,7 +24,7 @@
         
         @if (AppHelper::canAccess('create_project'))
             <a href="{{ route('admin.projects.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.create_project') }}</span>
                 </button>
@@ -86,10 +87,10 @@
     @php
         $StatusBadge = [
             'in_progress' => '#fb8233', // Theme Orange
-            'not_started' => '#94a3b8', 
+            'not_started' => '#057DB0', 
             'on_hold' => '#0ea5e9',
             'cancelled' => '#ef4444',
-            'completed' => '#10b981',
+            'completed' => '#057DB0',
         ];
     @endphp
 
@@ -163,8 +164,8 @@
 
                                 <div class="action-dock">
                                     @can('show_project_detail')
-                                        <a href="{{ route('admin.projects.show', $value->id) }}" class="btn-action view" title="View Detail">
-                                            <i data-feather="eye"></i>
+                                        <a href="{{ route('admin.projects.show', $value->id) }}" class="btn-action edit" title="View Detail">
+                                            <i data-feather="eye" style="height:16px; width:16px"></i>
                                         </a>
                                     @endcan
                                     @can('edit_project')

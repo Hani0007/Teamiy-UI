@@ -24,7 +24,7 @@
 
         @can('create_office_time')
             <a href="{{ route('admin.office-times.create') }}" style="text-decoration: none;">
-                <button class="btn-premium-add">
+                <button class="btn btn-primary">
                     <i data-feather="plus" style="width: 20px;"></i>
                     <span>{{ __('index.add_office_time') }}</span>
                 </button>
@@ -137,7 +137,7 @@
                                            data-href="{{route('admin.office-times.show',$value->id)}}" 
                                            data-id="{{ $value->id }}" class="btn-action view" title="View" 
                                            style="background: #f0f9ff; color: #0369a1;">
-                                            <i data-feather="eye"></i>
+                                            <i data-feather="eye" style="width:18px; height:18px"></i>
                                         </a>
                                     @endcan
 

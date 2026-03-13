@@ -147,20 +147,38 @@
 
 @section('title', __('index.users'))
 
-@section('button')
-    <a href="{{ route('admin.users.create')}}" class="btn shadow-sm px-4 fw-bold rounded-3 text-white" style="background-color: #057DB0;">
-        <i class="me-1" data-feather="plus-circle"></i> {{ __('index.add_user') }}
-    </a>
-@endsection
-
 @section('main-content')
-<section class="content-wrapper p-4" style="background: #f0f2f5; min-height: 100vh;">
+<section class="content" style="padding: 10px 20px;">
     @include('admin.section.flash_message')
+
+    {{-- Header Section: Exact Copy of Master Style --}}
+    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+        <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 600;">
+                {{ __('index.users') }}
+            </h2>
+            <p style="color: #94a3b8; font-weight: 500; font-size: 12px; margin-top: 5px;">
+                <i data-feather="users" style="width: 14px; vertical-align: middle;"></i> 
+                User & Role Management
+            </p>
+        </div>
+        
+        {{-- Create Button: Exact Copy of Master Style --}}
+        @can('create_user')
+            <a href="{{ route('admin.users.create') }}" style="text-decoration: none;">
+                <button class="btn btn-primary d-flex align-items-center gap-2" >
+                    <i data-feather="plus" style="width: 20px;"></i>
+                    <span>{{ __('index.add_user') }}</span>
+                </button>
+            </a>
+        @endcan
+    </div>
+
     @include('admin.users.common.breadcrumb')
 
-    <div class="user-list">
+    <div class="user-list mt-4">
         @forelse($admins as $key => $value)
-            <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden transition-all hover-card" style="background: #fff;">
                 <div class="card-body p-0">
                     <div class="row g-0 align-items-center">
                         
@@ -172,52 +190,59 @@
                         </div>
 
                         <div class="col p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h5 class="fw-bold text-dark mb-1">{{ ucfirst($value->name) }}</h5>
                                     <p class="text-muted small mb-0">
-                                        <i data-feather="mail" class="icon-xs me-1"></i> {{ $value->email }}
+                                        <i data-feather="mail" style="width: 14px;"></i> {{ $value->email }}
                                     </p>
                                 </div>
                                 
                                 <div class="text-end">
-                                    <span class="d-block small fw-bold text-muted mb-1 text-uppercase">@lang('index.status')</span>
+                                    <span class="d-block small fw-bold text-muted mb-1 text-uppercase" style="font-size: 10px;">@lang('index.status')</span>
                                     <div class="form-check form-switch d-inline-block">
-                                        <input class="form-check-input toggleStatus cursor-pointer" type="checkbox" 
+                                        {{-- Updated Toggle Color to #FB8233 --}}
+                                        <input class="form-check-input toggleStatus cursor-pointer custom-orange-toggle" type="checkbox" 
                                                href="{{ route('admin.users.toggle-status', $value->id) }}"
-                                               {{ $value->is_active == 1 ? 'checked' : '' }}
-                                               style="border-color: #057DB0;">
+                                               {{ $value->is_active == 1 ? 'checked' : '' }}>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {{-- Icon Dock: Replicated Master Style --}}
                         <div class="col-auto p-4 bg-light-subtle border-start">
-                            <div class="d-flex flex-column gap-2">
-                                <div class="btn-group shadow-sm bg-white rounded-3">
-                                    <a href="{{ route('admin.users.show', $value->id) }}" class="btn btn-link text-primary p-2" title="{{ __('index.view') }}">
-                                        <i data-feather="eye" style="width:18px;height:18px;"></i>
-                                    </a>
-
-                                    @if($value->id == auth('admin')->user()->id)
-                                        <a href="{{ route('admin.users.edit', $value->id) }}" class="btn btn-link text-info p-2" title="{{ __('index.edit_detail') }}">
-                                            <i data-feather="edit"></i>
-                                        </a>
-                                    @endif
-
-                                    @if($value->id != auth('admin')->user()->id && $value->id != 1)
-                                        <button class="btn btn-link text-danger p-2 deleteEmployee" 
-                                                data-href="{{ route('admin.users.delete', $value->id) }}" title="{{ __('index.delete_user') }}">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-                                    @endif
-                                </div>
+                            <div class="d-flex align-items-center gap-2">
                                 
+                                <a href="{{ route('admin.users.show', $value->id) }}" 
+                                   style="background: #e0f2fe; color: #0369a1; padding: 8px; border-radius: 8px; display: inline-flex;" 
+                                   title="{{ __('index.view') }}">
+                                    <i data-feather="eye" style="width:16px; height:16px;"></i>
+                                </a>
+
+                                @if($value->id == auth('admin')->user()->id)
+                                    <a href="{{ route('admin.users.edit', $value->id) }}" 
+                                       style="background: #f1f5f9; color: #475569; padding: 8px; border-radius: 8px; display: inline-flex;" 
+                                       title="{{ __('index.edit_detail') }}">
+                                        <i data-feather="edit-3" style="width:16px; height:16px;"></i>
+                                    </a>
+                                @endif
+
+                                @if($value->id != auth('admin')->user()->id && $value->id != 1)
+                                    <a href="javascript:void(0)" 
+                                       class="deleteEmployee"
+                                       data-href="{{ route('admin.users.delete', $value->id) }}" 
+                                       style="background: #fee2e2; color: #dc2626; padding: 8px; border-radius: 8px; display: inline-flex; cursor: pointer;" 
+                                       title="{{ __('index.delete_user') }}">
+                                        <i data-feather="trash-2" style="width:16px; height:16px;"></i>
+                                    </a>
+                                @endif
+
                                 @if($value->id == auth('admin')->user()->id)
                                     <button class="btn btn-sm text-white fw-bold rounded-3 changePassword" 
                                             data-href="{{ route('admin.users.change-password', $value->id) }}"
-                                            style="background-color: #057DB0;">
-                                        <i data-feather="lock" class="icon-xs me-1"></i> {{ __('index.change_password') }}
+                                            style="background-color: #057DB0; font-size: 11px; padding: 8px 12px;">
+                                        <i data-feather="lock" style="width: 12px; margin-right: 4px;"></i> {{ __('index.pass') }}
                                     </button>
                                 @endif
                             </div>
@@ -227,9 +252,9 @@
                 </div>
             </div>
         @empty
-            <div class="card border-0 shadow-sm rounded-4 text-center py-5 bg-white">
-                <i data-feather="users" class="mx-auto mb-3" style="width: 50px; height: 50px; color: #057DB0; opacity: 0.3;"></i>
-                <h5 class="text-muted fw-bold">{{ __('index.no_records_found') }}</h5>
+            <div class="text-center py-5">
+                <i data-feather="users" style="width: 50px; color: #cbd5e1;"></i>
+                <p class="text-muted mt-3">{{ __('index.no_records_found') }}</p>
             </div>
         @endforelse
     </div>
@@ -242,24 +267,22 @@
 @include('admin.users.common.password')
 
 <style>
-    .rounded-4 { border-radius: 1rem !important; }
-    .hover-card { transition: all 0.3s ease; border-left: 5px solid transparent !important; }
     .hover-card:hover { 
         transform: translateX(5px); 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important; 
-        border-left-color: #057DB0 !important;
-    }
-    
-    .form-switch .form-check-input:checked {
-        background-color: #057DB0;
-        border-color: #057DB0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; 
+        border-left: 5px solid #057DB0 !important;
     }
 
-    .btn-link { text-decoration: none; border: none; transition: 0.2s; }
-    .btn-link:hover { opacity: 0.7; transform: scale(1.1); }
+    /* Target Toggle Styling */
+    .custom-orange-toggle:checked {
+        background-color: #FB8233 !important;
+        border-color: #FB8233 !important;
+    }
     
-    .icon-xs { width: 14px; height: 14px; stroke-width: 2.5px; }
-    .shadow-xs { box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(251, 130, 51, 0.25);
+        border-color: #FB8233;
+    }
 </style>
 @endsection
 
@@ -267,7 +290,9 @@
     @include('admin.users.common.scripts')
     <script>
         $(document).ready(function() {
-            feather.replace();
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
         });
     </script>
 @endsection

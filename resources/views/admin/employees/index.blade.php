@@ -12,6 +12,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.employees') }}</h2>
+            @section('action', __('index.employees'))
             @include('admin.employees.common.breadcrumb')
             <div class="d-flex align-items-center gap-3 mt-1">
                 <!--<nav aria-label="breadcrumb">

@@ -15,6 +15,84 @@
         .select2-container--open {
             z-index: 9999; /* Higher than Bootstrap modal's z-index (usually 1050) */
         }
+    /* Premium Glassmorphism Card */
+    .card {
+        background: rgba(255, 255, 255, 0.7); /* Translucent background */
+        backdrop-filter: blur(10px); /* Blur effect */
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.4); 
+        border-radius: 16px; /* Smooth rounded corners */
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); /* Soft shadow */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+    }
+
+    /* Modern Table Styling */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(5, 125, 176, 0.02);
+    }
+    
+    .table td {
+        border-color: rgba(0, 0, 0, 0.05);
+        padding: 12px 15px;
+    }
+
+    /* Premium Button Effects */
+    .btn {
+        border-radius: 10px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary { background: #057DB0; border-color: #057DB0; }
+    .btn-primary:hover { background: #04668f; transform: translateY(-2px); }
+    
+    .btn-success { background: #198754; border: none; }
+    .btn-success:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3); }
+
+    /* Task List Modern Look */
+    .title-section {
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 12px !important;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .title-section:hover {
+        background: #fff;
+        border-color: #057DB0;
+        transform: scale(1.01);
+    }
+
+    /* Progress Bar */
+    .progress {
+        height: 10px;
+        border-radius: 20px;
+        background-color: #e9ecef;
+    }
+
+    .progress-bar {
+        border-radius: 20px;
+        background: linear-gradient(90deg, #057DB0, #00B4DB);
+    }
+
+    /* Profile Images Stack */
+    .checklist-image {
+        border: 2px solid #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-left: -10px; /* Overlapping effect */
+        transition: margin 0.3s;
+    }
+    .assigned_members:hover .checklist-image {
+        margin-left: 2px;
+    }
     </style>
     <link rel="stylesheet" href="{{ asset('assets/css/imageuploadify.min.css') }}">
 
@@ -24,27 +102,27 @@
 @section('button')
     <div class="float-md-end d-md-flex align-items-center mb-4">
         @can('edit_project')
-            <a href="{{ route('admin.projects.edit', $projectDetail->id) }}" >
+            <!-- <a href="{{ route('admin.projects.edit', $projectDetail->id) }}" >
                 <button class="btn btn-success me-md-2 d-md-flex align-items-center">
                     <i class="link-icon me-2" data-feather="edit"></i> @lang('index.edit_project')
                 </button>
-            </a>
+            </a> -->
         @endcan
 
         @can('create_task')
-            <a href="{{ route('admin.project-task.create', $projectDetail->id) }}" >
+            <!-- <a href="{{ route('admin.project-task.create', $projectDetail->id) }}" >
                 <button class="btn btn-secondary me-md-2 d-md-flex align-items-center">
                     <i class="link-icon me-2" data-feather="plus"></i> @lang('index.create_task')
                 </button>
-            </a>
+            </a> -->
         @endcan
 
         @can('upload_project_attachment')
-                <a href="#" data-bs-toggle="modal" data-bs-target="#projectAttachmentModal">
+                <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#projectAttachmentModal">
                     <button class="btn btn-primary d-md-flex align-items-center">
                         <i class="link-icon me-2" data-feather="clipboard"></i> @lang('index.upload_attachments')
                     </button>
-                </a>
+                </a> -->
         @endcan
     </div>
 @endsection
@@ -54,7 +132,31 @@
     <section class="content pb-0">
 
         @include('admin.section.flash_message')
+<div class="d-flex align-items-center justify-content-between mb-2">
+            <div>
+                <h3 class="mb-0" style="color:#057DB0">{{ ucfirst($projectDetail->name) }}</h3>
+            </div>
+            
+            <div class="d-flex align-items-center gap-2">
+                @can('edit_project')
+                    <a href="{{ route('admin.projects.edit', $projectDetail->id) }}" class="btn btn-success d-flex align-items-center shadow-sm">
+                        <i class="link-icon me-1" data-feather="edit" style="width: 16px;"></i> @lang('index.edit_project')
+                    </a>
+                @endcan
 
+                @can('create_task')
+                    <a href="{{ route('admin.project-task.create', $projectDetail->id) }}" class="btn btn-secondary d-flex align-items-center shadow-sm">
+                        <i class="link-icon me-1" data-feather="plus" style="width: 16px;"></i> @lang('index.create_task')
+                    </a>
+                @endcan
+
+                @can('upload_project_attachment')
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#projectAttachmentModal" class="btn btn-primary d-flex align-items-center shadow-sm">
+                        <i class="link-icon me-1" data-feather="clipboard" style="width: 16px;"></i> @lang('index.upload_attachments')
+                    </a>
+                @endcan
+            </div>
+        </div>
         @include('admin.project.common.breadcrumb')
 
         <div class="row position-relative">
@@ -235,11 +337,11 @@
                                 </tr>
                                 <tr>
                                     <td>@lang('index.created'):</td>
-                                    <td class="text-end text-success">{{ \App\Helpers\AppHelper::formatDateForView($projectDetail->start_date) }}</td>
+                                    <td class="text-end " style="color:#057DB0">{{ \App\Helpers\AppHelper::formatDateForView($projectDetail->start_date) }}</td>
                                 </tr>
                                 <tr>
                                     <td>@lang('index.deadline'):</td>
-                                    <td class="text-end text-danger">{{ \App\Helpers\AppHelper::formatDateForView($projectDetail->deadline) }}</td>
+                                    <td class="text-end " style="color:#FB8233">{{ \App\Helpers\AppHelper::formatDateForView($projectDetail->deadline) }}</td>
                                 </tr>
                                 <tr>
                                     <td>@lang('index.priority'):</td>
@@ -250,7 +352,7 @@
                                 <tr>
                                     <td>@lang('index.remaining_days'):</td>
                                     <td class="text-end">
-                                        <span class="badge badge-soft-success text-end d-inline-block float-end">
+                                        <span class="badge  text-end d-inline-block float-end" style="background:#057DB0">
                                             {{ $projectDetail->projectRemainingDaysToComplete() }} @lang('index.days_left')
                                         </span>
                                     </td>
@@ -385,8 +487,8 @@
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h5 class="modal-title"
+                <div class="modal-header text-white" style="background:#057DB0">
+                    <h5 class="modal-title "
                         id="projectAttachmentModalLabel">@lang('index.upload_project_attachments')</h5>
                 </div>
                 <div class="modal-body">
@@ -400,7 +502,7 @@
                                    accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple/>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary">@lang('index.submit')</button>
+                            <button type="submit" class="btn branch-back-btn w-100">@lang('index.submit')</button>
                         </div>
                     </form>
                 </div>
