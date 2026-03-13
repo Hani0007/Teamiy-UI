@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
 use Illuminate\Support\Facades\File;
+use App\Models\Branch;
 use Intervention\Image\Facades\Image;
 use Spatie\Permission\Models\Permission as ModelsPermission;
 use Spatie\Permission\Models\Role as ModelsRole;
@@ -250,6 +251,21 @@ class AppHelper
         }
 
     }
+
+public static function getCompanyBranches()
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('super-admin')) {
+            $company = $user->company()->first();
+        } else {
+            $company = Company::where('admin_id', $user->parent_id)->first();
+        }
+
+        $branches = Branch::where('company_id', $company->id)->pluck('id')->toArray();
+        return $branches;
+    }
+
 
     public static function getCompanyLogo()
     {

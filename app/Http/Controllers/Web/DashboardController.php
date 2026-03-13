@@ -68,9 +68,10 @@ class DashboardController extends Controller
                 // Get project statistics
                 $projectStats = $this->dashboardRepo->getProjectStats($companyId);
 
-                $projectSelect = ['id', 'name', 'start_date', 'deadline', 'status', 'priority'];
+                $projectSelect = ['id', 'name', 'start_date', 'deadline', 'status', 'priority', 'client_id'];
                 $withProject = [
                     'projectLeaders.user:id,name,avatar',
+                    'assignedMembers.user:id,name',
                     'tasks:id,project_id',
                     'completedTask:id,project_id'
                 ];
