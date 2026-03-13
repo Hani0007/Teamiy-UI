@@ -1,3 +1,4 @@
+
 <div class="row">
     @if(!isset(auth()->user()->branch_id))
     <div class="col-lg-6 col-md-6 mb-4">

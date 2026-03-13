@@ -212,6 +212,7 @@
 
 <div class="row">
     {{-- Project Selection --}}
+    {{-- @dd($project) --}}
     @if(isset($project))
         <div class="col-lg-6 col-md-6 mb-4">
             <label class="form-label">@lang('index.project') <span style="color: red">*</span></label>
@@ -219,6 +220,7 @@
                 <option value="{{$project->id}}" selected>{{ucfirst($project->name)}}</option>
             </select>
         </div>
+        <input type="hidden" name="branch_id" value="{{ $project->branch_id ?? '' }}">
     @else
         @if(!isset(auth()->user()->branch_id))
             <div class="col-lg-6 col-md-6 mb-4">
