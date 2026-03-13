@@ -739,12 +739,12 @@
 
 
 <div class="float-end">
-    <a href="{{ route('admin.employees.index') }}" class="branch-back-btn btn">
-        <i class="link-icon" data-feather="arrow-left me-3"></i> {{ __('index.back') }}
-    </a>
-    <button type="submit" class="btn btn-primary ">
-        {{ isset($userDetail) ? 'Update Employee' : __('index.add_employee') }}
-    </button>
+   <a href="{{ route('admin.employees.index') }}" class="branch-back-btn btn">
+                <i class="link-icon" data-feather="arrow-left me-3"></i> {{ __('index.back') }}
+            </a>
+<button type="submit" class="btn btn-primary ">
+    {{isset($userDetail)? "Update Employee":__('index.add_employee')}}
+</button>
 </div>
 
 

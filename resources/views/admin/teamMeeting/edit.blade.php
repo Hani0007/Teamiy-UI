@@ -49,17 +49,16 @@
             @include('admin.teamMeeting.common.form')
         </div>
 
-        <div class="branch-footer-actions d-flex justify-content-end">
-            
+        <div class="branch-footer-actions d-flex justify-content-between">
+            <a href="{{ route('admin.team-meetings.index') }}" class="branch-back-btn">
+                <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
+            </a>
             <div class="btn-group-wrapper">
-                <a href="{{ route('admin.team-meetings.index') }}" class="btn branch-back-btn me-2">
-                     <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
-                </a>
-                <button type="submit" class="btn btn-primary me-2">
+                <button type="submit" class="btn btn-secondary me-2">
                     {{ __('index.update') }}
                 </button>
                 <button type="submit" id="withTeamNotification" class="btn btn-primary">
-                     {{ __('index.update_send') }}
+                    <i class="fa fa-paper-plane me-1"></i> {{ __('index.update_send') }}
                 </button>
             </div>
         </div>

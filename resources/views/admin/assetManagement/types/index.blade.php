@@ -790,8 +790,7 @@ style="color:#057db0;font-weight:700;text-decoration:none;">
 
 
 @section('scripts')
-    <script>
-        $(document).ready(function(){
+
             $('.toggleStatus').change(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
@@ -826,32 +825,6 @@ style="color:#057db0;font-weight:700;text-decoration:none;">
                 }).then((result) => {
                     if (result.isConfirmed) window.location.href = href;
                 });
-            });
-            $('.create-assetType').click(function () {
-
-                $('#assetTypeForm').attr('action', '{{ route("admin.asset-types.store") }}');
-                $('#formMethod').val('POST');
-                $('#assetTypeForm')[0].reset();
-                $('#assetTypeModalLabel').text('Add Asset Type');
-            
-                $('#assetTypeModal').modal('show');
-
-            });
-            $('.edit-assetType').click(function () {
-
-                let url = $(this).data('href');
-            
-                $.get(url, function (data) {
-            
-                    $('#name').val(data.name);
-                    $('#formMethod').val('PUT');
-                    $('#assetTypeForm').attr('action', url);
-            
-                    $('#assetTypeModalLabel').text('Edit Asset Type');
-                    $('#assetTypeModal').modal('show');
-            
-                });
-
             });
         });
     </script>
