@@ -23,35 +23,35 @@
                 [
                     'label' => 'Total Employees', 
                     'value' => $employeeStats['total_employees'] ?? 0, 
-                    'percentage' => '+12%', 
+                    'percentage' => ($employeeStats['employees_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['employees_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Employee count includes all staff',
                     'icon' => 'fas fa-users'
                 ],
                 [
                     'label' => 'Branches', 
                     'value' => $employeeStats['total_branches'] ?? 0, 
-                    'percentage' => '+05%', 
+                    'percentage' => ($employeeStats['branches_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['branches_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total branches in company',
                     'icon' => 'fas fa-building'
                 ],
                 [
                     'label' => 'Today Presents', 
                     'value' => $employeeStats['today_presents'] ?? 0, 
-                    'percentage' => '+54%', 
+                    'percentage' => ($employeeStats['presents_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['presents_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees presents today',
                     'icon' => 'fas fa-user-check'
                 ],
                 [
                     'label' => 'Today Absents', 
                     'value' => $employeeStats['today_absents'] ?? 0, 
-                    'percentage' => '+11%', 
+                    'percentage' => ($employeeStats['absents_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['absents_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees absent today',
                     'icon' => 'fas fa-user-times'
                 ],
                 [
                     'label' => 'Today Lates', 
                     'value' => $employeeStats['today_lates'] ?? 0, 
-                    'percentage' => '-04%', 
+                    'percentage' => ($employeeStats['lates_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['lates_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees late today',
                     'icon' => 'fas fa-clock'
                 ]
@@ -84,8 +84,22 @@
                 <span><span class="badge bg-warning rounded-circle me-1 text-dark">{{ $projectStats['in_progress'] ?? 0 }}</span> In Progress</span>
                 <span><span class="badge bg-danger rounded-circle me-1">{{ $projectStats['late'] ?? 0 }}</span> Late</span>
                 <span><span class="badge bg-success rounded-circle me-1">{{ $projectStats['completed'] ?? 0 }}</span> Completed</span>
+                <span class="ms-3"><strong>Total: {{ $projectStats['total_projects'] ?? 0 }}</strong></span>
             </div>
         </div>
+        
+        @if(isset($projectStats['projects_by_branch']) && $projectStats['projects_by_branch']->count() > 0)
+        <div class="mb-3">
+            <h6 class="small text-muted mb-2">Projects by Branch</h6>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach($projectStats['projects_by_branch'] as $branch)
+                <span class="badge bg-light text-dark border">
+                    <strong>{{ $branch->branch_name }}:</strong> {{ $branch->project_count }}
+                </span>
+                @endforeach
+            </div>
+        </div>
+        @endif
         <div class="table-responsive">
             <table class="table mb-0">
                 <thead>
@@ -99,31 +113,34 @@
                             <div class="d-flex align-items-center">
                                 <div class="project-avatar me-3"></div>
                                 <div>
-                                    <div class="fw-bold">{{ $project->name ?? 'Website Redesign' }}</div>
-                                    <small class="text-muted">{{ $project->client_name ?? 'techverdi.com' }}</small>
+                                    <div class="fw-bold">{{ $project->name }}</div>
+                                    <small class="text-muted">{{ $project->client->name ?? 'Internal Project' }}</small>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : 'sp-pending bg-soft-secondary text-muted') }}">
-                                {{ $project->status == 'completed' ? 'Done' : ($project->status == 'in_progress' ? 'In Progress' : 'Not Started') }}
+                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : ($project->status == 'cancelled' ? 'sp-rejected bg-soft-danger text-danger' : 'sp-pending bg-soft-secondary text-muted')) }}">
+                                {{ ucfirst(str_replace('_', ' ', $project->status ?? 'not_started')) }}
                             </span>
                         </td>
                         <td>
-                            <div class="fw-bold">{{ $project->name ?? 'Home Page Redesign' }}</div>
-                            <small class="text-muted">{{ Str::limit($project->description ?? 'Redesign website homepage in wordpress...', 50) }}...</small>
+                            <div class="fw-bold">{{ $project->name }}</div>
+                            <small class="text-muted">
+                                @if($project->start_date)Started: {{ \Carbon\Carbon::parse($project->start_date)->format('M d, Y') }}@endif
+                                @if($project->deadline) • Deadline: {{ \Carbon\Carbon::parse($project->deadline)->format('M d, Y') }}@endif
+                            </small>
                         </td>
                         <td>
                             <div class="member-group d-flex">
-                                <div class="member-count">+{{ $project->members ?? 2 }}</div>
+                                <div class="member-count">{{ $project->projectLeaders->count() + $project->assignedMembers->count() }}</div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="pg-bar">
-                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->progress ?? 0 }}%"></div>
+                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->getProjectProgressInPercentage() ?? 0 }}%"></div>
                                 </div>
-                                <span class="fw-bold">{{ $project->progress ?? 0 }}%</span>
+                                <span class="fw-bold">{{ $project->getProjectProgressInPercentage() ?? 0 }}%</span>
                             </div>
                         </td>
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
@@ -174,7 +191,7 @@
                 <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-payroll">Payroll</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-meetings">Team Meetings</button>
                 </div>
             </div>
         </div>
@@ -186,25 +203,34 @@
                         <tr><th>ID Employee</th><th>Name</th><th>Department</th><th>Leave Type</th><th>Reason</th><th>Date/Time</th><th>Status</th><th></th></tr>
                     </thead>
                     <tbody>
-                        @php
-                            $leaves = [
-                                ['id' => 'FCD-154', 'n' => 'Pietro La Torre', 'd' => 'Inbound Sales', 't' => 'Full Day', 'r' => 'Doctor Appointment...', 'dt' => '02 Feb, 2026', 's' => 'Not Approved'],
-                                ['id' => 'FCD-155', 'n' => 'Benjamin', 'd' => 'PHP (Laravel)', 't' => 'Full Day', 'r' => 'Accident Emergency...', 'dt' => '24 Feb, 2026', 's' => 'Pending'],
-                                ['id' => 'FCD-156', 'n' => 'Jone Snow', 'd' => 'Flutter (Dart)', 't' => 'Short Leave', 'r' => 'Stuck in Traffic...', 'dt' => '9:30 AM to 12:00 PM', 's' => 'Approved']
-                            ];
-                        @endphp
-                        @foreach($leaves as $lv)
-                        <tr>
-                            <td>{{ $lv['id'] }}</td>
-                            <td><strong>{{ $lv['n'] }}</strong></td>
-                            <td>{{ $lv['d'] }}</td>
-                            <td>{{ $lv['t'] }}</td>
-                            <td>{{ $lv['r'] }}</td>
-                            <td>{{ $lv['dt'] }}</td>
-                            <td><span class="status-pill {{ $lv['s']=='Approved' ? 'sp-approved' : ($lv['s']=='Pending' ? 'sp-pending' : 'sp-rejected') }}">{{ $lv['s'] }}</span></td>
-                            <td><i class="fas fa-ellipsis-v text-muted"></i></td>
-                        </tr>
-                        @endforeach
+                        @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
+                            @foreach($recentLeaveRequests as $leave)
+                            <tr>
+                                <td>{{ $leave->employee->employee_code ?? 'N/A' }}</td>
+                                <td><strong>{{ $leave->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ $leave->department->dept_name ?? 'N/A' }}</td>
+                                <td>{{ $leave->leaveType->name ?? 'N/A' }}</td>
+                                <td>{{ \Illuminate\Support\Str::limit($leave->reason ?? 'No reason provided', 30) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($leave->leave_requested_date)->format('M d, Y') }}</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($leave->status == 'approved') sp-approved bg-soft-success text-success
+                                        @elseif($leave->status == 'pending') sp-pending bg-soft-warning text-warning
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ ucfirst($leave->status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td><i class="fas fa-ellipsis-v text-muted"></i></td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent leave requests found.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

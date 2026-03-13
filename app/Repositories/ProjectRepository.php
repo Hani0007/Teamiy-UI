@@ -7,22 +7,13 @@ use App\Models\Company;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Helpers\AppHelper;
 
 class ProjectRepository
 {
     const ASSIGNABLE_TYPE = 'project';
     public function getAllFilteredProjects($filterParameters,$select,$with): mixed
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('super-admin')) {
-            $company = $user->company()->first();
-        } else {
-            $company = Company::where('admin_id', $user->parent_id)->first();
-        }
-
-        $branches = Branch::where('company_id', $company->id)->pluck('id')->toArray();
-
         return Project::query()->select($select)->with($with)
 
         ->when(isset($filterParameters['project_name']), function ($query) use ($filterParameters) {
@@ -43,7 +34,7 @@ class ProjectRepository
                 });
          })
          ->withoutGlobalScope('branch')
-         ->whereIn('branch_id', $branches)
+         ->whereIn('branch_id', AppHelper::getCompanyBranches())
         ->orderBy('deadline','desc')
         ->paginate( getRecordPerPage());
     }
@@ -107,6 +98,8 @@ class ProjectRepository
         return Project::query()
             ->select($select)
             ->with($with)
+            ->withoutGlobalScope('branch')
+            ->whereIn('branch_id', AppHelper::getCompanyBranches())
             ->latest()
             ->take(5)
             ->get();

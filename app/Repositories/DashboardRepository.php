@@ -160,6 +160,7 @@ class DashboardRepository
     public function getEmployeeStats($companyId)
     {
         $currentDate = AppHelper::getCurrentDateInYmdFormat();
+        $lastMonthDate = date('Y-m-d', strtotime('-1 month'));
         
         // Simple queries to get real employee statistics
         $totalEmployees = DB::table('users')
@@ -198,12 +199,74 @@ class DashboardRepository
             ->distinct('attendances.user_id')
             ->count();
 
+        // Get last month's data for comparison
+        $lastMonthEmployees = DB::table('users')
+            ->where('company_id', $companyId)
+            ->whereNull('deleted_at')
+            ->whereDate('created_at', '<=', $lastMonthDate)
+            ->count();
+
+        $lastMonthBranches = DB::table('branches')
+            ->where('company_id', $companyId)
+            ->whereDate('created_at', '<=', $lastMonthDate)
+            ->count();
+
+        // Get last month's attendance data (same day last month)
+        $lastMonthDay = date('Y-m-d', strtotime('-1 month'));
+        $lastMonthPresents = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->whereDate('attendances.attendance_date', $lastMonthDay)
+            ->whereNotNull('attendances.check_in_at')
+            ->distinct('attendances.user_id')
+            ->count();
+
+        $lastMonthAbsents = DB::table('users')
+            ->leftJoin('attendances', function($join) use ($lastMonthDay) {
+                $join->on('users.id', '=', 'attendances.user_id')
+                     ->whereDate('attendances.attendance_date', $lastMonthDay);
+            })
+            ->where('users.company_id', $companyId)
+            ->whereNull('attendances.id')
+            ->whereNull('users.deleted_at')
+            ->count();
+
+        $lastMonthLates = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->whereDate('attendances.attendance_date', $lastMonthDay)
+            ->whereNotNull('attendances.check_in_at')
+            ->whereRaw('TIME(attendances.check_in_at) > "09:00:00"')
+            ->distinct('attendances.user_id')
+            ->count();
+
+        // Calculate percentage changes
+        $employeesPercentage = $lastMonthEmployees > 0 ? 
+            round((($totalEmployees - $lastMonthEmployees) / $lastMonthEmployees) * 100, 1) : 0;
+        
+        $branchesPercentage = $lastMonthBranches > 0 ? 
+            round((($totalBranches - $lastMonthBranches) / $lastMonthBranches) * 100, 1) : 0;
+        
+        $presentsPercentage = $lastMonthPresents > 0 ? 
+            round((($todayPresents - $lastMonthPresents) / $lastMonthPresents) * 100, 1) : 0;
+        
+        $absentsPercentage = $lastMonthAbsents > 0 ? 
+            round((($todayAbsents - $lastMonthAbsents) / $lastMonthAbsents) * 100, 1) : 0;
+        
+        $latesPercentage = $lastMonthLates > 0 ? 
+            round((($todayLates - $lastMonthLates) / $lastMonthLates) * 100, 1) : 0;
+
         return [
             'total_employees' => $totalEmployees,
             'total_branches' => $totalBranches,
             'today_presents' => $todayPresents,
             'today_absents' => $todayAbsents,
-            'today_lates' => $todayLates
+            'today_lates' => $todayLates,
+            'employees_percentage' => $employeesPercentage,
+            'branches_percentage' => $branchesPercentage,
+            'presents_percentage' => $presentsPercentage,
+            'absents_percentage' => $absentsPercentage,
+            'lates_percentage' => $latesPercentage
         ];
     }
 
@@ -234,11 +297,26 @@ class DashboardRepository
             ->where('projects.status', 'completed')
             ->count();
 
+        // Get total projects
+        $totalProjects = $notStarted + $inProgress + $late + $completed;
+
+        // Get projects by branch
+        $projectsByBranch = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->join('branches', 'users.branch_id', '=', 'branches.id')
+            ->where('users.company_id', $companyId)
+            ->select('branches.name as branch_name', DB::raw('COUNT(projects.id) as project_count'))
+            ->groupBy('branches.id', 'branches.name')
+            ->orderBy('project_count', 'desc')
+            ->get();
+
         return [
             'not_started' => $notStarted,
             'in_progress' => $inProgress,
             'late' => $late,
-            'completed' => $completed
+            'completed' => $completed,
+            'total_projects' => $totalProjects,
+            'projects_by_branch' => $projectsByBranch
         ];
     }
 
