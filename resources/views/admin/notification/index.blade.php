@@ -1,156 +1,120 @@
 @extends('layouts.master')
-@section('title',__('index.notifications'))
-@section('action',__('index.lists'))
+@section('title', __('index.notifications'))
 
 @section('main-content')
 
-    <section class="content">
+<section class="content content-wrapper">
+    @include('admin.section.flash_message')
 
-        @include('admin.section.flash_message')
-
-        @include('admin.notification.common.breadcrumb')
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="card-title mb-0">@lang('index.notification_lists')</h6>
-            </div>
-            <div class="card-body pb-0">
-                <form class="forms-sample" action="{{route('admin.notifications.index')}}" method="get">
-                    <div class="row align-items-center">
-                        <div class="col-lg-4 col-md-8 mb-4">
-                            <select class="form-select" name="type" id="type">
-                                <option value="" {{!isset($filterParameters['type']) ? 'selected': ''}}   >@lang('index.all_types')</option>
-                                @foreach(\App\Models\Notification::TYPES as  $value)
-                                    <option value="{{$value}}" {{ (isset($filterParameters['type']) && $value == $filterParameters['type'] ) ?'selected':'' }} >
-                                        {{ucfirst($value)}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-4 mb-4">
-                            <button type="submit" class="btn btn-block btn-primary form-control">@lang('index.filter')</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+    {{-- Breadcrumb & Header --}}
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 style="color: #057db0; font-weight: 700; margin-bottom: 10px;">{{ __('index.notifications') }}</h2>
+            @include('admin.notification.common.breadcrumb')
         </div>
+    </div>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="dataTableExample" class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>@lang('index.title')</th>
-                            <th>@lang('index.published_date')</th>
-                            <th class="text-center">@lang('index.type')</th>
+    {{-- Filter Panel --}}
+    <div class="filter-card">
+        <form action="{{route('admin.notifications.index')}}" method="get" class="row g-3 align-items-center">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label fw-bold small text-muted">@lang('index.type')</label>
+                <select class="form-select shadow-none" name="type" id="type" style="height:45px; border-radius:10px;">
+                    <option value="" {{!isset($filterParameters['type']) ? 'selected': ''}}>@lang('index.all_types')</option>
+                    @foreach(\App\Models\Notification::TYPES as $value)
+                        <option value="{{$value}}" {{ (isset($filterParameters['type']) && $value == $filterParameters['type'] ) ?'selected':'' }}>
+                            {{ucfirst($value)}}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-4 mt-lg-auto">
+                <button type="submit" class="btn btn-primary w-100 fw-bold" style="height:45px; border-radius:10px; background:#057db0;">@lang('index.filter')</button>
+            </div>
+        </form>
+    </div>
 
-                            @can('notification')
-                                <th class="text-center">@lang('index.description')</th>
-                            @endcan
+    {{-- Notification Cards Grid --}}
+    <div class="notification-grid">
+        @forelse($notifications as $key => $value)
+            <div class="n-card">
+                {{-- Status Toggle --}}
+                <div class="status-switch">
+                    <label class="switch">
+                        <input class="toggleStatus" href="{{route('admin.notifications.toggle-status',$value->id)}}"
+                               type="checkbox" {{($value->is_active) == 1 ?'checked':''}}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
 
-                            <th class="text-center">@lang('index.status')</th>
+                <div>
+                    <span class="type-pill">{{ $value->type }}</span>
+                    <h3 class="n-title">{{ removeSpecialChars($value->title) }}</h3>
+                    <div class="n-date">
+                        <i data-feather="calendar" style="width: 14px;"></i>
+                        {{ convertDateTimeFormat($value->notification_publish_date) ?? 'Not published yet' }}
+                    </div>
+                </div>
 
-                            @can('notification')
-                                <th class="text-center">@lang('index.action')</th>
-                            @endcan
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
+                <div class="n-footer">
+                    <div class="d-flex gap-2">
+                        @can('notification')
+                        <a href="javascript:void(0)" 
+                           id="showNotificationDescription" 
+                           data-href="{{route('admin.notifications.show',$value->id)}}"
+                           data-id="{{ $value->id }}" 
+                           class="btn-circle-lite" title="@lang('index.show_detail')">
+                            <i data-feather="eye" style="width: 18px;"></i>
+                        </a>
+                        @endcan
 
-                        @forelse($notifications as $key => $value)
-                            <tr>
-                                <td>{{(($notifications->currentPage()- 1 ) * (\App\Models\Notification::RECORDS_PER_PAGE) + (++$key))}}</td>
-                                <td>{{removeSpecialChars($value->title)}}</td>
-                                <td>{{  convertDateTimeFormat($value->notification_publish_date) ?? 'Not published yet'}}</td>
-                                <td class="text-center">{{  ucfirst($value->type)}}</td>
+                        @can('notification')
+                            @if($value->type == 'general')
+                            <a href="{{route('admin.notifications.edit',$value->id)}}" class="btn-circle-lite" title="@lang('index.edit')">
+                                <i data-feather="edit-2" style="width: 18px;"></i>
+                            </a>
+                            @endif
+                        @endcan
+                    </div>
 
-                                @can('notification')
-                                    <td class="text-center">
-                                        <a href=""
-                                           id="showNotificationDescription"
-                                           data-href="{{route('admin.notifications.show',$value->id)}}"
-                                           data-id="{{ $value->id }}" title="@lang('index.show_detail')">
-                                            <i class="link-icon" data-feather="eye"></i>
-                                        </a>
-                                    </td>
-                                @endcan
-
-                                <td class="text-center">
-                                    <label class="switch">
-                                        <input class="toggleStatus" href="{{route('admin.notifications.toggle-status',$value->id)}}"
-                                               type="checkbox" {{($value->is_active) == 1 ?'checked':''}}>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </td>
-
-                                @can('notification')
-                                    <td class="text-center">
-                                    <ul class="d-flex list-unstyled mb-0 justify-content-center">
-
-                                            @if($value->type == 'general')
-                                                <li class="me-2">
-                                                    <a href="{{route('admin.notifications.edit',$value->id)}}" title="@lang('index.edit') ">
-                                                        <i class="link-icon" data-feather="edit"></i>
-                                                    </a>
-                                                </li>
-                                            @endif
-
-                                            <li class="me-2">
-                                                <a class="deleteNotification"
-                                                   data-href="{{route('admin.notifications.delete',$value->id)}}" title="@lang('index.delete')">
-                                                    <i class="link-icon"  data-feather="delete"></i>
-                                                </a>
-                                            </li>
-
-
-{{--                                        @can('send_notification')--}}
-{{--                                            @if($value->type == 'general')--}}
-{{--                                                <li >--}}
-{{--                                                    <a class="sendNotification"--}}
-{{--                                                       data-href="{{route('admin.notifications.send-notification',$value->id)}}" title="send notification">--}}
-{{--                                                        <button class="btn btn-primary btn-xs">send notification</button>--}}
-{{--                                                    </a>--}}
-{{--                                                </li>--}}
-{{--                                            @endif--}}
-{{--                                        @endcan--}}
-
-                                    </ul>
-                                </td>
-                                @endcan
-
-
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="100%">
-                                    <p class="text-center"><b>@lang('index.no_records_found')</b></p>
-                                </td>
-                            </tr>
-                        @endforelse
-
-                        </tbody>
-                    </table>
+                    @can('notification')
+                    <a href="javascript:void(0)" 
+                       class="btn-circle-lite btn-delete deleteNotification"
+                       data-href="{{route('admin.notifications.delete',$value->id)}}" 
+                       title="@lang('index.delete')">
+                        <i data-feather="trash-2" style="width: 18px;"></i>
+                    </a>
+                    @endcan
                 </div>
             </div>
-        </div>
+        @empty
+            <div class="col-12 text-center py-5">
+                <div class="text-muted">
+                    <i data-feather="bell-off" style="width: 48px; height: 48px; opacity: 0.2;"></i>
+                    <p class="mt-3 fw-bold">@lang('index.no_records_found')</p>
+                </div>
+            </div>
+        @endforelse
+    </div>
 
-        <div class="dataTables_paginate mt-3">
-            {{$notifications->appends($_GET)->links()}}
-        </div>
-    </section>
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{$notifications->appends($_GET)->links()}}
+    </div>
 
-    @include('admin.notification.show')
+</section>
+
+@include('admin.notification.show')
+
 @endsection
 
 @section('scripts')
-
     @include('admin.notification.common.scripts')
+    <script>
+        $(document).ready(function() {
+            if(typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
 @endsection
-
-
-
-
-
-
