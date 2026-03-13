@@ -60,9 +60,13 @@ class AssetDetailRequest extends FormRequest
 
         $rules['warranty_end_date'] = ['nullable',
             'required_if:warranty_available,1',
-            'date',
-            'after:purchased_date'
+            'date'
         ];
+
+        // Only enforce after:purchased_date if warranty is available
+        if ($this->input('warranty_available') == 1) {
+            $rules['warranty_end_date'][] = 'after:purchased_date';
+        }
 
         $rules['assigned_date'] = ['nullable',
             'required_unless:assigned_to,null',
