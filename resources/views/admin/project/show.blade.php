@@ -208,7 +208,7 @@
                                     @canany(['edit_task','show_task_detail','delete_task'])
 
                                     <div class="btn-group card-option position-absolute end-0 top-50 translate-middle">
-                                        <button type="button" class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button type="button" class=" dropdown-toggle p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border:none; background:transparent">
                                             <i class="link-icon"  data-feather="more-vertical"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" style="">
