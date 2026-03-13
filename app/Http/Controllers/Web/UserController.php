@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Repositories\BranchRepository;
 use App\Repositories\CompanyRepository;
 use App\Repositories\EmployeeLeaveTypeRepository;
+use App\Models\EmployeeDocument;
+use Illuminate\Support\Facades\File;
 use App\Repositories\LeaveTypeRepository;
 use App\Repositories\OfficeTimeRepository;
 use App\Repositories\PostRepository;
@@ -45,20 +47,19 @@ class UserController extends Controller
     private $view = 'admin.employees.';
 
 
-    public function __construct(protected UserRepository              $userRepo,
-                                protected CompanyRepository           $companyRepo,
-                                protected RoleRepository              $roleRepo,
-                                protected OfficeTimeRepository        $officeTimeRepo,
-                                protected UserAccountRepository       $accountRepo,
-                                protected CompanyRepository           $companyRepository,
-                                protected BranchRepository            $branchRepository,
-                                protected LeaveTypeRepository         $leaveTypeRepository,
-                                protected EmployeeLeaveTypeRepository $employeeLeaveTypeRepository,
-                                protected PostRepository $postRepository,
+    public function __construct(
+        protected UserRepository              $userRepo,
+        protected CompanyRepository           $companyRepo,
+        protected RoleRepository              $roleRepo,
+        protected OfficeTimeRepository        $officeTimeRepo,
+        protected UserAccountRepository       $accountRepo,
+        protected CompanyRepository           $companyRepository,
+        protected BranchRepository            $branchRepository,
+        protected LeaveTypeRepository         $leaveTypeRepository,
+        protected EmployeeLeaveTypeRepository $employeeLeaveTypeRepository,
+        protected PostRepository $postRepository,
 
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws AuthorizationException
@@ -76,11 +77,11 @@ class UserController extends Controller
                 'department_id' => $request->department_id ?? null,
             ];
 
-            if(!auth('admin')->check() && auth()->check()){
+            if (!auth('admin')->check() && auth()->check()) {
                 $filterParameters['branch_id'] = auth()->user()->branch_id;
             }
 
-            $with = ['branch:id,name', 'company:id,name', 'post:id,post_name', 'department:id,dept_name', 'role:id,name','officeTime:id,shift,opening_time,closing_time','supervisor:id,name'];
+            $with = ['branch:id,name', 'company:id,name', 'post:id,post_name', 'department:id,dept_name', 'role:id,name', 'officeTime:id,shift,opening_time,closing_time', 'supervisor:id,name'];
 
             $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
             $users = $this->userRepo->getAllUsers($filterParameters, $select, $with);
@@ -130,6 +131,7 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
     {
+        dd($request->all(), $accountRequest->all(), $leaveRequest->all());
         $this->authorize('create_employee');
         try {
             $validatedData = $request->validated();
@@ -160,7 +162,7 @@ class UserController extends Controller
                 if (isset($validatedData['company_registration'])) {
                     $companyUpdateData['company_registration'] = $validatedData['company_registration'];
                 }
-                
+
                 if (!empty($companyUpdateData)) {
                     $companyId = AppHelper::getAuthUserCompanyId();
                     $companyDetail = $this->companyRepo->findOrFailCompanyDetailById($companyId);
@@ -176,7 +178,6 @@ class UserController extends Controller
                     $input['leave_type_id'] = $value;
 
                     $this->employeeLeaveTypeRepository->store($input);
-
                 }
             }
 
@@ -233,7 +234,7 @@ class UserController extends Controller
 
             $userWith = ['accountDetail', 'employeeDocuments', 'department', 'post'];
             $userDetail = $this->userRepo->findUserDetailById($id, $userSelect, $userWith);
-            $leaveTypes = $this->leaveTypeRepository->getGenderSpecificPaidLeaveTypes(null , $userDetail->gender);
+            $leaveTypes = $this->leaveTypeRepository->getGenderSpecificPaidLeaveTypes(null, $userDetail->gender);
             $employeeLeaveTypes = $this->employeeLeaveTypeRepository->getAll(['id', 'leave_type_id', 'days', 'is_active'], $id);
             $bsEnabled = AppHelper::ifDateInBsEnabled();
             $filteredPosts = isset($userDetail->department_id)
@@ -241,10 +242,10 @@ class UserController extends Controller
                 : [];
 
             $filteredSupervisor = isset($userDetail->department_id)
-                ? $this->userRepo->getAllActiveEmployeeByDepartment($userDetail->department_id, ['id','name'])
+                ? $this->userRepo->getAllActiveEmployeeByDepartment($userDetail->department_id, ['id', 'name'])
                 : [];
 
-            return view($this->view . 'edit', compact('companyDetail', 'roles', 'userDetail', 'leaveTypes', 'employeeLeaveTypes', 'bsEnabled','filteredSupervisor','filteredPosts'));
+            return view($this->view . 'edit', compact('companyDetail', 'roles', 'userDetail', 'leaveTypes', 'employeeLeaveTypes', 'bsEnabled', 'filteredSupervisor', 'filteredPosts'));
         } catch (Exception $exception) {
 
             return redirect()->back()->with('danger', $exception->getFile());
@@ -253,6 +254,7 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest, $id)
     {
+        // dd($request->all(), $accountRequest->all(), $leaveRequest->all());
         $this->authorize('edit_employee');
         try {
             $validatedData = $request->validated();
@@ -486,7 +488,6 @@ class UserController extends Controller
             $this->userRepo->changePassword($userDetail, $validatedData['new_password']);
             DB::commit();
             return redirect()->back()->with('success', __('message.user_password_change'));
-
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
@@ -543,6 +544,53 @@ class UserController extends Controller
     }
 
 
+    public function deleteDocument(Request $request)
+    {
+        $employeeDoc = EmployeeDocument::where('employee_id', $request->user_id)->first();
+        if (!$employeeDoc) {
+            return response()->json(['success' => false, 'message' => 'Document record not found']);
+        }
+
+        $documents = $employeeDoc->employee_document ?? []; // <--- use this
+
+        if (($key = array_search($request->file, $documents)) !== false) {
+            unset($documents[$key]);
+
+            $path = public_path('uploads/user/emp-documents/' . $request->file);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+
+            $employeeDoc->employee_document = array_values($documents);
+            $employeeDoc->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
+    public function deleteContract(Request $request)
+    {
+        
+        $employeeDoc = EmployeeDocument::where('employee_id', $request->user_id)->first();
+        if (!$employeeDoc) {
+            return response()->json(['success' => false, 'message' => 'Document record not found']);
+        }
+
+        $contractFile = $employeeDoc->employee_contract;
+
+        if ($contractFile && $contractFile === $request->file) {
+            $path = public_path('uploads/user/emp-documents/' . $contractFile);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+
+            $employeeDoc->employee_contract = null;
+            $employeeDoc->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+
     public function getAllEmployeeByDepartmentId($departmentId): JsonResponse|RedirectResponse
     {
         try {
@@ -586,16 +634,14 @@ class UserController extends Controller
     {
         try {
 
-            $users = $this->userRepo->getAllBranchUsers($branchId, ['id','name']);
+            $users = $this->userRepo->getAllBranchUsers($branchId, ['id', 'name']);
 
             return response()->json([
                 'users' => $users,
             ]);
-
         } catch (Exception $exception) {
-            return AppHelper::sendErrorResponse($exception->getMessage(),$exception->getCode());
+            return AppHelper::sendErrorResponse($exception->getMessage(), $exception->getCode());
         }
-
     }
 
     public function toggleHolidayCheckIn($id)
@@ -619,8 +665,7 @@ class UserController extends Controller
     {
         $departments = Department::where('branch_id', $request->branchId)->get();
 
-        if(count($departments) > 0)
-        {
+        if (count($departments) > 0) {
             return response()->json(['status' => true, 'data' => $departments]);
         }
 
@@ -630,11 +675,10 @@ class UserController extends Controller
     public function fetchDesignations(Request $request)
     {
         $posts = Post::where('branch_id', $request->branchId)
-                 ->where('dept_id', $request->departmentId)
-                 ->get();
+            ->where('dept_id', $request->departmentId)
+            ->get();
 
-        if(count($posts) > 0)
-        {
+        if (count($posts) > 0) {
             return response()->json(['status' => true, 'data' => $posts]);
         }
 
@@ -645,8 +689,7 @@ class UserController extends Controller
     {
         $officeTimings = AppHelper::getOfficeTimings($request->branchId);
 
-        if(count($officeTimings) > 0)
-        {
+        if (count($officeTimings) > 0) {
             return response()->json(['status' => true, 'data' => $officeTimings]);
         }
 
@@ -659,34 +702,34 @@ class UserController extends Controller
     private function calculateEmployeeStatistics($users)
     {
         $totalEmployees = $users->count();
-        
+
         // Calculate new employees this year
         $currentYear = now()->year;
         $newEmployeesThisYear = $users->where('created_at', '>=', $currentYear . '-01-01')->count();
-        
+
         // Calculate growth percentage
         $previousYearEmployees = $users->where('created_at', '>=', ($currentYear - 1) . '-01-01')
-                                   ->where('created_at', '<', $currentYear . '-01-01')->count();
-        $growthPercentage = $previousYearEmployees > 0 ? 
+            ->where('created_at', '<', $currentYear . '-01-01')->count();
+        $growthPercentage = $previousYearEmployees > 0 ?
             (($totalEmployees - $previousYearEmployees) / $previousYearEmployees) * 100 : 0;
-        
+
         // Calculate employment types
         $fullTimeEmployees = $users->where('employment_type', 'permanent')->count();
         $contractEmployees = $users->where('employment_type', 'contract')->count();
         $internEmployees = $users->where('employment_type', 'temporary')->count();
-        
+
         // Calculate gender distribution
         $maleEmployees = $users->where('gender', 'male')->count();
         $femaleEmployees = $users->where('gender', 'female')->count();
-        
+
         $malePercentage = $totalEmployees > 0 ? ($maleEmployees / $totalEmployees) * 100 : 0;
         $femalePercentage = $totalEmployees > 0 ? ($femaleEmployees / $totalEmployees) * 100 : 0;
-        
+
         // Calculate progress bar widths
         $fullTimePercentage = $totalEmployees > 0 ? ($fullTimeEmployees / $totalEmployees) * 100 : 0;
         $contractPercentage = $totalEmployees > 0 ? ($contractEmployees / $totalEmployees) * 100 : 0;
         $internPercentage = $totalEmployees > 0 ? ($internEmployees / $totalEmployees) * 100 : 0;
-        
+
         return [
             'total_employees' => number_format($totalEmployees),
             'growth_percentage' => number_format($growthPercentage, 1),
@@ -703,5 +746,4 @@ class UserController extends Controller
             'female_percentage' => number_format($femalePercentage, 0),
         ];
     }
-
 }

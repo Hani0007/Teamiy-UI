@@ -110,8 +110,8 @@
                 <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['full_time_percentage'] ?? '0' }}%; background: #057db0;"></div></div>
             </div>
             <div class="prog-row">
-                <div class="prog-labels"><span style="color:#3b82f6;">Contract</span><span>{{ $employeeStats['contract_count'] ?? '0' }}</span></div>
-                <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['contract_percentage'] ?? '0' }}%; background: #3b82f6;"></div></div>
+                <div class="prog-labels"><span style="color:#3b82f6;">Part-Time</span><span>{{ $employeeStats['part_time_count'] ?? '0' }}</span></div>
+                <div class="prog-bar-bg"><div class="prog-fill" style="width: {{ $employeeStats['part_time_percentage'] ?? '0' }}%; background: #3b82f6;"></div></div>
             </div>
         </div>
 

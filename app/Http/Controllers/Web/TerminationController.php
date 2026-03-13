@@ -109,6 +109,9 @@ class TerminationController extends Controller
 
             DB::beginTransaction();
             $terminationData = $this->terminationService->saveTerminationDetail($validatedData);
+            if (!$terminationData) {
+                return redirect()->back()->with('warning', 'This employee already has an active termination.');
+            }
             DB::commit();
 
             if($terminationData && $validatedData['status'] == TerminationStatusEnum::approved->value)

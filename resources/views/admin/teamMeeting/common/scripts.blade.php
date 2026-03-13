@@ -70,22 +70,7 @@
             })
         })
 
-        $('.removeImage').click(function (event) {
-            event.preventDefault();
-            let href = $(this).data('href');
-            Swal.fire({
-                title: `{{ __('index.image_delete_confirmation') }}`,
-                showDenyButton: true,
-                confirmButtonText: `{{__('index.yes')}}`,
-                denyButtonText: `{{__('index.no')}}`,
-                padding: '10px 50px 10px 50px',
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = href;
-                }
-            })
-        });
+        
 
         $('body').on('click', '.showMeetingDescription', function (event) {
             event.preventDefault();
@@ -326,5 +311,26 @@
         });
     });
 
+    $(document).ready(function() {
+        $(document).on('click', '.removeImage', function(event) {
+            console.log('Remove image clicked'); // should now trigger
+            event.preventDefault();
+
+            let href = $(this).data('href');
+
+            Swal.fire({
+                title: `{{ __('index.image_delete_confirmation') }}`,
+                showDenyButton: true,
+                confirmButtonText: `{{ __('index.yes') }}`,
+                denyButtonText: `{{ __('index.no') }}`,
+                padding: '10px 50px 10px 50px',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+            });
+        });
+    });
 
 </script>

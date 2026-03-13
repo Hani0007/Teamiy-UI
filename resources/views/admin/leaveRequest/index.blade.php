@@ -66,6 +66,13 @@
                     <label class="form-label fw-bold text-muted small text-uppercase">{{ __('index.leave_type') }}</label>
                     <select class="form-select shadow-none modern-select" name="leave_type" id="leaveType" style="height: 48px; border-radius: 10px; border: 1px solid #e2e8f0;">
                         <option value="" {{!isset($filterParameters['leave_type']) ? 'selected': ''}} >{{ __('index.all_leave_type') }}</option>
+                         @if(isset($companyDetail))
+                            @foreach($companyDetail->leaveTypes()->get() as $key => $leaveType)
+                                <option value="{{$leaveType->id}}" {{ (isset($filterParameters['leave_type']) && $filterParameters['leave_type'] == $leaveType->id) ? 'selected' : '' }} >
+                                    {{ucfirst($leaveType->name)}}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 

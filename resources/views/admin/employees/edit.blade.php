@@ -14,6 +14,7 @@
 
 @section('main-content')
 
+{{-- @dd($userDetail) --}}
     <section class="content">
 <div class="teamy-top-header">
         <div>

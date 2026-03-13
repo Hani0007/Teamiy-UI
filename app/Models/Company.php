@@ -107,4 +107,13 @@ class Company extends Model
     {
         return $this->hasManyThrough(Department::class, Branch::class);
     }
+    // public function leaveTypes()
+    // {
+    //     return $this->hasMany(LeaveType::class,'company_id','id')
+    //         ->select('id','name')
+    //         ->where('is_active',1);
+    // }
+    public function LeaveTypes(){
+        return $this->hasManyThrough(LeaveType::class, Branch::class);
+    }
 }

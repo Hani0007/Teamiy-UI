@@ -43,6 +43,12 @@ class TerminationService
      */
     public function saveTerminationDetail($validatedData)
     {
+        $existingTermination = \App\Models\Termination::where('employee_id', $validatedData['employee_id'])
+            ->first();
+
+        if ($existingTermination) {
+             return false;
+        }
         return $this->terminationRepository->store($validatedData);
 
     }

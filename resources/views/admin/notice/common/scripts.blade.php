@@ -203,7 +203,10 @@
         // Handle "All Employees" checkbox
         $('#checkbox').on('change', function() {
             if(this.checked) {
+
                 $('#notice option').prop('selected', true);
+                // Remove required
+                $('#notice').prop('required', false);
             } else {
                 $('#notice option').prop('selected', false);
             }
