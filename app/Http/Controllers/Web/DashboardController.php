@@ -78,7 +78,13 @@ class DashboardController extends Controller
                 $recentProjects = $this->projectService
                     ->getRecentProjectListsForDashboard($projectSelect, $withProject);
 
-                $multipleAttendance = AppHelper::getAttendanceLimit();
+                // Get recent leave requests
+                $recentLeaveRequests = $this->dashboardRepo->getRecentLeaveRequests($companyId);
+
+                // $multipleAttendance = AppHelper::getAttendanceLimit();
+                $recentAttendance = Attendance::select('id','worked_hour','attendance_status', 'user_id','office_time_id')->with('employee:id,name', 'officeTime:id,opening_time,closing_time,shift')->where('company_id', $companyId)->take(5)->latest()->get();
+                $recentTeamMeetings = TeamMeeting::select('id','title','meeting_start_time', 'meeting_date')->with('teamMeetingParticipator.participator:id,name')->take(5)->latest()->get();
+                
             }
 
             return view('admin.dashboard', compact(
@@ -87,6 +93,9 @@ class DashboardController extends Controller
                 'taskPieChartData',
                 'projectCardDetail',
                 'recentProjects',
+                'recentLeaveRequests',
+                'recentAttendance',
+                'recentTeamMeetings',
                 'appTimeSetting',
                 'multipleAttendance',
                 'employeeStats',

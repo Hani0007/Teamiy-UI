@@ -210,17 +210,69 @@
             </div>
 
             <div class="tab-pane fade" id="tab-attendance">
-                <div class="p-5 text-center text-muted">
-                    <i class="fas fa-clock fa-2x mb-3"></i>
-                    <p>Attendance logs for the selected period will appear here.</p>
-                </div>
+                <table class="table mb-0 mt-3">
+                    <thead>
+                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th></tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($recentAttendance) && $recentAttendance->count() > 0)
+                            @foreach($recentAttendance as $attendance)
+                            <tr>
+                                <td><strong>{{ $attendance->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ number_format($attendance->worked_hour ?? 0, 1) }} hrs</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($attendance->attendance_status == 'present') sp-approved bg-soft-success text-success
+                                        @elseif($attendance->attendance_status == 'late') sp-pending bg-soft-warning text-warning
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ ucfirst($attendance->attendance_status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td>{{ $attendance->officeTime->shift ?? 'General Shift' }}</td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent attendance records found.</p>
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
 
-            <div class="tab-pane fade" id="tab-payroll">
-                <div class="p-5 text-center text-muted">
-                    <i class="fas fa-money-check-alt fa-2x mb-3"></i>
-                    <p>Payroll processing data for 2026 is ready to view.</p>
-                </div>
+            <div class="tab-pane fade" id="tab-meetings">
+                <table class="table mb-0 mt-3">
+                    <thead>
+                        <tr><th>Title</th><th>Meeting Date</th><th>Start Time</th><th>Participators</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($recentTeamMeetings) && $recentTeamMeetings->count() > 0)
+                            @foreach($recentTeamMeetings as $meeting)
+                            <tr>
+                                <td><strong>{{ $meeting->title ?? 'N/A' }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_start_time)->format('h:i A') }}</td>
+                                <td>{{ $meeting->teamMeetingParticipator->count() }} participators</td>
+                                <td>
+                                    <span class="status-pill sp-pending bg-soft-secondary text-muted">
+                                        {{ \Carbon\Carbon::parse($meeting->meeting_date)->isPast() ? 'Completed' : 'Scheduled' }}
+                                    </span>
+                                </td>
+                                <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent team meetings found.</p>
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="text-center py-3 border-top"><a href="#" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
