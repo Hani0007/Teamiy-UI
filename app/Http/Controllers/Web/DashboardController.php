@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\Attendance;
+use App\Models\TeamMeeting;
 
 class DashboardController extends Controller
 {
@@ -43,6 +45,8 @@ class DashboardController extends Controller
             $taskPieChartData = [];
             $projectCardDetail = [];
             $recentProjects = collect();
+            $recentAttendance = collect();
+            $recentTeamMeetings = collect();
             $multipleAttendance = false;
             $employeeStats = [];
             $projectStats = [];
@@ -77,7 +81,10 @@ class DashboardController extends Controller
                 // Get recent leave requests
                 $recentLeaveRequests = $this->dashboardRepo->getRecentLeaveRequests($companyId);
 
-                $multipleAttendance = AppHelper::getAttendanceLimit();
+                // $multipleAttendance = AppHelper::getAttendanceLimit();
+                $recentAttendance = Attendance::select('id','worked_hour','attendance_status', 'user_id','office_time_id')->with('employee:id,name', 'officeTime:id,opening_time,closing_time,shift')->where('company_id', $companyId)->take(5)->latest()->get();
+                $recentTeamMeetings = TeamMeeting::select('id','title','meeting_start_time', 'meeting_date')->with('teamMeetingParticipator.participator:id,name')->take(5)->latest()->get();
+                // dd($recentTeamMeetings);
             }
 
             return view('admin.dashboard', compact(
