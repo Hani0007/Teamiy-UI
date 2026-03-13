@@ -743,7 +743,7 @@
                 <i class="link-icon" data-feather="arrow-left me-3"></i> {{ __('index.back') }}
             </a>
 <button type="submit" class="btn btn-primary ">
-    {{isset($userDetail)? "Update Employee":__('index.add_employee')}}
+    {{isset($userDetail)? __('index.update_employee'):__('index.add_employee')}}
 </button>
 </div>
 
