@@ -1,7 +1,11 @@
 @php
     $locale = \Illuminate\Support\Facades\App::getLocale();
     $themeColor = \App\Helpers\AppHelper::getThemeColor();
+    $user = \App\Helpers\AppHelper::getAuthUserCode();
+    $defaultCountryCode = $user->company->country_code;
 @endphp
+{{-- @dd($defaultCountryCode) --}}
+
 <!DOCTYPE html>
 <html lang="{{ $locale ?? 'en' }}">
 <head>
@@ -152,7 +156,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe("{{ config('services.stripe.key') }}");
-
+   var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
     (function () {
         function formatFlagWithNameAndCode(state) {
             if (!state.id) return state.text;
@@ -305,54 +309,96 @@
             }
             ensureLibraryData();
 
-            document.querySelectorAll('.phone-group').forEach(function (group) {
-                var select = group.querySelector('.phone-country');
-                var input = group.querySelector('input[type="tel"]');
-                var form = group.closest('form');
-                // if (select && input) {
-                //     var digits = (input.value || '').replace(/[^0-9]/g, '');
-                //     var codes = ['971','966','92','91','44','49','39','41','33','1', '48'];
-                //     var raw = (input.value || '').replace(/^\+/, '');
-                //     for (var i = 0; i < codes.length; i++) {
-                //         var c = codes[i];
-                //         if (raw.startsWith(c)) {
-                //             select.value = c;
-                //             if (window.jQuery && jQuery.fn.select2) {
-                //                 jQuery(select).trigger('change.select2');
-                //             }
-                //             input.value = raw.slice(c.length);
-                //             break;
-                //         }
-                //     }
-                //     if (!raw) {
-                //         input.value = digits;
-                //     }
-                // }
+            // add default country code
 
-                if (select && input) {
-                    // Use the data-current attribute for preselected country code
-                    var currentCode = select.dataset.current || '92';
-                    select.value = currentCode;
+            // document.querySelectorAll('.phone-group').forEach(function (group) {
+            //     var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
+            //     console.log("Default country code:", DEFAULT_COUNTRY_CODE);
+            //     var select = group.querySelector('.phone-country');
+            //     var input = group.querySelector('input[type="tel"]');
+            //     var form = group.closest('form');
+            //     // if (select && input) {
+            //     //     var digits = (input.value || '').replace(/[^0-9]/g, '');
+            //     //     var codes = ['971','966','92','91','44','49','39','41','33','1', '48'];
+            //     //     var raw = (input.value || '').replace(/^\+/, '');
+            //     //     for (var i = 0; i < codes.length; i++) {
+            //     //         var c = codes[i];
+            //     //         if (raw.startsWith(c)) {
+            //     //             select.value = c;
+            //     //             if (window.jQuery && jQuery.fn.select2) {
+            //     //                 jQuery(select).trigger('change.select2');
+            //     //             }
+            //     //             input.value = raw.slice(c.length);
+            //     //             break;
+            //     //         }
+            //     //     }
+            //     //     if (!raw) {
+            //     //         input.value = digits;
+            //     //     }
+            //     // }
 
-                    // If select2 is used, update it
-                    if (window.jQuery && jQuery.fn.select2) {
-                        jQuery(select).trigger('change.select2');
-                    }
-                }
+            //    if (!select) return;
 
-                if (select && input && form) {
-                    form.addEventListener('submit', function () {
-                        var digits = (input.value || '').replace(/[^0-9]/g, '');
-                        var selectedCode = select.value;
+            //     // Set default company country code
+            //     if (DEFAULT_COUNTRY_CODE) {
 
-                        if (digits.startsWith(selectedCode)) {
-                            digits = digits.slice(selectedCode.length);
-                        }
+            //         select.value = DEFAULT_COUNTRY_CODE;
 
-                        input.value = '+' + selectedCode + ' ' + digits;
-                    });
-                }
-            });
+            //         if (window.jQuery && jQuery.fn.select2) {
+            //             jQuery(select).val(DEFAULT_COUNTRY_CODE).trigger('change.select2');
+            //         }
+
+            //     }
+
+            //     if (select && input && form) {
+            //         form.addEventListener('submit', function () {
+            //             var digits = (input.value || '').replace(/[^0-9]/g, '');
+            //             var selectedCode = select.value;
+
+            //             if (digits.startsWith(selectedCode)) {
+            //                 digits = digits.slice(selectedCode.length);
+            //             }
+
+            //             input.value = '+' + selectedCode + ' ' + digits;
+            //         });
+            //     }
+            // });
+            // $(document).ready(function () {
+
+            //     var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
+            //     console.log("Default country code:", DEFAULT_COUNTRY_CODE);
+
+            //     $('.phone-group').each(function () {
+
+            //         var select = $(this).find('.phone-country');
+            //         var input = $(this).find('input[type="tel"]');
+            //         var form = $(this).closest('form');
+
+            //         if (!select.length) return;
+
+            //         // set default country code
+            //         if (DEFAULT_COUNTRY_CODE) {
+            //             select.val(DEFAULT_COUNTRY_CODE).trigger('change');
+            //         }
+
+            //         // on form submit combine country code + phone
+            //         if (form.length) {
+            //             form.on('submit', function () {
+
+            //                 var digits = (input.val() || '').replace(/[^0-9]/g, '');
+            //                 var selectedCode = select.val();
+
+            //                 if (digits.startsWith(selectedCode)) {
+            //                     digits = digits.slice(selectedCode.length);
+            //                 }
+
+            //                 input.val('+' + selectedCode + ' ' + digits);
+            //             });
+            //         }
+
+            //     });
+
+            // });
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initPhoneSelects);
