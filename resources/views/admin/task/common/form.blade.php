@@ -297,20 +297,22 @@
         </select>
     </div>
 
-    {{-- Description --}}
-    <div class="col-lg-12 mb-4">
+    <div class="d-flex gap-2">
+     {{-- Description --}}
+    <div class="col-lg-6 mb-4">
         <label class="form-label">@lang('index.description')</label>
         <textarea class="form-control" name="description" id="tinymceExample" rows="3">{{ $taskDetail->description ?? old('description') }}</textarea>
     </div>
 
     {{-- Attachments Section --}}
-    <div class="col-lg-12 mb-4"> <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
+    <div class="col-lg-6 mb-4"> <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
         <label class="form-label">@lang('index.task_attachments') <span class="text-muted fw-normal" style="font-size: 0.8rem;">
                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
-</span></label>
+        </span></label>
         <div class="uploadify-wrapper p-3 border rounded bg-light">
             <input id="image-uploadify" type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple>
         </div>
+    </div>
     </div>
 </div>
 

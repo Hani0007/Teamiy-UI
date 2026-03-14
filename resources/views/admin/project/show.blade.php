@@ -148,13 +148,6 @@
             border: none;
         }
 
-        .branch-back-btn {
-            background-color: #FB8233 !important;
-            color: white;
-            border-radius: 12px;
-            padding: 12px;
-            font-weight: 700;
-        }
 
         #updateMemberModal .modal-content, #updateMemberModal .modal-body {
             overflow: visible !important;
@@ -429,7 +422,7 @@
                     <div class="card">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5>@lang('index.project_members')</h5>
-                            <button class="btn btn-outline-light btn-sm open-employee-modal d-flex align-items-center shadow-sm"
+                            <button class=" branch-back-btn  open-employee-modal d-flex align-items-center shadow-sm text-sm p-2" 
                                     data-add-type="member"
                                     data-href="{{ route('admin.projects.update-member-data') }}"
                                     data-project-id="{{ $projectDetail->id }}">
@@ -485,6 +478,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="mb-3 text-end">
+        <a href="{{ route('admin.projects.index') }}" class="btn branch-back-btn d-inline-flex align-items-center">
+            <i data-feather="arrow-left" class="me-2"></i> @lang('index.back')
+        </a>
     </div>
 
     @include('admin.project.common.update-member')
