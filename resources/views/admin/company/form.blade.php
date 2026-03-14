@@ -3,7 +3,7 @@
         <div>
             <h2>{{ __('company_profile') }}</h2>
             <div class="header-info-row">
-                <div class="header-info-item"><span class="status-badge">{{ __('active') }}</span></div>
+                <div class="header-info-item"><span class="status-badge" style="position: relative;top: 0;right: 0;">{{ __('active') }}</span></div>
                 <div class="header-info-item"><i class="fa fa-code-branch"></i> {{ __('main_branch') }}</div>
                 <div class="header-info-item"><i class="fa fa-users"></i> {{ isset($companyDetail) && $companyDetail ? $companyDetail->no_of_employees : '0' }} {{ __('employees') }}</div>
                 <div class="header-info-item"><i class="fa fa-map-marker-alt"></i> {{ isset($companyDetail) && $companyDetail ? $companyDetail->city : __('location_not_set') }}</div>
@@ -57,12 +57,7 @@
                     @endif
                 </div>
                 <div class="logo-meta">
-                    <label class="teamy-label"><i data-feather="image" class="text-primary" style="width: 18px; height: 18px;"></i> {{ __('company_logo') }}     <span class="text-muted fw-normal" style="font-size: 0.8rem;">
-            ( .jpg, .jpeg, .png )
-        </span>
-    </label>
-        
-    
+                    <label class="teamy-label">{{ __('company_logo') }}</label>
                     <input type="file" name="logo" id="logo-input" style="display:none" onchange="previewFile(this)">
                     <button type="button" class="btn btn-sm" onclick="document.getElementById('logo-input').click()" style="background:var(--teamy-orange); color:white; border-radius:6px; padding:6px 15px; border:none;">{{ __('index.upload_logo') }}</button>
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearLogo()" style="border-radius:6px; padding:6px 15px; border:1px solid #dc3545; color:#dc3545; background:none; margin-left:5px;">{{ __('remove') }}</button>
@@ -375,50 +370,4 @@
     });
 
     window.onload = initializePhoneData;
-</script>
-
-<script>
-    function initAddressAutocomplete() {
-
-    const input = document.getElementById("address");
-
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-        types: ["geocode"]
-    });
-
-    autocomplete.addListener("place_changed", function () {
-
-        const place = autocomplete.getPlace();
-
-        let city = "";
-        let province = "";
-        let postalCode = "";
-
-        place.address_components.forEach(component => {
-
-            const types = component.types;
-
-            if (types.includes("locality")) {
-                city = component.long_name;
-            }
-
-            if (types.includes("administrative_area_level_1")) {
-                province = component.long_name;
-            }
-
-            if (types.includes("postal_code")) {
-                postalCode = component.long_name;
-            }
-
-        });
-
-        document.getElementById("city").value = city;
-        document.getElementById("province").value = province;
-        document.getElementById("postal_code").value = postalCode;
-
-    });
-
-}
-
-document.addEventListener("DOMContentLoaded", initAddressAutocomplete);
 </script>
