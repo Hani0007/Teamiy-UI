@@ -304,8 +304,10 @@
     </div>
 
     {{-- Attachments Section --}}
-    <div class="col-lg-12 mb-4">
-        <label class="form-label">@lang('index.task_attachments')</label>
+    <div class="col-lg-12 mb-4"> <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
+        <label class="form-label">@lang('index.task_attachments') <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+               ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+</span></label>
         <div class="uploadify-wrapper p-3 border rounded bg-light">
             <input id="image-uploadify" type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple>
         </div>

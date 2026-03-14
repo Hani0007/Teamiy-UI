@@ -59,7 +59,9 @@
     {{-- Right Side: Profile Picture --}}
     <div class="col-lg-4 text-center">
         <div class="card bg-light border-0 p-4 rounded-3">
-            <label class="form-label fw-bold mb-3 d-block">{{ __('index.upload_avatar') }}</label>
+            <label class="form-label fw-bold mb-3 d-block"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_avatar') }}<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
             
             <div class="mb-3">
                 @php

@@ -93,7 +93,9 @@
 
     {{-- Asset Image --}}
     <div class="col-lg-6 col-md-6 mb-4">
-        <label for="image" class="form-label">{{ __('index.upload_image') }} @if(!isset($assetDetail)) <span style="color: red">*</span> @endif</label>
+        <label for="image" class="form-label"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_image') }} @if(!isset($assetDetail)) <span style="color: red">*</span> @endif<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
         <div class="image-upload-wrapper border rounded p-3 text-center">
             <input class="form-control" type="file" id="image" name="image" accept=".jpeg,.png,.jpg,.webp" {{isset($assetDetail) ? '': 'required'}}>
             

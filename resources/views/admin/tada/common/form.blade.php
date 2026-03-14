@@ -70,7 +70,9 @@
 
         <div class="col-lg-6" >
             <div class="mb-4">
-                <p class="mb-2">{{ __('index.uploaded_attachment') }} <span style="color: red">*</span></p>
+                <p class="mb-2"> <i data-feather="paperclip" class="text-secondary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.uploaded_attachment') }} <span style="color: red">*</span><span class="text-muted fw-normal" style="font-size: 0.8rem;">
+                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+</span></p>
                 <div class="card p-4 pb-0">
                     <div class="row mb-4">
                         @forelse($attachments as $key => $data)
@@ -119,7 +121,9 @@
                 </div>
             </div>
             <div class="mb-4">
-                <p class="mb-2">{{ __('index.uploaded_attachment') }} <span style="color: red">*</span></p>
+                <p class="mb-2"><i data-feather="paperclip" class="text-secondary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.uploaded_attachment') }} <span style="color: red">*</span><span class="text-muted fw-normal" style="font-size: 0.8rem;">
+                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+</span></p>
                 <div>
                     <input id="image-uploadify" type="file"  name="attachments[]"
                         accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip"  multiple />
