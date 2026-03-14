@@ -3,7 +3,11 @@
 @section('title', __('index.employee_payroll'))
 
 @section('action', __('index.payroll_generate'))
-
+<style>
+    a.btn-act.btn-view-style:hover {
+    color: #fb8233;
+}
+</style>
 
 @section('main-content')
 <section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh;">
@@ -11,9 +15,12 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h2 style="color: #057db0; font-weight: 700;">{{ __('index.employee_payroll') }}</h2>
+            <h2 style="color: #057db0; margin-bottom:10px;">{{ __('index.employee_payroll') }}</h2>
             @include('admin.payroll.employeeSalary.common.breadcrumb')
         </div>
+        <!--<div class="card-header">
+                <h6 class="card-title mb-0">{{__('index.payroll_create')}}</h6>
+            </div>-->
     </div>
 
     {{-- Glass Filters --}}
@@ -118,43 +125,134 @@
                 </div>
             </div>
 
-            {{-- Full Detail Modal --}}
-            <div class="modal fade" id="viewModal{{$key}}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content" style="border-radius:24px; border:none; overflow:hidden;">
-                        <div class="modal-header border-0 pb-0 px-4 pt-4">
-                            <h5 class="fw-bold" style="color:#057db0;">Payroll Breakdown</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-4">
-                            <div class="d-flex align-items-center mb-4 p-3 rounded-4" style="background:#f8fafc;">
-                                <div class="icon-box me-3" style="width:45px; height:45px; background:#057db0; color:#fff; border-radius:12px;">
-                                    <i data-feather="user"></i>
+            {{-- Full Detail Modal - Premium Style --}}
+<div class="modal fade" id="viewModal{{$key}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);">
+            
+            <div class="modal-header border-0 p-4 pb-0" style="display: flex; align-items: center; justify-content: space-between;">
+                <h4 class="fw-bold" style="color: #057db0; letter-spacing: -0.5px;">Payroll</h4>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="row g-3">
+                    
+                    {{-- Left Column: Employee Info --}}
+                    <div class="col-md-4">
+                        <div class="h-100 p-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                            <h6 class="fw-bold mb-4" style="color: #057db0; font-size: 0.85rem; text-transform: uppercase;">Employee Information</h6>
+                            
+                            <div class="text-center mb-4">
+                                <div class="mx-auto d-flex align-items-center justify-content-center" 
+                                     style="width: 60px; height: 60px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #057db0; border-radius: 50%; font-size: 1.5rem; font-weight: 700; border: 2px solid #fff; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);">
+                                    {{ substr($payroll?->employee?->name, 0, 1) }}
                                 </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">{{ $payroll?->employee?->name }}</h6>
-                                    <small class="text-muted">ID: #{{ $payroll->id }}</small>
-                                </div>
+                                <div class="mt-3 fw-bold text-dark" style="font-size: 1rem;">{{ $payroll?->employee?->name }}</div>
+                                <div class="text-muted small">{{ $payroll?->employee?->email ?? 'no-email@mail.com' }}</div>
                             </div>
 
-                            <div class="p-3 rounded-4 border">
-                                <div class="d-flex justify-content-between mb-2"><span>Base Salary:</span><strong>{{$currency}}{{number_format($payroll->base_salary,2)}}</strong></div>
-                                <div class="d-flex justify-content-between mb-2 text-success"><span>Allowances:</span><strong>+{{$currency}}{{number_format($payroll->total_allowance,2)}}</strong></div>
-                                <div class="d-flex justify-content-between mb-2 text-danger"><span>Deductions:</span><strong>-{{$currency}}{{number_format($payroll->total_deduction,2)}}</strong></div>
-                                <div class="d-flex justify-content-between mb-2 text-danger"><span>Tax:</span><strong>-{{$currency}}{{number_format($payroll->tax,2)}}</strong></div>
-                                <div class="d-flex justify-content-between border-top pt-2 mt-2 fw-bold text-primary" style="font-size:1.1rem;">
-                                    <span>NET PAYABLE:</span>
-                                    <span>{{$currency}}{{number_format($payroll->net_salary,2)}}</span>
+                            <div class="space-y-3">
+                                <div class="mb-3">
+                                    <label class="d-block text-muted small mb-1">Payroll Period</label>
+                                    <span class="fw-semibold text-dark small">
+                                        @if(isset($payroll->payment_type) && $payroll->payment_type == 'monthly')
+                                            {{ \App\Helpers\AppHelper::getMonthYear($salary_from) }}
+                                        @else
+                                            {{ \App\Helpers\AttendanceHelper::payslipDate($salary_from) }} - {{ \App\Helpers\AttendanceHelper::payslipDate($salary_to) }}
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="d-block text-muted small mb-1">Status</label>
+                                    <span class="badge px-3 py-2" style="background: #fb823326; color: #fb8233; border-radius: 8px; font-weight: 600;">{{ ucfirst($payroll->status) }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="d-block text-muted small mb-1">Branch</label>
+                                    <span class="fw-semibold text-dark small">{{ $payroll?->employee?->branch?->name ?? 'Main Branch' }}</span>
+                                </div>
+                                <div>
+                                    <label class="d-block text-muted small mb-1">Department</label>
+                                    <span class="fw-semibold text-dark small">{{ $payroll?->employee?->department?->dept_name ?? 'N/A' }}</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {{-- Middle Column: Salary Breakdown --}}
+                    <div class="col-md-5">
+                        <div class="h-100 p-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                            <h6 class="fw-bold mb-4" style="color: #057db0; font-size: 0.85rem; text-transform: uppercase;">Salary Breakdown</h6>
                             
-                            <a href="{{ route('admin.payroll.salary.slip', $payroll->id) }}" class="btn-premium w-100 mt-4 d-flex align-items-center justify-content-center text-decoration-none">
-                                <i data-feather="download" style="width:16px; margin-right:8px;"></i> Download PDF Slip
-                            </a>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Payment Type</span>
+                                <span class="fw-medium small text-dark">{{ ucfirst($payroll->payment_type) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="text-muted small">Payroll Type</span>
+                                <span class="fw-medium small text-dark">{{ $payroll->payroll_type ?? 'Hourly' }}</span>
+                            </div>
+
+                            <div style="border-top: 1px dashed #e2e8f0; margin: 15px 0;"></div>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-dark">Base Salary</span>
+                                <span class="fw-bold text-dark">{{$currency}}{{number_format($payroll->base_salary,2)}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Tax</span>
+                                <span class="fw-bold text-danger">- {{$currency}}{{number_format($payroll->tax,2)}}</span>
+                            </div>
+
+                            <div class="mt-4 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #f1f5f9;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-primary" style="font-size: 1.1rem;">Net Salary</span>
+                                    <span class="fw-bold text-primary" style="font-size: 1.3rem;">{{$currency}}{{number_format($payroll->net_salary,2)}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Right Column: Hours & Quick Actions --}}
+                    <div class="col-md-3">
+                        <div class="h-100 d-flex flex-column gap-3">
+                            {{-- Hours Info --}}
+                            <div class="p-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                                <h6 class="fw-bold mb-3" style="color: #057db0; font-size: 0.85rem; text-transform: uppercase;">Hours</h6>
+                                <div class="text-muted small mb-1">Worked Hours</div>
+                                <div class="h4 fw-bold text-dark mb-0">{{ $payroll->worked_hours ?? '120' }} hrs</div>
+                            </div>
+
+                            {{-- Visual Element --}}
+                            <div class="flex-grow-1 p-3 d-flex align-items-center justify-content-center" style="opacity: 0.5;">
+                                <i data-feather="trending-up" style="width: 50px; height: 50px; color: #cbd5e1;"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {{-- Footer Buttons 
+                <div class="mt-4 pt-2">
+                    <a href="{{ route('admin.payroll.salary.slip', $payroll->id) }}" class="btn w-100 mb-2 py-3 shadow-sm border-0" 
+                       style="background: #0ea5e9; color: white; border-radius: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        <i data-feather="download" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Download Salary Slip (PDF)
+                    </a>
+                    <button type="button" class="btn w-100 py-3 border-0" data-bs-dismiss="modal" 
+                            style="background: #f97316; color: white; border-radius: 12px; font-weight: 600;">
+                        Close
+                    </button>
+                </div>--}}
+                <div class="branch-footer-actions">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="{{ route('admin.payroll.salary.slip', $payroll->id) }}" class="branch-back-btn text-decoration-none">
+                <i class="download"></i>
+                Download Salary Slip (PDF)
+            </a>
+        </div>
             </div>
+        </div>
+    </div>
+</div>
         @empty
             <div class="col-12 text-center py-5">No records found.</div>
         @endforelse

@@ -12,9 +12,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
             <h2 style="color: #057db0;">{{ __('index.assets') }}</h2>
-            <p style="color: #94a3b8; font-weight: 500; font-size: 12px;">
-                <i data-feather="box" style="width: 14px; vertical-align: middle;"></i> Asset Inventory Management
-            </p>
+            @include('admin.assetManagement.assetDetail.common.breadcrumb')
         </div>
 
         @can('create_assets')

@@ -14,7 +14,7 @@
                         <p class="text-white-50 mb-0 small" style="font-size: 11px;">View holiday event and schedule</p>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2 " data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body p-4" style="background: #f8fafc;">
@@ -63,7 +63,7 @@
             </div>
 
             <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fafc;">
-                <button type="button" class="btn  py-2 fw-bold" data-bs-dismiss="modal" 
+                <button type="button" class="btn w-100 py-2 fw-bold" data-bs-dismiss="modal" 
                         style="background: #fff; color: #64748b; border: 1px solid #e2e8f0; border-radius: 12px; transition: all 0.3s;">
                     {{ __('index.close') }}
                 </button>

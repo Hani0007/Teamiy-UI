@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="card-body p-0">
-                    <div class="d-none d-md-grid permission-grid px-4 py-3 text-muted fw-bold border-bottom" style="font-size: 12px; letter-spacing: 0.5px; background: #fafbfc;">
+                    <div class="d-none d-md-grid permission-grid px-4 py-3 text-muted fw-bold border-bottom" style="font-size: 12px; letter-spacing: 0.5px; background: #057fb0; color:#fff !important;">
                         <div># ID</div>
                         <div>PERMISSION NAME</div>
                         <div>GUARD TYPE</div>
@@ -99,74 +99,6 @@
         </div>
     </div>
 </section>
-
-<style>
-    /* Grid Layout */
-    .permission-grid {
-        display: grid;
-        grid-template-columns: 80px 1fr 150px 150px;
-    }
-
-    /* Row Styling */
-    .permission-item-row {
-        background: #fff;
-        border: 1px solid #edf2f9;
-        border-radius: 12px;
-        transition: all 0.2s ease;
-    }
-
-    .permission-item-row:hover {
-        transform: translateY(-2px);
-        border-color: var(--bs-primary);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    /* Icon Placeholder */
-    .perm-icon {
-        width: 32px;
-        height: 32px;
-        background: rgba(var(--bs-primary-rgb), 0.1);
-        color: var(--bs-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-    }
-
-    /* Action Buttons */
-    .btn-action-circle {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        transition: 0.2s;
-        text-decoration: none;
-    }
-
-    .edit { background: rgba(var(--bs-primary-rgb), 0.08); color: var(--bs-primary); }
-    .edit:hover { background: var(--bs-primary); color: #fff; }
-
-    .delete { background: #fff5f5; color: #ff4747; }
-    .delete:hover { background: #ff4747; color: #fff; }
-
-    /* Badges */
-    .bg-soft-primary { background: rgba(var(--bs-primary-rgb), 0.1); }
-    .bg-soft-info { background: #e0f7fa; }
-    .bg-soft-success { background: #e8f5e9; }
-    .bg-light-alt { background: #fafbfc; }
-
-    /* Custom Pagination Fix */
-    .pagination-modern .pagination { margin-bottom: 0; }
-    .pagination-modern .page-link { border-radius: 8px; margin: 0 2px; border: none; font-size: 13px; }
-
-    @media (max-width: 768px) {
-        .permission-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-        .permission-grid div:first-child { display: none; }
-    }
-</style>
 @endsection
 
 @section('scripts')

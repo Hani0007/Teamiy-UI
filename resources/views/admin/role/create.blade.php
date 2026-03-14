@@ -6,6 +6,7 @@
 
     <section class="content">
         @include('admin.section.flash_message')
+        @include('admin.role.common.breadcrumb')
 
         {{-- Blue Header --}}
         <div class="teamy-top-header">
@@ -13,7 +14,7 @@
                 <h2>{{ __('index.role') }}</h2>
                 <div class="header-info-row">
                     <div class="header-info-item">
-                        <span class="status-badge" style="background: #eef2ff; color: #6366f1;">{{ __('index.create') }}</span>
+                        <span class="status-badge" style="background: #eef2ff; color: #fb8233; position: static;">{{ __('index.create') }}</span>
                     </div>
                     <div class="header-info-item">
                         <i class="fa fa-shield-alt"></i> Create new system access levels
