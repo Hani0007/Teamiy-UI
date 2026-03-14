@@ -117,7 +117,7 @@
                             </div>
 
                             <div class="info-item-box mt-3">
-                                <div class="icon-circle" style="background: #fef3c7; color: #d97706;">
+                                <div class="icon-circle" style="background: #e0f2fe; color: #FB8233;">
                                     <i data-feather="log-out" style="width: 16px;"></i>
                                 </div>
                                 <div class="text-content">
@@ -135,8 +135,8 @@
                                     @can('show_office_time')
                                         <a href="javascript:void(0)" id="showOfficeTimeDetail" 
                                            data-href="{{route('admin.office-times.show',$value->id)}}" 
-                                           data-id="{{ $value->id }}" class="btn-action view" title="View" 
-                                           style="background: #f0f9ff; color: #0369a1;">
+                                           data-id="{{ $value->id }}" class="btn-action edit" title="View" 
+                                           >
                                             <i data-feather="eye" style="width:18px; height:18px"></i>
                                         </a>
                                     @endcan
