@@ -18,7 +18,7 @@
             <h2>{{ __('index.resignation') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">
                         {{ isset($resignationDetail) ? __('index.edit') : __('index.create') }}
                     </span>
                 </div>
