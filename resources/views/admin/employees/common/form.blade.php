@@ -832,123 +832,34 @@
 
 
     });
-    // address autocomplete logic
+   
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmV0MY4lYqAzB6QkWW4ENqZEuD2O4qTlc&libraries=places"></script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
 
         const input = document.getElementById('address');
-        const suggestionsBox = document.getElementById('address-suggestions');
 
-        if (!input || !suggestionsBox) return;
+        if (!input) return;
 
-        let debounceTimer;
-
-        input.addEventListener('keyup', function() {
-            let query = this.value.trim();
-
-            clearTimeout(debounceTimer);
-
-            if (query.length < 2) {
-                suggestionsBox.innerHTML = '';
-                return;
-            }
-
-            debounceTimer = setTimeout(() => {
-
-                fetch(
-                        `https://us-central1-flecso-98e70.cloudfunctions.net/placesAutocomplete?input=${encodeURIComponent(query)}`
-                    )
-                    .then(response => response.json())
-                    .then(data => {
-
-                        suggestionsBox.innerHTML = '';
-
-                        if (data.status === "OK" && data.predictions.length > 0) {
-
-                            data.predictions.forEach(item => {
-
-                                let option = document.createElement('a');
-                                option.classList.add('list-group-item',
-                                    'list-group-item-action');
-                                option.textContent = item.description;
-
-                                option.addEventListener('click', function() {
-
-                                    input.value = item.description;
-                                    suggestionsBox.innerHTML = '';
-
-                                    input.dispatchEvent(new CustomEvent(
-                                        'placeSelected', {
-                                            detail: {
-                                                placeId: item
-                                                    .place_id,
-                                                description: item
-                                                    .description
-                                            }
-                                        }));
-                                });
-
-                                suggestionsBox.appendChild(option);
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Autocomplete Error:", error);
-                    });
-
-            }, 300);
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['geocode']
         });
 
-        input.addEventListener('placeSelected', function(e) {
+        autocomplete.addListener('place_changed', function() {
 
-            console.log("Event Triggered");
+            const place = autocomplete.getPlace();
 
-            const placeId = e.detail.placeId;
+            if (!place || !place.address_components) return;
 
-            fetch(
-                    `https://us-central1-flecso-98e70.cloudfunctions.net/placeDetails?place_id=${placeId}`
-                )
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "OK") {
+            let country = '';
+            let postalCode = '';
+            let province = '';
+            let city = '';
 
-                        const location = data.result.geometry.location;
+            place.address_components.forEach(component => {
 
-                        if (document.getElementById('branch_location_latitude')) {
-                            document.getElementById('branch_location_latitude').value = location
-                                .lat;
-                            document.getElementById('branch_location_longitude').value = location
-                                .lng;
-                        }
-
-                        // Fill address components safely
-                        fillAddressComponents(data.result);
-
-                    }
-                })
-                .catch(err => console.error('Place Details Error:', err));
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                suggestionsBox.innerHTML = '';
-            }
-        });
-    });
-
-    function fillAddressComponents(result) {
-        console.log("Filling address components with result:", result);
-        if (!result) return;
-
-        let country = '';
-        let postalCode = '';
-        let province = '';
-        let city = '';
-
-        // Use address_components if available (most reliable)
-        if (result.address_components && Array.isArray(result.address_components)) {
-            const components = result.address_components;
-
-            components.forEach(component => {
                 const types = component.types || [];
                 const longName = component.long_name || '';
 
@@ -967,60 +878,30 @@
                 if (types.includes('country')) {
                     country = longName;
                 }
+
             });
-        }
 
-        if (!city || !country || !postalCode || !province) {
-            const parts = result.formatted_address.split(',').map(p => p.trim());
+            fillAddressComponents({
+                country,
+                province,
+                city,
+                postalCode
+            });
 
-            if (!country) {
-                country = parts[parts.length - 1] || '';
+            // Latitude / Longitude
+            if (place.geometry && place.geometry.location) {
+
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+
+                const latInput = document.getElementById('branch_location_latitude');
+                const lngInput = document.getElementById('branch_location_longitude');
+
+                if (latInput) latInput.value = lat;
+                if (lngInput) lngInput.value = lng;
             }
 
-            if ((!postalCode || !province) && parts.length >= 2) {
-                const postalProvincePart = parts[parts.length - 2];
-
-                const postalMatch = postalProvincePart.match(/(\d+)\s*$/);
-                if (postalMatch && !postalCode) {
-                    postalCode = postalMatch[1];
-                }
-
-                if (!province) {
-                    province = postalProvincePart.replace(postalCode, '').trim();
-                }
-            }
-
-            if (!city && parts.length >= 3) {
-                city = parts[parts.length - 3].trim();
-            }
-        }
-
-        const provinceInput = document.querySelector('input[name="province"]');
-        const cityInput = document.querySelector('input[name="city"]');
-        const postalInput = document.querySelector('input[name="postal_code"]');
-
-        if (provinceInput) provinceInput.value = province || '';
-        if (cityInput) cityInput.value = city || '';
-        if (postalInput) postalInput.value = postalCode || '';
-
-        const countrySelect = document.querySelector('select[name="country"]');
-        if (countrySelect) {
-            let matched = false;
-            for (let option of countrySelect.options) {
-                if (option.text.toLowerCase() === country.toLowerCase()) {
-                    option.selected = true;
-                    matched = true;
-                    break;
-                }
-            }
-            if (!matched && countrySelect.options.length > 0) countrySelect.selectedIndex = 0;
-        }
-
-        console.log("Parsed Address:", {
-            country,
-            province,
-            city,
-            postalCode
         });
-    }
+
+    });
 </script>
