@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
     {
-        dd($request->all(), $accountRequest->all(), $leaveRequest->all());
+        // dd($request->all(), $accountRequest->all(), $leaveRequest->all());
         $this->authorize('create_employee');
         try {
             $validatedData = $request->validated();
