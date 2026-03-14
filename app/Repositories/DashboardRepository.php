@@ -160,9 +160,9 @@ class DashboardRepository
     public function getEmployeeStats($companyId)
     {
         $currentDate = AppHelper::getCurrentDateInYmdFormat();
-        $lastMonth = date('Y-m', strtotime('-1 month'));
+        $lastMonthDate = date('Y-m-d', strtotime('-1 month'));
         
-        // Current counts
+        // Simple queries to get real employee statistics
         $totalEmployees = DB::table('users')
             ->where('company_id', $companyId)
             ->whereNull('deleted_at')
@@ -172,34 +172,6 @@ class DashboardRepository
             ->where('company_id', $companyId)
             ->count();
 
-        // Last month counts (actual counts from last month)
-        $lastMonthEmployees = DB::table('users')
-            ->where('company_id', $companyId)
-            ->whereNull('deleted_at')
-            ->whereMonth('created_at', '<=', date('m', strtotime('-1 month')))
-            ->whereYear('created_at', '<', date('Y', strtotime('now')))
-            ->where(function($query) {
-                $query->whereNull('deleted_at')
-                      ->orWhereMonth('deleted_at', '>', date('m', strtotime('-1 month')))
-                      ->orWhereYear('deleted_at', '>', date('Y', strtotime('-1 month')));
-            })
-            ->count();
-
-        $lastMonthBranches = DB::table('branches')
-            ->where('company_id', $companyId)
-            ->whereMonth('created_at', '<=', date('m', strtotime('-1 month')))
-            ->whereYear('created_at', '<', date('Y', strtotime('now')))
-            ->count();
-
-        // If no historical data, use reasonable defaults
-        if ($lastMonthEmployees == 0) {
-            $lastMonthEmployees = max(1, floor($totalEmployees * 0.8)); // Assume 80% of current
-        }
-        if ($lastMonthBranches == 0) {
-            $lastMonthBranches = max(1, floor($totalBranches * 0.8)); // Assume 80% of current
-        }
-
-        // Current day data
         $todayPresents = DB::table('attendances')
             ->join('users', 'attendances.user_id', '=', 'users.id')
             ->where('users.company_id', $companyId)
@@ -227,60 +199,62 @@ class DashboardRepository
             ->distinct('attendances.user_id')
             ->count();
 
-        // Get last week's data for comparison
-        $lastWeekStart = date('Y-m-d', strtotime('-2 weeks monday', strtotime($currentDate)));
-        $lastWeekEnd = date('Y-m-d', strtotime('-2 weeks sunday', strtotime($currentDate)));
-        
-        $lastWeekPresents = DB::table('attendances')
-            ->join('users', 'attendances.user_id', '=', 'users.id')
-            ->where('users.company_id', $companyId)
-            ->whereBetween('attendances.attendance_date', [$lastWeekStart, $lastWeekEnd])
-            ->whereNotNull('attendances.check_in_at')
-            ->distinct('attendances.user_id', 'attendances.attendance_date')
+        // Get last month's data for comparison
+        $lastMonthEmployees = DB::table('users')
+            ->where('company_id', $companyId)
+            ->whereNull('deleted_at')
+            ->whereDate('created_at', '<=', $lastMonthDate)
             ->count();
 
-        $lastWeekAbsents = DB::table('users')
-            ->leftJoin('attendances', function($join) use ($lastWeekStart, $lastWeekEnd) {
+        $lastMonthBranches = DB::table('branches')
+            ->where('company_id', $companyId)
+            ->whereDate('created_at', '<=', $lastMonthDate)
+            ->count();
+
+        // Get last month's attendance data (same day last month)
+        $lastMonthDay = date('Y-m-d', strtotime('-1 month'));
+        $lastMonthPresents = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
+            ->where('users.company_id', $companyId)
+            ->whereDate('attendances.attendance_date', $lastMonthDay)
+            ->whereNotNull('attendances.check_in_at')
+            ->distinct('attendances.user_id')
+            ->count();
+
+        $lastMonthAbsents = DB::table('users')
+            ->leftJoin('attendances', function($join) use ($lastMonthDay) {
                 $join->on('users.id', '=', 'attendances.user_id')
-                     ->whereBetween('attendances.attendance_date', [$lastWeekStart, $lastWeekEnd]);
+                     ->whereDate('attendances.attendance_date', $lastMonthDay);
             })
             ->where('users.company_id', $companyId)
-            ->whereNull('users.deleted_at')
             ->whereNull('attendances.id')
-            ->distinct('users.id')
+            ->whereNull('users.deleted_at')
             ->count();
 
-        $lastWeekLates = DB::table('attendances')
+        $lastMonthLates = DB::table('attendances')
             ->join('users', 'attendances.user_id', '=', 'users.id')
             ->where('users.company_id', $companyId)
-            ->whereBetween('attendances.attendance_date', [$lastWeekStart, $lastWeekEnd])
+            ->whereDate('attendances.attendance_date', $lastMonthDay)
             ->whereNotNull('attendances.check_in_at')
             ->whereRaw('TIME(attendances.check_in_at) > "09:00:00"')
-            ->distinct('attendances.user_id', 'attendances.attendance_date')
+            ->distinct('attendances.user_id')
             ->count();
 
-        // Calculate weekly averages (5 working days)
-        $lastWeekAvgPresents = $lastWeekPresents / 5;
-        $lastWeekAvgAbsents = $lastWeekAbsents / 5;
-        $lastWeekAvgLates = $lastWeekLates / 5;
-
-        // If no weekly data, use reasonable defaults based on company size
-        if ($lastWeekAvgPresents == 0) {
-            $lastWeekAvgPresents = max(5, floor($totalEmployees * 0.7)); // Minimum 5, assume 70% attendance daily
-        }
-        if ($lastWeekAvgAbsents == 0) {
-            $lastWeekAvgAbsents = max(5, floor($totalEmployees * 0.3)); // Minimum 5, assume 30% absence daily
-        }
-        if ($lastWeekAvgLates == 0) {
-            $lastWeekAvgLates = max(2, floor($totalEmployees * 0.1)); // Minimum 2, assume 10% late daily
-        }
-
-        // Safe percentage calculations
-        $employeesChange = $this->calculateSafePercentage($lastMonthEmployees, $totalEmployees);
-        $branchesChange = $this->calculateSafePercentage($lastMonthBranches, $totalBranches);
-        $presentsChange = $this->calculateSafePercentage($lastWeekAvgPresents, $todayPresents);
-        $absentsChange = $this->calculateSafePercentage($lastWeekAvgAbsents, $todayAbsents);
-        $latesChange = $this->calculateSafePercentage($lastWeekAvgLates, $todayLates);
+        // Calculate percentage changes
+        $employeesPercentage = $lastMonthEmployees > 0 ? 
+            round((($totalEmployees - $lastMonthEmployees) / $lastMonthEmployees) * 100, 1) : 0;
+        
+        $branchesPercentage = $lastMonthBranches > 0 ? 
+            round((($totalBranches - $lastMonthBranches) / $lastMonthBranches) * 100, 1) : 0;
+        
+        $presentsPercentage = $lastMonthPresents > 0 ? 
+            round((($todayPresents - $lastMonthPresents) / $lastMonthPresents) * 100, 1) : 0;
+        
+        $absentsPercentage = $lastMonthAbsents > 0 ? 
+            round((($todayAbsents - $lastMonthAbsents) / $lastMonthAbsents) * 100, 1) : 0;
+        
+        $latesPercentage = $lastMonthLates > 0 ? 
+            round((($todayLates - $lastMonthLates) / $lastMonthLates) * 100, 1) : 0;
 
         return [
             'total_employees' => $totalEmployees,
@@ -288,85 +262,74 @@ class DashboardRepository
             'today_presents' => $todayPresents,
             'today_absents' => $todayAbsents,
             'today_lates' => $todayLates,
-            'employees_change' => $employeesChange,
-            'branches_change' => $branchesChange,
-            'presents_change' => $presentsChange,
-            'absents_change' => $absentsChange,
-            'lates_change' => $latesChange
+            'employees_percentage' => $employeesPercentage,
+            'branches_percentage' => $branchesPercentage,
+            'presents_percentage' => $presentsPercentage,
+            'absents_percentage' => $absentsPercentage,
+            'lates_percentage' => $latesPercentage
         ];
-    }
-
-    private function calculateSafePercentage($previous, $current)
-    {
-        if ($previous == 0) {
-            // If previous was 0, show growth if current > 0, otherwise 0%
-            return $current > 0 ? '+100.0' : '0.0';
-        }
-        
-        // If current is 0, don't show negative percentage, show 0% instead
-        if ($current == 0) {
-            return '0.0';
-        }
-        
-        $change = (($current - $previous) / $previous) * 100;
-        
-        // Cap the percentage to prevent extremely high values
-        if ($change > 200) {
-            $change = 200;
-        } elseif ($change < -200) {
-            $change = -200;
-        }
-        
-        $formattedChange = number_format(abs($change), 1);
-        
-        return $change >= 0 ? '+' . $formattedChange : '-' . $formattedChange;
     }
 
     public function getProjectStats($companyId)
     {
-        // Count projects linked to the specific branches of that company
-        $companyBranches = AppHelper::getCompanyBranches();
-        
+        // Fetch real project statistics
         $notStarted = DB::table('projects')
-            ->whereIn('branch_id', $companyBranches)
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
             ->where('projects.status', 'not_started')
             ->count();
 
         $inProgress = DB::table('projects')
-            ->whereIn('branch_id', $companyBranches)
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
             ->where('projects.status', 'in_progress')
             ->count();
 
         $late = DB::table('projects')
-            ->whereIn('branch_id', $companyBranches)
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
             ->where('projects.status', 'late')
             ->count();
 
         $completed = DB::table('projects')
-            ->whereIn('branch_id', $companyBranches)
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->where('users.company_id', $companyId)
             ->where('projects.status', 'completed')
             ->count();
+
+        // Get total projects
+        $totalProjects = $notStarted + $inProgress + $late + $completed;
+
+        // Get projects by branch
+        $projectsByBranch = DB::table('projects')
+            ->join('users', 'projects.created_by', '=', 'users.id')
+            ->join('branches', 'users.branch_id', '=', 'branches.id')
+            ->where('users.company_id', $companyId)
+            ->select('branches.name as branch_name', DB::raw('COUNT(projects.id) as project_count'))
+            ->groupBy('branches.id', 'branches.name')
+            ->orderBy('project_count', 'desc')
+            ->get();
 
         return [
             'not_started' => $notStarted,
             'in_progress' => $inProgress,
             'late' => $late,
-            'completed' => $completed
+            'completed' => $completed,
+            'total_projects' => $totalProjects,
+            'projects_by_branch' => $projectsByBranch
         ];
     }
 
     public function getRecentLeaveRequests($companyId)
     {
-        $companyBranches = AppHelper::getCompanyBranches();
         
         return \App\Models\LeaveRequestMaster::query()
-            ->withoutGlobalScope('branch')
             ->with([
                 'employee:id,name,employee_code',
                 'department:id,dept_name',
                 'leaveType:id,name'
             ])
-            ->whereIn('branch_id', $companyBranches)
+            ->where('company_id', $companyId)
             ->latest('leave_requested_date')
             ->take(5)
             ->get();

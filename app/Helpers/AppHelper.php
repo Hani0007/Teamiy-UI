@@ -7,7 +7,6 @@ use App\Enum\ShiftTypeEnum;
 use App\Helpers\SMPush\SMPushHelper;
 use App\Models\AppSetting;
 use App\Models\Attendance;
-use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Department;
@@ -39,6 +38,7 @@ use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
 use Illuminate\Support\Facades\File;
+use App\Models\Branch;
 use Intervention\Image\Facades\Image;
 use Spatie\Permission\Models\Permission as ModelsPermission;
 use Spatie\Permission\Models\Role as ModelsRole;
@@ -252,7 +252,7 @@ class AppHelper
 
     }
 
-    public static function getCompanyBranches()
+public static function getCompanyBranches()
     {
         $user = auth()->user();
 
@@ -265,6 +265,7 @@ class AppHelper
         $branches = Branch::where('company_id', $company->id)->pluck('id')->toArray();
         return $branches;
     }
+
 
     public static function getCompanyLogo()
     {

@@ -1,3 +1,4 @@
+{{--
 @extends('layouts.master')
 
 @section('title', __('index.notices'))
@@ -183,70 +184,27 @@
 @extends('layouts.master')
 
 @section('title', __('index.notices'))
+
 <style>
 .toggleStatus:checked{
     background-color:#FB8233 !important;
     border-color:#FB8233 !important;
 }
 </style>
-@section('button')
-    @can('create_notice')
-        <a href="{{ route('admin.notices.create')}}" class="btn  px-4 fw-bold  btn-primary">
-            <i class="me-1" data-feather="plus-circle"></i> @lang('index.create_notice')
-        </a>
-    @endcan
-@endsection
-
 @section('main-content')
 <section class="content-wrapper p-4" style="background: #f0f2f5; min-height: 100vh;">
     @include('admin.section.flash_message')
-
-    {{-- Filter Section --}}
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body p-4">
-            <form action="{{ route('admin.notices.index') }}" method="get">
-                <div class="row g-3 align-items-end">
-                    @if(!isset(auth()->user()->branch_id))
-                        <div class="col-lg-3 col-md-6">
-                            <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.branch')</label>
-                            <select class="form-select border-2 shadow-none" id="branch_id" name="branch_id" style="border-color: #e9ecef;">
-                                <option value="" {{ !isset($filterParameters['branch_id']) ? 'selected': ''}} disabled>{{ __('index.select_branch') }}</option>
-                                @if(isset($companyDetail))
-                                    @foreach($companyDetail->branches()->get() as $branch)
-                                        <option value="{{$branch->id}}" {{ (isset($filterParameters['branch_id']) && $filterParameters['branch_id'] == $branch->id) ? 'selected': '' }}>
-                                            {{ucfirst($branch->name)}}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    @endif
-
-                    <div class="col-lg-3 col-md-6">
-                        <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.from_date')</label>
-                        <input type="date" name="publish_date_from" value="{{ request('publish_date_from') }}" class="form-control border-2 shadow-none">
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <label class="form-label small fw-bold" style="color: #057DB0;">@lang('index.to_date')</label>
-                        <input type="date" name="publish_date_to" value="{{ request('publish_date_to') }}" class="form-control border-2 shadow-none">
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 d-flex gap-2">
-                        <button type="submit" class="btn text-white w-100 fw-bold shadow-sm" style="background-color: #057DB0;">
-                            <i data-feather="filter" class="icon-xs me-1"></i> @lang('index.filter')
-                        </button>
-                        <a href="{{ route('admin.notices.index') }}" class="btn branch-back-btn w-100 fw-bold">
-                            @lang('index.reset')
-                        </a>
-                    </div>
-                </div>
-            </form>
+    
+    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-4">
+        <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.create_notice') }}</h2>
+            @include('admin.notice.common.breadcrumb')
         </div>
-        <button onclick="window.location.href='{{ route('admin.notices.create')}}'" class="btn-premium-add shadow-sm" style="background: #057db0; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; border: none; display: flex; align-items: center; gap: 8px;">
-            <i data-feather="plus" style="width: 20px;"></i>
-            <span>{{ __('index.create_notice') }}</span>
-        </button>
+
+        @can('create_notice')
+            <a href="{{ route('admin.notices.create')}}" class="btn  px-4 fw-bold  btn-primary">
+            <i class="link-icon" data-feather="plus"></i> @lang('index.create_notice')</a>
+        @endcan
     </div>
 
     {{-- 2. Glass-morphism Filter Panel (As per Sample) --}}

@@ -6,14 +6,14 @@
 
     <section class="content">
         @include('admin.section.flash_message')
-
+    @include('admin.role.common.breadcrumb')
         {{-- Blue Header --}}
         <div class="teamy-top-header">
             <div>
                 <h2>{{ __('index.role') }}</h2>
                 <div class="header-info-row">
                     <div class="header-info-item">
-                        <span class="status-badge" style="background: #fff7ed; color: #f97316;">{{ __('index.edit') }}</span>
+                        <span class="status-badge" style="background: #eef2ff; color: #fb8233; position: static;">{{ __('index.edit') }}</span>
                     </div>
                     <div class="header-info-item">
                         <i class="fa fa-user-shield"></i> Editing: {{ $roleDetail->name }}

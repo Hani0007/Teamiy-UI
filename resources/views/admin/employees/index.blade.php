@@ -7,13 +7,12 @@
 
 <section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')
+    @include('admin.employees.common.breadcrumb')
 
     {{-- 1. Modern Breadcrumbs & Top Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div class="page-identity">
             <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.employees') }}</h2>
-            @section('action', __('index.employees'))
-            @include('admin.employees.common.breadcrumb')
             <div class="d-flex align-items-center gap-3 mt-1">
                 <!--<nav aria-label="breadcrumb">
                     <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0;">

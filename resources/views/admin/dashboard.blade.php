@@ -21,37 +21,37 @@
         @php
             $topStats = [
                 [
-                    'label' => 'Total Employees',
-                    'value' => $employeeStats['total_employees'] ?? 0,
-                    'percentage' => ($employeeStats['employees_change'] ?? '0.0') . '%',
+                    'label' => 'Total Employees', 
+                    'value' => $employeeStats['total_employees'] ?? 0, 
+                    'percentage' => ($employeeStats['employees_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['employees_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Employee count includes all staff',
                     'icon' => 'fas fa-users'
                 ],
                 [
-                    'label' => 'Branches',
-                    'value' => $employeeStats['total_branches'] ?? 0,
-                    'percentage' => ($employeeStats['branches_change'] ?? '0.0') . '%',
+                    'label' => 'Branches', 
+                    'value' => $employeeStats['total_branches'] ?? 0, 
+                    'percentage' => ($employeeStats['branches_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['branches_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total branches in company',
                     'icon' => 'fas fa-building'
                 ],
                 [
-                    'label' => 'Today Presents',
-                    'value' => $employeeStats['today_presents'] ?? 0,
-                    'percentage' => ($employeeStats['presents_change'] ?? '0.0') . '%',
+                    'label' => 'Today Presents', 
+                    'value' => $employeeStats['today_presents'] ?? 0, 
+                    'percentage' => ($employeeStats['presents_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['presents_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees presents today',
                     'icon' => 'fas fa-user-check'
                 ],
                 [
-                    'label' => 'Today Absents',
-                    'value' => $employeeStats['today_absents'] ?? 0,
-                    'percentage' => ($employeeStats['absents_change'] ?? '0.0') . '%',
+                    'label' => 'Today Absents', 
+                    'value' => $employeeStats['today_absents'] ?? 0, 
+                    'percentage' => ($employeeStats['absents_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['absents_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees absent today',
                     'icon' => 'fas fa-user-times'
                 ],
                 [
-                    'label' => 'Today Lates',
-                    'value' => $employeeStats['today_lates'] ?? 0,
-                    'percentage' => ($employeeStats['lates_change'] ?? '0.0') . '%',
+                    'label' => 'Today Lates', 
+                    'value' => $employeeStats['today_lates'] ?? 0, 
+                    'percentage' => ($employeeStats['lates_percentage'] >= 0 ? '+' : '') . number_format($employeeStats['lates_percentage'] ?? 0, 1) . '%', 
                     'description' => 'Total employees late today',
                     'icon' => 'fas fa-clock'
                 ]
@@ -84,8 +84,22 @@
                 <span><span class="badge bg-warning rounded-circle me-1 text-dark">{{ $projectStats['in_progress'] ?? 0 }}</span> In Progress</span>
                 <span><span class="badge bg-danger rounded-circle me-1">{{ $projectStats['late'] ?? 0 }}</span> Late</span>
                 <span><span class="badge bg-success rounded-circle me-1">{{ $projectStats['completed'] ?? 0 }}</span> Completed</span>
+                <span class="ms-3"><strong>Total: {{ $projectStats['total_projects'] ?? 0 }}</strong></span>
             </div>
         </div>
+        
+        @if(isset($projectStats['projects_by_branch']) && $projectStats['projects_by_branch']->count() > 0)
+        <div class="mb-3">
+            <h6 class="small text-muted mb-2">Projects by Branch</h6>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach($projectStats['projects_by_branch'] as $branch)
+                <span class="badge bg-light text-dark border">
+                    <strong>{{ $branch->branch_name }}:</strong> {{ $branch->project_count }}
+                </span>
+                @endforeach
+            </div>
+        </div>
+        @endif
         <div class="table-responsive">
             <table class="table mb-0">
                 <thead>
@@ -99,38 +113,41 @@
                             <div class="d-flex align-items-center">
                                 <div class="project-avatar me-3"></div>
                                 <div>
-                                    <div class="fw-bold">{{ $project->name ?? 'Website Redesign' }}</div>
-                                    <small class="text-muted">{{ $project->client_name ?? 'techverdi.com' }}</small>
+                                    <div class="fw-bold">{{ $project->name }}</div>
+                                    <small class="text-muted">{{ $project->client->name ?? 'Internal Project' }}</small>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : 'sp-pending bg-soft-secondary text-muted') }}">
-                                {{ $project->status == 'completed' ? 'Done' : ($project->status == 'in_progress' ? 'In Progress' : 'Not Started') }}
+                            <span class="status-pill {{ $project->status == 'completed' ? 'sp-approved bg-soft-success text-success' : ($project->status == 'in_progress' ? 'sp-pending bg-soft-primary text-primary' : ($project->status == 'cancelled' ? 'sp-rejected bg-soft-danger text-danger' : 'sp-pending bg-soft-secondary text-muted')) }}">
+                                {{ ucfirst(str_replace('_', ' ', $project->status ?? 'not_started')) }}
                             </span>
                         </td>
                         <td>
-                            <div class="fw-bold">{{ $project->name ?? 'Home Page Redesign' }}</div>
-                            <small class="text-muted">{{ Str::limit($project->description ?? 'Redesign website homepage in wordpress...', 50) }}...</small>
+                            <div class="fw-bold">{{ $project->name }}</div>
+                            <small class="text-muted">
+                                @if($project->start_date)Started: {{ \Carbon\Carbon::parse($project->start_date)->format('M d, Y') }}@endif
+                                @if($project->deadline) • Deadline: {{ \Carbon\Carbon::parse($project->deadline)->format('M d, Y') }}@endif
+                            </small>
                         </td>
                         <td>
                             <div class="member-group d-flex">
-                                <div class="member-count">+{{ $project->members ?? 2 }}</div>
+                                <div class="member-count">{{ $project->projectLeaders->count() + $project->assignedMembers->count() }}</div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="pg-bar">
-                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->progress ?? 0 }}%"></div>
+                                    <div class="pg-fill {{ $project->status == 'completed' ? 'bg-green' : ($project->status == 'in_progress' ? 'bg-green' : 'bg-gray') }}" style="width: {{ $project->getProjectProgressInPercentage() ?? 0 }}%"></div>
                                 </div>
-                                <span class="fw-bold">{{ $project->progress ?? 0 }}%</span>
+                                <span class="fw-bold">{{ $project->getProjectProgressInPercentage() ?? 0 }}%</span>
                             </div>
                         </td>
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
                     @endforeach
                     @else
-                    {{-- @for($i=1; $i<=3; $i++)
+                    @for($i=1; $i<=3; $i++)
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
@@ -155,7 +172,7 @@
                         </td>
                         <td><i class="fas fa-ellipsis-v text-muted"></i></td>
                     </tr>
-                    @endfor --}}
+                    @endfor
                     @endif
                 </tbody>
             </table>
@@ -170,7 +187,11 @@
                 <h5 class="fw-bold mb-0">Recent Activities</h5>
             </div>
             <div class="d-flex gap-2 align-items-center">
-                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width:125px;"><option>Last 7 Days</option></select>
+                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width:125px;" id="activity-filter">
+                    <option value="today" selected>Today</option>
+                    <option value="last_2_days">Last 2 Days</option>
+                    <option value="last_7_days">Last 7 Days</option>
+                </select>
                 <div class="nav nav-pills nav-pills-custom" id="activity-tabs" role="tablist">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-leave">Leave Requests</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-attendance">Attendance</button>
@@ -187,25 +208,38 @@
                     </thead>
                     <tbody>
                         @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
-                        @foreach($recentLeaveRequests as $leaveRequest)
-                        <tr>
-                            <td>{{ $leaveRequest->employee->employee_code ?? 'FCD-' . $leaveRequest->id }}</td>
-                            <td><strong>{{ $leaveRequest->employee->name ?? 'N/A' }}</strong></td>
-                            <td>{{ $leaveRequest->department->dept_name ?? 'N/A' }}</td>
-                            <td>{{ $leaveRequest->leaveType->name ?? 'N/A' }}</td>
-                            <td>{{ Str::limit($leaveRequest->reasons ?? 'N/A', 30) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($leaveRequest->leave_requested_date)->format('d M, Y') }}</td>
-                            <td><span class="status-pill {{ $leaveRequest->status == 'approved' ? 'sp-approved' : ($leaveRequest->status == 'pending' ? 'sp-pending' : 'sp-rejected') }}">{{ ucfirst($leaveRequest->status ?? 'Pending') }}</span></td>
-                            <td><i class="fas fa-ellipsis-v text-muted"></i></td>
-                        </tr>
-                        @endforeach
+                            @foreach($recentLeaveRequests as $leave)
+                            <tr data-real-data>
+                                <td>{{ $leave->employee->employee_code ?? 'N/A' }}</td>
+                                <td><strong>{{ $leave->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ $leave->department->dept_name ?? 'N/A' }}</td>
+                                <td>{{ $leave->leaveType->name ?? 'N/A' }}</td>
+                                <td>{{ \Illuminate\Support\Str::limit($leave->reason ?? 'No reason provided', 30) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($leave->leave_requested_date)->format('M d, Y') }}</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($leave->status == 'approved') sp-approved bg-soft-success text-success
+                                        @elseif($leave->status == 'pending') sp-pending bg-soft-warning text-warning
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ ucfirst($leave->status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td><i class="fas fa-ellipsis-v text-muted"></i></td>
+                            </tr>
+                            @endforeach
                         @else
-                        <tr>
-                            <td colspan="8" class="text-center text-muted py-3">
-                                <p class="mb-0">No recent leave requests found.</p>
+                            <tr data-real-data>
+                                <td colspan="7" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent leave requests found.</p>
+                                </td>
+                            </tr>
+                        @endif
+                        <tr data-no-data style="display: none;">
+                            <td colspan="7" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
                             </td>
                         </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
@@ -213,43 +247,38 @@
             <div class="tab-pane fade" id="tab-attendance">
                 <table class="table mb-0 mt-3">
                     <thead>
-                        <tr><th>Employee name</th><th>Total Worked Hours</th><th>Attendance Status</th><th>Shift</th><th>Action</th></tr>
+                        <tr><th>Employee name</th><th>Check-in</th><th>Check-out</th><th>Attendance Status</th><th>Shift</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>John Smith</strong></td>
-                            <td>8.5 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Sarah Johnson</strong></td>
-                            <td>8.0 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mike Wilson</strong></td>
-                            <td>7.5 hrs</td>
-                            <td><span class="status-pill sp-pending bg-soft-warning text-warning">Late</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-warning" disabled>Checked In Late</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Emily Davis</strong></td>
-                            <td>0.0 hrs</td>
-                            <td><span class="status-pill sp-rejected bg-soft-danger text-danger">Absent</span></td>
-                            <td>Morning (9AM-5PM)</td>
-                            <td><button class="btn btn-sm btn-warning">Check In</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Robert Brown</strong></td>
-                            <td>9.0 hrs</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Present</span></td>
-                            <td>Evening (2PM-10PM)</td>
-                            <td><button class="btn btn-sm btn-success" disabled>Checked In</button></td>
+                        @if(isset($recentAttendance) && $recentAttendance->count() > 0)
+                            @foreach($recentAttendance as $attendance)
+                            <tr data-real-data>
+                                <td><strong>{{ $attendance->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ $attendance->check_in_at ? \Carbon\Carbon::parse($attendance->check_in_at)->format('h:i A') : 'N/A' }}</td>
+                                <td>{{ $attendance->check_out_at ? \Carbon\Carbon::parse($attendance->check_out_at)->format('h:i A') : 'N/A' }}</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($attendance->attendance_status == 'present' || $attendance->attendance_status == '1') sp-approved bg-soft-success text-success
+                                        @elseif($attendance->attendance_status == 'late') sp-pending bg-soft-warning text-warning
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ $attendance->attendance_status == '1' ? 'Present' : ($attendance->attendance_status == '0' ? 'Absent' : ucfirst($attendance->attendance_status ?? 'Unknown')) }}
+                                    </span>
+                                </td>
+                                <td>{{ $attendance->officeTime->shift ?? 'General Shift' }}</td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr data-real-data>
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent attendance records found.</p>
+                                </td>
+                            </tr>
+                        @endif
+                        <tr data-no-data style="display: none;">
+                            <td colspan="5" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -258,54 +287,87 @@
             <div class="tab-pane fade" id="tab-meetings">
                 <table class="table mb-0 mt-3">
                     <thead>
-                        <tr><th>Meeting Title</th><th>Date & Time</th><th>Duration</th><th>Attendees</th><th>Status</th><th>Action</th></tr>
+                        <tr><th>Title</th><th>Meeting Date</th><th>Start Time</th><th>Participators</th><th>Status</th><th>Action</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Weekly Team Standup</strong></td>
-                            <td>Today, 10:00 AM</td>
-                            <td>30 mins</td>
-                            <td>12 participants</td>
-                            <td><span class="status-pill sp-approved bg-soft-success text-success">Completed</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">View Notes</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Project Review Meeting</strong></td>
-                            <td>Today, 2:00 PM</td>
-                            <td>1 hour</td>
-                            <td>8 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-primary text-primary">In Progress</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Join Meeting</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Client Presentation</strong></td>
-                            <td>Tomorrow, 11:00 AM</td>
-                            <td>2 hours</td>
-                            <td>6 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Prepare</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Quarterly Planning</strong></td>
-                            <td>Dec 15, 9:00 AM</td>
-                            <td>3 hours</td>
-                            <td>25 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Upcoming</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Set Reminder</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Training Session</strong></td>
-                            <td>Dec 18, 3:00 PM</td>
-                            <td>1.5 hours</td>
-                            <td>15 participants</td>
-                            <td><span class="status-pill sp-pending bg-soft-secondary text-muted">Scheduled</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Register</button></td>
+                        @if(isset($recentTeamMeetings) && $recentTeamMeetings->count() > 0)
+                            @foreach($recentTeamMeetings as $meeting)
+                            <tr data-real-data>
+                                <td><strong>{{ $meeting->title ?? 'N/A' }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_start_time)->format('h:i A') }}</td>
+                                <td>{{ $meeting->teamMeetingParticipator->count() }} participators</td>
+                                <td>
+                                    <span class="status-pill sp-pending bg-soft-secondary text-muted">
+                                        {{ \Carbon\Carbon::parse($meeting->meeting_date)->isPast() ? 'Completed' : 'Scheduled' }}
+                                    </span>
+                                </td>
+                                <td><a href="{{ route('admin.team-meetings.index') }}" class="btn btn-sm btn-outline-primary">View Details</a></td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr data-real-data>
+                                <td colspan="6" class="text-center text-muted py-3">
+                                    <p class="mb-0">No recent team meetings found.</p>
+                                </td>
+                            </tr>
+                        @endif
+                        <tr data-no-data>
+                            <td colspan="6" class="text-center text-muted py-3">
+                                <p class="mb-0">No data found.</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="text-center py-3 border-top"><a href="{{ route('admin.leave-request.index') }}" class="text-muted small fw-bold text-decoration-none">See All Activites</a></div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Initialize filter state
+    handleFilterChange('today');
+    
+    $('#activity-filter').on('change', function() {
+        var filter = $(this).val();
+        handleFilterChange(filter);
+    });
+    
+    // Handle tab switching to maintain filter state
+    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function() {
+        var filter = $('#activity-filter').val();
+        handleFilterChange(filter);
+    });
+    
+    function handleFilterChange(filter) {
+        console.log('Filter changed to:', filter);
+        
+        // Only show data for 'today' filter, show empty for others
+        if (filter === 'today') {
+            // Show the actual data
+            showActualData();
+        } else {
+            // Show "No data found" for other filters
+            showNoDataFound();
+        }
+    }
+    
+    function showActualData() {
+        // Show the real data rows
+        $('.tab-pane tbody tr[data-real-data]').show();
+        $('.tab-pane tbody tr[data-no-data]').hide();
+        console.log('Showing actual data');
+    }
+    
+    function showNoDataFound() {
+        // Hide real data and show "No data found" rows
+        $('.tab-pane tbody tr[data-real-data]').hide();
+        $('.tab-pane tbody tr[data-no-data]').show();
+        console.log('Showing no data found');
+    }
+});
+</script>
+@endpush

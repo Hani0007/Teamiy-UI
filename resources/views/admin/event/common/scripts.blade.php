@@ -230,3 +230,27 @@
         document.getElementById('eventNotification').value = 1;
     });
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmV0MY4lYqAzB6QkWW4ENqZEuD2O4qTlc&libraries=places"></script>
+
+<script>
+
+function initAutocomplete() {
+
+    const input = document.getElementById('location');
+
+    const autocomplete = new google.maps.places.Autocomplete(input);
+
+    autocomplete.addListener('place_changed', function () {
+
+        const place = autocomplete.getPlace();
+
+        console.log(place.formatted_address);
+
+    });
+
+}
+
+google.maps.event.addDomListener(window, 'load', initAutocomplete);
+
+</script>

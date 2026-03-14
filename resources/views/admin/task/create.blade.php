@@ -84,6 +84,7 @@
                 <div class="section-heading-text">
                     <h4>{{ __('index.create_task') }}</h4>
                     <p>Assign tasks to project members and set deadlines</p>
+                    <p>{{ $project->branch?->name ?? 'N/A' }}</p>
                 </div>
             </div>
 

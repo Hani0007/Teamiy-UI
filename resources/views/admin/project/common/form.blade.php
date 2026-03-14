@@ -1,3 +1,4 @@
+
 <div class="row">
     @if(!isset(auth()->user()->branch_id))
     <div class="col-lg-6 col-md-6 mb-4">
@@ -110,8 +111,13 @@
                     </div>
                 </div> --}}
                 <div class="upload_files mb-4">
-                    <label for="upload" class="form-label">{{ __('index.upload_project_logo') }} </label>
-                    <input class="form-control" type="file" id="upload" accept=",.jpg,.jpeg,.png" name="cover_pic">
+<label for="upload" class="form-label d-flex align-items-center gap-2">
+        <i data-feather="image" class="text-primary" style="width: 18px; height: 18px;"></i>
+        <span>{{ __('index.upload_project_logo') }}</span>
+        <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+            ( .jpg, .jpeg, .png )
+        </span>
+    </label>                    <input class="form-control" type="file" id="upload" accept=",.jpg,.jpeg,.png" name="cover_pic">
                 </div>
                 <div class="upload_files mb-4">
                     @if(isset($projectDetail) && $projectDetail->cover_pic)
@@ -144,10 +150,19 @@
 
     <div class="col-lg-6 mb-4">
         <div class="uploadify_plugin mb-3">
-            <input id="image-uploadify" type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple>
+            <label for="image-uploadify" class="form-label d-flex align-items-center gap-2" style="cursor: pointer;">
+            <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
+            <span>{{ __('index.attachments') ?? 'Project Attachments' }}</span>
+            <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+            </span>
+        </label>
+            
+                <input id="image-uploadify"  type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple >
+            
         </div>
 
-        @if(isset($projectDetail))
+    @if(isset($projectDetail))
         <div class="uploadify_image_files">
             <label for="" class="form-label">{{ __('index.uploaded_files_images') }}</label>
             @if(count($files) < 1 && count($images) < 1)

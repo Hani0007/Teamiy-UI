@@ -44,8 +44,8 @@
                 <div class="ms-auto">
                     @php
                         $color = [
-                            \App\Enum\ResignationStatusEnum::approved->value => 'primary',
-                            \App\Enum\ResignationStatusEnum::onReview->value => 'primary',
+                            \App\Enum\ResignationStatusEnum::approved->value => 'info',
+                            \App\Enum\ResignationStatusEnum::onReview->value => 'info',
                             \App\Enum\ResignationStatusEnum::pending->value => 'secondary',
                             \App\Enum\ResignationStatusEnum::cancelled->value => 'danger',
                         ];
@@ -126,14 +126,6 @@
                     </div>
                 </div>
             </div>
-            <div class="float-md-end mt-3">
-                <a href="{{ route('admin.resignation.index') }}">
-                    <button class="btn btn-primary shadow-sm px-4" style="border-radius: 10px; background: linear-gradient(135deg, #057db0 0%, #046690 100%); border: none;">
-                        <i class="link-icon" data-feather="arrow-left" style="width: 18px;"></i> 
-                        {{ __('index.back') }}
-                    </button>
-                </a>
-            </div>    
         </div>
     </div>
 </section>

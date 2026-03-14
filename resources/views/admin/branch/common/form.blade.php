@@ -100,101 +100,30 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.5/build/js/intlTelInput.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var input = document.querySelector("#phone");
+document.addEventListener("DOMContentLoaded", function () {
+    var input = document.querySelector("#phone");
 
-        if (!input || !window.intlTelInput) return;
+    if (!input || !window.intlTelInput) return;
 
-        var iti = window.intlTelInput(input, {
-            nationalMode: false
+    var iti = window.intlTelInput(input, { nationalMode: false });
+    var countrySelect = document.getElementById("country_code");
+    if (countrySelect) {
+        var data = iti.getCountryData();
+        countrySelect.innerHTML = "";
+        data.forEach(function(country) {
+            var option = document.createElement("option");
+            option.value = country.dialCode;
+            option.text = "+" + country.dialCode;
+            option.setAttribute("data-country", country.iso2);
+            countrySelect.appendChild(option);
         });
-        var countrySelect = document.getElementById("country_code");
-        if (countrySelect) {
-            var data = iti.getCountryData();
-            countrySelect.innerHTML = "";
-            data.forEach(function(country) {
-                var option = document.createElement("option");
-                option.value = country.dialCode;
-                option.text = "+" + country.dialCode;
-                option.setAttribute("data-country", country.iso2);
-                countrySelect.appendChild(option);
-            });
-            countrySelect.value = "92";
-            countrySelect.addEventListener("change", function() {
-                iti.setCountry(this.options[this.selectedIndex].getAttribute("data-country"));
-            });
-        }
-    });
+        countrySelect.value = "92";
+        countrySelect.addEventListener("change", function() {
+            iti.setCountry(this.options[this.selectedIndex].getAttribute("data-country"));
+        });
+    }
+});
 </script>
-
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmV0MY4lYqAzB6QkWW4ENqZEuD2O4qTlc&libraries=places"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const input = document.getElementById('address');
-
-        if (!input) return;
-
-        const autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['geocode']
-        });
-
-        autocomplete.addListener('place_changed', function() {
-
-            const place = autocomplete.getPlace();
-
-            if (!place || !place.address_components) return;
-
-            let country = '';
-            let postalCode = '';
-            let province = '';
-            let city = '';
-
-            place.address_components.forEach(component => {
-
-                const types = component.types || [];
-                const longName = component.long_name || '';
-
-                if (types.includes('postal_code')) {
-                    postalCode = longName;
-                }
-
-                if (types.includes('locality')) {
-                    city = longName;
-                }
-
-                if (types.includes('administrative_area_level_1')) {
-                    province = longName;
-                }
-
-                if (types.includes('country')) {
-                    country = longName;
-                }
-
-            });
-
-            fillAddressComponents({
-                country,
-                province,
-                city,
-                postalCode
-            });
-
-            // Latitude / Longitude
-            if (place.geometry && place.geometry.location) {
-
-                const lat = place.geometry.location.lat();
-                const lng = place.geometry.location.lng();
-
-                const latInput = document.getElementById('branch_location_latitude');
-                const lngInput = document.getElementById('branch_location_longitude');
-
-                if (latInput) latInput.value = lat;
-                if (lngInput) lngInput.value = lng;
-            }
-
-        });
 
     });
 </script>

@@ -13,6 +13,20 @@
         .fc-event {
             cursor: pointer;
         }
+        /* Event ka text color white karne ke liye */
+    .fc-event-title, .fc-event-time {
+        color: #ffffff !important;
+    }
+
+    /* Agar background dark hai toh dot ka color bhi light hona chahiye */
+    .fc-daygrid-event-dot {
+        border-color: #ffffff !important;
+    }
+
+    /* Poore event box ka text color */
+    .fc-event {
+        color: #ffffff !important;
+    }
     </style>
 @endsection
 
@@ -244,7 +258,7 @@
                                                     </h5>
 
                                                     <div class="btn-group card-option">
-                                                        <button type="button" class="btn p-0" data-bs-toggle="dropdown"
+                                                        <button type="button" class=" p-0" data-bs-toggle="dropdown" style="border:none; background:transparent"
                                                                 aria-haspopup="true" aria-expanded="false">
                                                             <i class="link-icon" data-feather="more-vertical"></i>
                                                         </button>

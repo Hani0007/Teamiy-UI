@@ -22,14 +22,14 @@
 @section('main-content')
 <section class="content">
     @include('admin.section.flash_message')
-
+    @include('admin.permission.common.breadcrumb')
     {{-- Blue Header --}}
     <div class="teamy-top-header">
         <div>
             <h2>Permission Management</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">@lang('index.create')</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #fb8233; position: static;">@lang('index.create')</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-plus-circle"></i> Add new system-wide permission

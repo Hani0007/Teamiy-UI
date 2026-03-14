@@ -1,598 +1,254 @@
 @extends('layouts.master')
-
 @section('title', __('index.attendance'))
-
-@section('action', __('index.employee_attendance_lists'))
-
-
+<style>
+    a.btn-action-primary:hover {
+    background-color: #fb8233;
+    color: #ffffff;
+}
+</style>
 @section('main-content')
+<div class="content-wrapper">
+    @php
+        $currentDate = $isBsEnabled ? \App\Helpers\AppHelper::getCurrentDateInBS() : \App\Helpers\AppHelper::getCurrentDateInYmdFormat();
+    @endphp
+{{-- Breadcrumbs & Top Header --}}
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-4">
+        <div class="page-identity">
+            <h2 style="color: #057db0; font-weight: 700; margin: 0;">{{ __('index.attendance') }}</h2>
+            @include('admin.attendance.common.breadcrumb')
+            </nav>
+        </div>
+    </div>
 
-    <section class="content">
-        <?php
-        if($isBsEnabled){
-            $currentDate = \App\Helpers\AppHelper::getCurrentDateInBS();
+    {{-- Filter Panel (Premium Glass Style) --}}
+<div class="glass-filter-panel mb-5 shadow-sm border-0"
+     style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border-radius:20px; padding:25px;">
 
-        }else{
-            $currentDate = \App\Helpers\AppHelper::getCurrentDateInYmdFormat();
-        }
-        ?>
+<form action="{{ route('admin.attendances.index') }}" method="get" class="row g-3 align-items-end">
 
-        @include('admin.section.flash_message')
+    {{-- Attendance Date --}}
+    <div class="col-xl-3 col-lg-3 col-md-6">
 
-        @include('admin.attendance.common.breadcrumb')
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="card-title mb-0">{{ __('index.attendance_filter')  }}</h6>
-            </div>
-            <form class="forms-sample card-body pb-0" action="{{ route('admin.attendances.index') }}" method="get">
+        <label class="form-label fw-bold text-muted small" style="letter-spacing:0.5px;">
+            {{ __('index.date') }}
+        </label>
 
-                <div class="row align-items-center">
+        @if($isBsEnabled)
 
-                    <div class="col-lg col-md-6 mb-4">
-                        <input id="attendance_date"
-                               name="attendance_date"
-                               value="{{ $filterParameter['attendance_date'] }}"
-                               @if($isBsEnabled)
-                                   class="form-control dayAttendance"
-                               type="text"
-                               placeholder="{{ __('index.date_placeholder_bs') }}"
-                               @else
-                                   class="form-control"
-                               type="date"
-                            @endif
-                        />
+            <input id="attendance_date"
+                   name="attendance_date"
+                   value="{{ $filterParameter['attendance_date'] }}"
+                   class="form-control dayAttendance shadow-none"
+                   type="text"
+                   placeholder="{{ __('index.date_placeholder_bs') }}"
+                   style="height:48px;border-radius:12px;border:1px solid #e2e8f0;" />
+
+        @else
+
+            <input id="attendance_date"
+                   name="attendance_date"
+                   value="{{ $filterParameter['attendance_date'] }}"
+                   class="form-control shadow-none"
+                   type="date"
+                   style="height:48px;border-radius:12px;border:1px solid #e2e8f0;" />
+
+        @endif
+
+    </div>
+
+    {{-- Branch --}}
+    @if(!isset(auth()->user()->branch_id))
+
+    <div class="col-xl-3 col-lg-3 col-md-6">
+
+        <label class="form-label fw-bold text-muted small" style="letter-spacing:0.5px;">
+            {{ __('index.branch') }}
+        </label>
+
+        <select class="form-select modern-select shadow-none"
+                name="branch_id"
+                id="branch_id"
+                style="height:48px;border-radius:12px;border:1px solid #e2e8f0;">
+
+            <option value="" {{ !isset($filterParameter['branch_id']) ? 'selected' : '' }}>
+                {{ __('index.select_branch') }}
+            </option>
+
+            @foreach($branch as $value)
+
+                <option value="{{ $value->id }}"
+                    {{ (isset($filterParameter['branch_id']) && $value->id == $filterParameter['branch_id']) ? 'selected' : '' }}>
+
+                    {{ ucfirst($value->name) }}
+
+                </option>
+
+            @endforeach
+
+        </select>
+
+    </div>
+
+    @endif
+
+
+    {{-- Department --}}
+    <div class="col-xl-3 col-lg-3 col-md-6">
+
+        <label class="form-label fw-bold text-muted small" style="letter-spacing:0.5px;">
+            {{ __('index.department') }}
+        </label>
+
+        <select class="form-select modern-select shadow-none"
+                name="department_id"
+                id="department_id"
+                style="height:48px;border-radius:12px;border:1px solid #e2e8f0;">
+
+            <option selected disabled>
+                {{ __('index.select_department') }}
+            </option>
+
+        </select>
+
+    </div>
+
+
+    {{-- Buttons --}}
+    <div class="col-xl-3 col-lg-3 col-md-6 d-flex gap-2">
+
+        <button type="submit"
+                class="btn-theme-primary w-100 border-0"
+                style="background:#057db0;color:#fff;height:48px;border-radius:12px;font-weight:600;transition:all .3s ease;">
+
+            {{ __('index.filter') }}
+
+        </button>
+
+
+        @can('attendance_csv_export')
+
+        <button type="button"
+                id="download-daywise-attendance-excel"
+                data-href="{{ route('admin.attendances.index') }}"
+                class="btn-theme-secondary w-100 border-0"
+                style="background:#057db0;color:#fff;height:48px;border-radius:12px;font-weight:600;">
+
+            {{ __('index.csv_export') }}
+
+        </button>
+
+        @endcan
+
+
+        <a href="{{ route('admin.attendances.index') }}"
+           class="btn-theme-outline w-100 text-decoration-none d-flex align-items-center justify-content-center"
+           style="height:48px;border:1px solid #e2e8f0;border-radius:12px;color:#64748b;background:#fff;font-weight:600;">
+
+            {{ __('index.reset') }}
+
+        </a>
+
+    </div>
+
+</form>
+
+</div>
+
+    <div class="attendance-grid">
+        @forelse($attendanceDetail->groupBy('user_id') as $userId => $userAttendances)
+            @php
+                $firstAtt = $userAttendances->first();
+                $totalMin = $userAttendances->sum('worked_hour');
+                $h = floor($totalMin / 60); $m = $totalMin % 60;
+                $isNight = \App\Helpers\AppHelper::isOnNightShift($userId);
+                $updateUrl = $firstAtt->attendance_id ? route($isNight ? 'admin.night_attendances.update' : 'admin.attendances.update', $firstAtt->attendance_id) : '#';
+                $deleteUrl = $firstAtt->attendance_id ? route('admin.attendance.delete', $firstAtt->attendance_id) : '#';
+            @endphp
+
+            <div class="clean-card">
+                <span class="status-dot status-{{ $firstAtt->attendance_status }}">
+                    {{ $firstAtt->attendance_status == 1 ? 'Approved' : 'Pending' }}
+                </span>
+
+                <div class="card-top">
+                    <div class="avatar-lite">{{ substr($firstAtt->user_name, 0, 1) }}</div>
+                    <div class="user-info">
+                        <p class="user-name">{{ ucfirst($firstAtt->user_name) }}</p>
+                        <span class="user-id">#{{ $userId }} • {{ strtoupper($firstAtt->shift ?? 'Day') }}</span>
                     </div>
-                    @if(!isset(auth()->user()->branch_id))
-                    <div class="col-lg col-md-6 mb-4">
-                        <select class="form-select form-select-lg" name="branch_id" id="branch_id">
-                            <option value="" {{ !isset($filterParameter['branch_id']) ? 'selected' : '' }}>{{ __('index.select_branch') }}</option>
-                            @foreach($branch as $key =>  $value)
-                                <option value="{{ $value->id }}" {{ (isset($filterParameter['branch_id']) && $value->id == $filterParameter['branch_id']) ? 'selected' : '' }}>
-                                    {{ ucfirst($value->name) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                </div>
 
+                <div class="time-row">
+                    <div class="time-item">
+                        <small>Check In</small>
+                        <span class="time-val text-success">{{ $firstAtt->check_in_at ? \App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $firstAtt->check_in_at) : '--:--' }}</span>
+                    </div>
+                    <div class="time-item text-end">
+                        <small>Check Out</small>
+                        <span class="time-val text-danger">{{ $firstAtt->check_out_at ? \App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $firstAtt->check_out_at) : '--:--' }}</span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="worked-pill">Worked: {{ $h }}h {{ $m }}m</span>
+                </div>
+
+                <div class="actions-lite">
+                    @if($filterParameter['attendance_date'] == $currentDate)
+                        @if(!$firstAtt->check_in_at)
+                            <a href="{{ route('admin.employees.check-in', [$firstAtt->company_id, $userId]) }}" class="btn-action-primary" >Check In</a>
+                        @elseif(!$firstAtt->check_out_at)
+                            <a href="{{ route('admin.employees.check-out', [$firstAtt->company_id, $userId]) }}" class="btn btn-outline-danger btn-sm rounded-3 fw-bold px-3">Check Out</a>
+                        @endif
                     @endif
-                    <div class="col-lg col-md-6 mb-4">
-                        <select class="form-select " name="department_id" id="department_id">
-                            <option selected disabled>{{ __('index.select_department') }}</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="d-md-flex align-items-center gap-2">
-                            <button type="submit" class="btn btn-block btn-success form-control mb-4">{{ __('index.filter') }}</button>
-                            @can('attendance_csv_export')
-                            <button type="button" id="download-daywise-attendance-excel"
-                                    data-href="{{ route('admin.attendances.index') }}"
-                                    class="btn btn-block btn-secondary form-control mb-4">{{ __('index.csv_export') }}
+
+                    @can('attendance_show')
+                        <a href="{{ route('admin.attendances.show', $userId) }}" class="btn-icon-lite" title="View"><i data-feather="eye" style="width: 16px;"></i></a>
+                    @endcan
+
+                    @if($firstAtt->attendance_id)
+                        @can('attendance_update')
+                            <button class="btn-icon-lite {{ $isNight ? 'editNightAttendance' : 'editAttendance' }}" data-href="{{ $updateUrl }}" data-name="{{ $firstAtt->user_name }}">
+                                <i data-feather="edit-2" style="width: 16px;"></i>
                             </button>
-                            @endcan
-                            <a class="btn btn-block btn-primary form-control me-0 mb-4" href="{{ route('admin.attendances.index') }}">{{ __('index.reset') }}</a>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">{{ __('index.attendance_of_the_day') }}</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-
-                        <table id="dataTableExample" class="table">
-                            <thead>
-                            <tr>
-                                @can('attendance_show')
-                                    <th></th>
-                                @endcan
-                                <th>{{ __('index.employee_name') }}</th>
-                                    @if($multipleAttendance > 1)
-                                        <th class="text-center">{{ __('index.total_worked_hours') }}</th>
-                                    @else
-                                        <th class="text-center">{{ __('index.check_in_at') }}</th>
-                                        <th class="text-center">{{ __('index.check_out_at') }}</th>
-                                        <th class="text-center">{{ __('index.worked_hour') }}</th>
-                                    @endif
-
-                                <th class="text-center">{{ __('index.attendance_status') }}</th>
-                                <th class="text-center">{{ __('index.shift') }}</th>
-                                @canany(['attendance_create', 'attendance_update', 'attendance_delete'])
-                                    <th class="text-center">{{ __('index.action') }}</th>
-                                @endcanany
-                            </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                $changeColor = [
-                                    0 => 'danger',
-                                    1 => 'success',
-                                ]
-                               @endphp
-
-                                @forelse($attendanceDetail->groupBy('user_id') as $userId => $userAttendances)
-
-                                    @php
-                                        $firstAttendance = $userAttendances->first();
-                                        $totalWorkedMinutes = $userAttendances->sum('worked_hour');
-                                        $lastAttendance = $userAttendances->last();
-
-                                        $hours = floor($totalWorkedMinutes / 60);
-                                        $minutes = $totalWorkedMinutes % 60;
-
-                                        $workedHours = '';
-                                        if ($hours > 0) {
-                                            $workedHours .= $hours . ' h ';
-                                        }
-                                        if ($minutes > 0) {
-                                            $workedHours .= $minutes . ' m';
-                                        }
-                                        $workedHours = trim($workedHours);
-
-                                        $multipleEntries = $userAttendances->count();
-
-                                        $nightShift = \App\Helpers\AppHelper::isOnNightShift($userId);
-
-                                    @endphp
-
-                                    <tr>
-                                    @can('attendance_show')
-                                        <td>
-                                            <ul class="text-center list-unstyled mb-0">
-                                                <li class="me-2">
-                                                    <a href="{{ route('admin.attendances.show', $userId) }}"
-                                                       title="{{ __('index.show_detail') }}">
-                                                        <i class="link-icon" data-feather="eye"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    @endcan
-
-                                    <td>
-                                        {{ ucfirst($firstAttendance->user_name) }}
-                                    </td>
-
-                                    @if($nightShift)
-                                        @if($multipleAttendance <= 1)
-                                            @if(isset($firstAttendance->night_checkin))
-                                                <td class="text-center">
-                                                <span class="btn btn-outline-secondary btn-xs checkLocation"
-                                                      title="{{ $firstAttendance->check_in_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? __('index.show_checkin_location') : strtoupper($firstAttendance->check_in_type).' '.__('index.checkin') }}"
-                                                      data-bs-toggle="modal"
-                                                      data-href="{{ 'https://maps.google.com/maps?q='.$firstAttendance->check_in_latitude.','.$firstAttendance->check_in_longitude.'&t=&z=20&ie=UTF8&iwloc=&output=embed' }}"
-                                                      data-bs-target="{{ '#addslider' }}"
-                                                >
-                                                    {{  \App\Helpers\AttendanceHelper::changeNightAttendanceFormat($appTimeSetting, $firstAttendance->night_checkin) ?? '' }}
-                                                </span>
-                                                </td>
-                                            @else
-                                                <td class="text-center"></td>
-                                            @endif
-
-                                            @if( isset($firstAttendance->night_checkout))
-                                                <td class="text-center">
-                                                <span class="btn btn-outline-secondary btn-xs checkLocation"
-                                                      title="{{ $firstAttendance->check_out_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? __('index.show_checkout_location') : strtoupper($firstAttendance->check_out_type).' '.__('index.checkout') }}"
-                                                      data-bs-toggle="modal"
-                                                      data-href="{{  'https://maps.google.com/maps?q='.$firstAttendance->check_out_latitude.','.$firstAttendance->check_out_longitude.'&t=&z=20&ie=UTF8&iwloc=&output=embed' }}"
-                                                      data-bs-target="{{  '#addslider' }}"
-                                                >
-                                                   {{  \App\Helpers\AttendanceHelper::changeNightAttendanceFormat($appTimeSetting, $firstAttendance->night_checkout)  ??  '' }}
-                                                </span>
-                                                </td>
-                                            @else
-                                                <td class="text-center"></td>
-                                            @endif
-                                        @endif
-
-                                            <td class="text-center">
-                                                {{ \App\Helpers\AttendanceHelper::getWorkedTimeInHourAndMinute($firstAttendance->worked_hour) }}
-                                            </td>
-                                    @elseif($multipleAttendance > 1)
-                                        <td class="text-center">
-                                            {{ $workedHours }}
-                                        </td>
-                                    @else
-                                        @if(isset($firstAttendance->check_in_at))
-                                            <td class="text-center">
-                                                <span class="btn btn-outline-secondary btn-xs checkLocation"
-                                                      title="{{ $firstAttendance->check_in_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? __('index.show_checkin_location') : strtoupper($firstAttendance->check_in_type).' '.__('index.checkin') }}"
-                                                      data-bs-toggle="modal"
-                                                      data-href="{{ 'https://maps.google.com/maps?q='.$firstAttendance->check_in_latitude.','.$firstAttendance->check_in_longitude.'&t=&z=20&ie=UTF8&iwloc=&output=embed' }}"
-                                                      data-bs-target="{{ '#addslider' }}"
-                                                >
-                                                    {{  \App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $firstAttendance->check_in_at) ?? '' }}
-                                                </span>
-                                            </td>
-                                        @else
-                                            <td class="text-center"></td>
-                                        @endif
-
-                                        @if(isset($firstAttendance->check_out_at) )
-                                            <td class="text-center">
-                                                <span class="btn btn-outline-secondary btn-xs checkLocation"
-                                                      title="{{ $firstAttendance->check_out_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? __('index.show_checkout_location') : strtoupper($firstAttendance->check_out_type).' '.__('index.checkout') }}"
-                                                      data-bs-toggle="modal"
-                                                      data-href="{{  'https://maps.google.com/maps?q='.$firstAttendance->check_out_latitude.','.$firstAttendance->check_out_longitude.'&t=&z=20&ie=UTF8&iwloc=&output=embed' }}"
-                                                      data-bs-target="{{  '#addslider' }}"
-                                                >
-                                                   {{ \App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $firstAttendance->check_out_at) ??  '' }}
-                                                </span>
-                                            </td>
-                                        @else
-                                            <td class="text-center"></td>
-                                        @endif
-
-                                        <td class="text-center">
-                                            {{ \App\Helpers\AttendanceHelper::getWorkedTimeInHourAndMinute($firstAttendance->worked_hour) }}
-                                        </td>
-                                    @endif
-
-                                    @if(!is_null($firstAttendance->attendance_status))
-                                        <td class="text-center">
-                                            <a class="btn btn-{{ $changeColor[$firstAttendance->attendance_status] }} btn-xs"
-                                               title="{{ $firstAttendance->attendance_status == \App\Models\Attendance::ATTENDANCE_APPROVED ? __('index.approved') : __('index.rejected') }}">
-                                                {{ $firstAttendance->attendance_status == \App\Models\Attendance::ATTENDANCE_APPROVED ? __('index.approved') : __('index.rejected') }}
-                                            </a>
-                                        </td>
-                                    @else
-                                        <td class="text-center">
-                                           <span class="btn btn-light btn-xs disabled">
-                                                {{ __('index.pending') }}
-                                            </span>
-                                        </td>
-                                    @endif
-
-                                    @if($firstAttendance->shift)
-                                        <td class="text-center">
-                                            <span class="btn btn-warning btn-xs">
-                                                {{ ucfirst($firstAttendance->shift)  }}
-                                            </span>
-                                        </td>
-                                    @else
-                                        <td class="text-center">
-                                        </td>
-                                    @endif
-
-                                    @canany(['attendance_create','attendance_update'])
-                                        @if($nightShift && $filterParameter['attendance_date'] ==  $currentDate)
-
-                                            <td class="text-center">
-                                                <ul class="d-flex text-center list-unstyled mb-0 justify-content-center align-items-center">
-                                                    @php
-                                                        $nightAttendance = \App\Helpers\AttendanceHelper::checkNightShiftCheckOut($userId);
-
-                                                    @endphp
-                                                    @if($nightAttendance == 'checkout')
-                                                        @can('attendance_update')
-                                                            <li class="me-2">
-                                                                <a href="{{ route('admin.employees.check-out', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                   id="checkOut"
-                                                                   data-href=""
-                                                                   data-id="">
-                                                                    <button class="btn btn-danger btn-xs">{{ __('index.check_out') }}</button>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-                                                    @elseif($nightAttendance == 'checkin')
-                                                        @can('attendance_create')
-                                                            <li class="me-2">
-                                                                <a href="{{ route('admin.employees.check-in', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                   id="checkIn"
-                                                                   data-href=""
-                                                                   data-id="">
-                                                                    <button class="btn btn-success btn-xs">{{ __('index.check_in') }}</button>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-                                                    @else
-
-                                                    @endif
-
-                                                    @if($firstAttendance->attendance_id)
-                                                        @can('attendance_update')
-                                                            <li class="me-2">
-                                                                <a href=""
-                                                                   class="editNightAttendance"
-                                                                   data-href="{{ route('admin.night_attendances.update', $firstAttendance->attendance_id) }}"
-                                                                   data-in="{{ $firstAttendance->night_checkin }}"
-                                                                   data-out="{{ $firstAttendance->night_checkout ?? null  }}"
-                                                                   data-remark="{{ $firstAttendance->edit_remark }}"
-                                                                   data-date="{{ \App\Helpers\AttendanceHelper::formattedAttendanceDate($isBsEnabled, $firstAttendance->attendance_date) }}"
-                                                                   data-name="{{ ucfirst($firstAttendance->user_name) }}"
-                                                                   title="{{ __('index.edit_attendance_time') }}"
-                                                                >
-                                                                    <i class="link-icon"
-                                                                       data-feather="edit"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-
-                                                        @can('attendance_delete')
-                                                            <li class="me-2">
-                                                                <a class="deleteAttendance" href="{{ route('admin.attendance.delete', $firstAttendance->attendance_id) }}">
-                                                                    <i class="link-icon"  data-feather="delete"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-                                                        @if($attendanceNote)
-                                                            <li class="me-2">
-                                                                <a href="#"
-                                                                   class="noteLink"
-                                                                   data-checkout_note="{{ $firstAttendance->check_out_note }}"
-                                                                   data-checkin_note="{{ $firstAttendance->check_in_note }}">
-                                                                    Note
-                                                                </a>
-                                                            </li>
-                                                        @endif
-                                                    @endif
-                                                </ul>
-                                            </td>
-                                        @elseif($multipleAttendance > 1)
-                                            <td class="text-center">
-                                                <ul class="d-flex text-center list-unstyled mb-0 justify-content-center align-items-center">
-
-                                                    @if($filterParameter['attendance_date'] == $currentDate && ($multipleEntries < $multipleAttendance || ($lastAttendance->check_in_at && !$lastAttendance->check_out_at)))
-
-                                                        @if((!$firstAttendance->check_in_at && !$firstAttendance->check_out_at) || ($lastAttendance->check_in_at && $lastAttendance->check_out_at))
-                                                            @can('attendance_create')
-                                                                <li class="me-2">
-                                                                    {{-- <a href="{{ route('admin.employees.check-in', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                       id="checkIn"
-                                                                       data-href=""
-                                                                       data-id="">
-                                                                        <button
-                                                                            class="btn btn-success btn-xs">{{ __('index.check_in') }}</button>
-                                                                    </a> --}}
-
-                                                                    <a href="javascript:void (0);"
-                                                                       data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                                       data-href=""
-                                                                       data-id="">
-                                                                        <button
-                                                                            class="btn btn-success btn-xs">{{ __('index.check_in') }}</button>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- Modal -->
-                                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                                                    aria-hidden="true">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" style="text-align: left;" id="exampleModalLabel">Modal title</h5>
-                                                                                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                                    aria-label="Close"></button> --}}
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <p>
-                                                                                    To ensure accurate tracking, check-ins must be performed via the <strong>Teamiy app</strong>.
-                                                                                    Please log in to your mobile device to proceed.
-                                                                                </p>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary"
-                                                                                    data-bs-dismiss="modal">Close</button>
-                                                                                {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endcan
-                                                        @elseif(($firstAttendance->check_in_at && !$firstAttendance->check_out_at) || ($lastAttendance->check_in_at && !$lastAttendance->check_out_at))
-                                                            @can('attendance_update')
-                                                                <li class="me-2">
-                                                                    <a href="{{ route('admin.employees.check-out', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                       id="checkOut"
-                                                                       data-href=""
-                                                                       data-id="">
-                                                                        <button
-                                                                            class="btn btn-danger btn-xs">{{ __('index.check_out') }}</button>
-                                                                    </a>
-                                                                </li>
-                                                            @endcan
-                                                        @endif
-
-                                                    @endif
-                                                    @if($attendanceNote)
-                                                        <li class="me-2">
-                                                            <a href="#"
-                                                               class="noteLink"
-                                                               data-checkout_note="{{ $firstAttendance->check_out_note }}"
-                                                               data-checkin_note="{{ $firstAttendance->check_in_note }}">
-                                                                Note
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </td>
-                                        @else
-                                            <td class="text-center">
-                                                <ul class="d-flex text-center list-unstyled mb-0 justify-content-center align-items-center">
-
-                                                    @if($filterParameter['attendance_date'] ==  $currentDate)
-                                                            @if(!$firstAttendance->check_in_at)
-                                                                @can('attendance_create')
-                                                                    <li class="me-2">
-                                                                        <a href="{{ route('admin.employees.check-in', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                           id="checkIn"
-                                                                           data-href=""
-                                                                           data-id="">
-                                                                            <button class="btn btn-success btn-xs">{{ __('index.check_in') }}</button>
-                                                                        </a>
-                                                                    </li>
-                                                                @endcan
-                                                            @endif
-
-
-                                                            @if($firstAttendance->check_in_at && !$firstAttendance->check_out_at)
-                                                                @can('attendance_update')
-                                                                    <li class="me-2">
-                                                                        <a href="{{ route('admin.employees.check-out', [$firstAttendance->company_id, $firstAttendance->user_id]) }}"
-                                                                           id="checkOut"
-                                                                           data-href=""
-                                                                           data-id="">
-                                                                            <button class="btn btn-danger btn-xs">{{ __('index.check_out') }}</button>
-                                                                        </a>
-                                                                    </li>
-                                                                @endcan
-                                                            @endif
-                                                        @endif
-
-                                                    @if($firstAttendance->attendance_id)
-                                                        @can('attendance_update')
-                                                            <li class="me-2">
-                                                                <a href=""
-                                                                   class="editAttendance"
-                                                                   data-href="{{ route('admin.attendances.update', $firstAttendance->attendance_id) }}"
-                                                                   data-in="{{ date('H:i', strtotime($firstAttendance->check_in_at)) }}"
-                                                                   data-out="{{ $firstAttendance->check_out_at ? date('H:i', strtotime($firstAttendance->check_out_at)) : null }}"
-                                                                   data-remark="{{ $firstAttendance->edit_remark }}"
-                                                                   data-date="{{ $filterParameter['attendance_date'] }}"
-                                                                   data-name="{{ ucfirst($firstAttendance->user_name) }}"
-                                                                   title="{{ __('index.edit_attendance_time') }}"
-                                                                >
-                                                                    <i class="link-icon"
-                                                                       data-feather="edit"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-
-                                                        @can('attendance_delete')
-                                                            <li class="me-2">
-                                                                <a class="deleteAttendance" href="{{ route('admin.attendance.delete', $firstAttendance->attendance_id) }}">
-                                                                    <i class="link-icon"  data-feather="delete"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endcan
-                                                            @if($attendanceNote)
-                                                                <li class="me-2">
-                                                                    <a href="#"
-                                                                       class="noteLink"
-                                                                       data-checkout_note="{{ $firstAttendance->check_out_note }}"
-                                                                       data-checkin_note="{{ $firstAttendance->check_in_note }}">
-                                                                        Note
-                                                                    </a>
-                                                                </li>
-                                                            @endif
-                                                    @endif
-
-                                                </ul>
-                                            </td>
-                                        @endif
-                                    @endcanany
-
-                                </tr>
-
-                                @empty
-                                    <tr>
-                                        <td colspan="100%">
-                                            <p class="text-center"><b>{{ __('index.no_records_found') }}</b></p>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-
+                        @endcan
+                        @can('attendance_delete')
+                            <a href="{{ $deleteUrl }}" class="btn-icon-lite btn-delete-lite deleteAttendance">
+                                <i data-feather="trash-2" style="width: 16px;"></i>
+                            </a>
+                        @endcan
+                    @endif
                 </div>
             </div>
-        </div>
-
-
-        <div class="modal fade" id="addslider" tabindex="-1" aria-labelledby="addslider" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <iframe id="iframeModalWindow" class="attendancelocation" height="500px" width="100%" src="" name="iframe_modal"></iframe>
-                    </div>
-                </div>
+        @empty
+            <div class="col-12 text-center py-5">
+                <p class="text-muted fw-medium">No records found.</p>
             </div>
-        </div>
+        @endforelse
+    </div>
 
-        @include('admin.attendance.common.edit-attendance-form')
-        @include('admin.attendance.common.edit-night-attendance-form')
+    @if(!($attendanceDetail instanceof \Illuminate\Database\Eloquent\Collection))
+        <div class="mt-4">{{ $attendanceDetail->links() }}</div>
+    @endif
 
-        <!-- note for checkin and checkout -->
-        <div id="noteModal" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Attendance Notes</h5>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Check-in Note:</strong> <span id="checkinNote"></span></p>
-                        <p><strong>Check-out Note:</strong> <span id="checkoutNote"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    @include('admin.attendance.common.edit-attendance-form')
+    @include('admin.attendance.common.edit-night-attendance-form')
+</div>
 @endsection
 
 @section('scripts')
     @include('admin.attendance.common.scripts')
     <script>
         $(document).ready(function () {
-            const loadDepartments = async () => {
-
-                const isAdmin = {{ auth('admin')->check() ? 'true' : 'false' }};
-                const defaultBranchId = {{ auth()->user()->branch_id ?? 'null' }};
-                const selectedBranchId = isAdmin ? $('#branch_id option:selected').val() : defaultBranchId;
-
-
-                let departmentId = "{{  $filterParameter['department_id'] ?? '' }}";
-                console.log(departmentId);
-                $('#department_id').empty();
-                if (selectedBranchId) {
-                    $.ajax({
-                        type: 'GET',
-                        url: "{{ url('admin/departments/get-All-Departments') }}" + '/' + selectedBranchId,
-                    }).done(function (response) {
-                        if (!departmentId) {
-                            $('#department_id').append('<option disabled  selected >{{ __('index.select_department') }}</option>');
-                        }
-                        response.data.forEach(function (data) {
-                            $('#department_id').append('<option ' + ((data.id == departmentId) ? "selected" : '') + ' value="' + data.id + '" >' + data.dept_name + '</option>');
-                        });
-                    });
-                }
-            };
-
-            const isAdmin = {{ auth('admin')->check() ? 'true' : 'false' }};
-            if (isAdmin) {
-                $('#branch_id').on('change', loadDepartments);
-                $('#branch_id').trigger('change');
-            } else {
-                loadDepartments(); // Load directly for regular users
-            }
-
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const noteModal = new bootstrap.Modal(document.getElementById('noteModal'));
-
-            document.querySelectorAll('.noteLink').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const checkinNote = this.getAttribute('data-checkin_note');
-                    const checkoutNote = this.getAttribute('data-checkout_note');
-
-                    document.getElementById('checkinNote').textContent = checkinNote || '';
-                    document.getElementById('checkoutNote').textContent = checkoutNote || '';
-
-                    noteModal.show();
+            feather.replace();
+            const bId = {{ auth('admin')->check() ? "$('#branch_id option:selected').val()" : (auth()->user()->branch_id ?? 'null') }};
+            if (bId) {
+                $.ajax({ type: 'GET', url: "{{ url('admin/departments/get-All-Departments') }}/" + bId })
+                .done(res => {
+                    $('#department_id').empty().append('<option disabled selected>Department</option>');
+                    res.data.forEach(d => $('#department_id').append(`<option value="${d.id}">${d.dept_name}</option>`));
                 });
-            });
+            }
         });
     </script>
 @endsection
-

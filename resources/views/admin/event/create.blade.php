@@ -2,7 +2,6 @@
 
 @section('title', __('index.event'))
 
-
 @section('styles')
 <style>
     .teamy-body-wrapper { padding: 1.5rem; background-color: #f9fafb; min-height: 100vh; }
