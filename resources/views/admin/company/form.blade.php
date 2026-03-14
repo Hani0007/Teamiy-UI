@@ -376,3 +376,49 @@
 
     window.onload = initializePhoneData;
 </script>
+
+<script>
+    function initAddressAutocomplete() {
+
+    const input = document.getElementById("address");
+
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ["geocode"]
+    });
+
+    autocomplete.addListener("place_changed", function () {
+
+        const place = autocomplete.getPlace();
+
+        let city = "";
+        let province = "";
+        let postalCode = "";
+
+        place.address_components.forEach(component => {
+
+            const types = component.types;
+
+            if (types.includes("locality")) {
+                city = component.long_name;
+            }
+
+            if (types.includes("administrative_area_level_1")) {
+                province = component.long_name;
+            }
+
+            if (types.includes("postal_code")) {
+                postalCode = component.long_name;
+            }
+
+        });
+
+        document.getElementById("city").value = city;
+        document.getElementById("province").value = province;
+        document.getElementById("postal_code").value = postalCode;
+
+    });
+
+}
+
+document.addEventListener("DOMContentLoaded", initAddressAutocomplete);
+</script>
