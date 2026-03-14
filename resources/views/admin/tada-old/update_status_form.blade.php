@@ -2,7 +2,7 @@
 <div class="modal fade" id="addslider" tabindex="-1" aria-labelledby="addslider" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header text-white" style="background:#057DB0">
+            <div class="modal-header text-center">
                 <h5 class="modal-title" id="exampleModalLabel"></h5>
             </div>
             <div class="modal-body">
@@ -28,7 +28,7 @@
                         </div>
 
                         @can('edit_tada')
-                            <div class="col-lg-12 text-end">
+                            <div class="col-lg-12 text-center">
                                 <button type="submit" class="btn btn-primary update">{{__('index.update')}}</button>
                             </div>
                         @endcan

@@ -252,14 +252,14 @@
     {{-- Dates --}}
     <div class="col-lg-3 col-md-6 mb-4">
         <label class="form-label">@lang('index.task_start_date') <span style="color: red">*</span></label>
-        <input type="datetime-local" class="form-control {{ $isBsEnabled ? 'startNpDate' : '' }}" 
+        <input type="text" class="form-control {{ $isBsEnabled ? 'startNpDate' : '' }}" 
                {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="start_date" required 
                value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->start_date) : $taskDetail->start_date) : old('start_date') }}">
     </div>
 
     <div class="col-lg-3 col-md-6 mb-4">
         <label class="form-label">@lang('index.task_end_date') <span style="color: red">*</span></label>
-        <input type="datetime-local" class="form-control {{ $isBsEnabled ? 'npDeadline' : '' }}" 
+        <input type="text" class="form-control {{ $isBsEnabled ? 'npDeadline' : '' }}" 
                {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="end_date" required 
                value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->end_date) : $taskDetail->end_date) : old('end_date') }}">
     </div>
@@ -297,22 +297,18 @@
         </select>
     </div>
 
-    <div class="d-flex gap-2">
-     {{-- Description --}}
-    <div class="col-lg-6 mb-4">
+    {{-- Description --}}
+    <div class="col-lg-12 mb-4">
         <label class="form-label">@lang('index.description')</label>
         <textarea class="form-control" name="description" id="tinymceExample" rows="3">{{ $taskDetail->description ?? old('description') }}</textarea>
     </div>
 
     {{-- Attachments Section --}}
-    <div class="col-lg-6 mb-4"> <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
-        <label class="form-label">@lang('index.task_attachments') <span class="text-muted fw-normal" style="font-size: 0.8rem;">
-               ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
-        </span></label>
+    <div class="col-lg-12 mb-4">
+        <label class="form-label">@lang('index.task_attachments')</label>
         <div class="uploadify-wrapper p-3 border rounded bg-light">
             <input id="image-uploadify" type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple>
         </div>
-    </div>
     </div>
 </div>
 

@@ -5,74 +5,33 @@
 @section('page-styles')
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <style>
-    :root {
-        --primary-blue: #057db0;
-        --accent-orange: #fb8233;
-        --text-dark: #1e293b;
-    }
-
-    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%; overflow: hidden; }
     .split-reset-container { display: flex; min-height: 100vh; background: #fff; }
-
-    /* LEFT SECTION (FORM) */
-    .reset-left {
-        flex: 1; display: flex; flex-direction: column; justify-content: center;
-        padding: 60px; max-width: 600px; overflow-y: auto;
-    }
+    .reset-left {flex: 1; display: flex; flex-direction: column; justify-content: center;padding: 60px; max-width: 600px; overflow-y: auto;}
     .logo-area { align-self: center; margin-bottom: 25px; }
     .reset-header { text-align: center; margin-bottom: 30px; }
     .reset-header h3 { color: var(--primary-blue); font-weight: 800; font-size: 24px; margin-bottom: 10px; }
     .reset-header p { color: #64748b; font-size: 15px; }
-
-    /* Form Styles from Login Design */
     .form-group { margin-bottom: 20px; position: relative; }
     .reset-label { font-weight: 600; color: var(--accent-orange); margin-bottom: 8px; display: block; font-size: 14px; }
-    .reset-input {
-        width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
-        background: #fff; font-size: 14px; transition: 0.3s; box-sizing: border-box;
-    }
+    .reset-input {width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #e2e8f0;background: #fff; font-size: 14px; transition: 0.3s; box-sizing: border-box;}
     .reset-input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
-
-    /* Password Rules Styling */
-    .reset-password-rules { 
-        background: #f8fafc; border: 1px dashed #cbd5e1; color: #64748b; 
-        font-size: 13px; border-radius: 12px; padding: 12px; margin-bottom: 20px; 
-    }
+    .reset-password-rules { background: #f8fafc; border: 1px dashed #cbd5e1; color: #64748b; font-size: 13px; border-radius: 12px; padding: 12px; margin-bottom: 20px; }
     .rule-valid { color: #10b981 !important; font-weight: 700; }
-
     .password-wrapper { position: relative; }
-    .password-toggle { 
-        position: absolute; right: 15px; top: 45px; cursor: pointer; color: #94a3b8; width: 20px; z-index: 10;
-    }
+    .password-toggle { position: absolute; right: 15px; top: 45px; cursor: pointer; color: #94a3b8; width: 20px; z-index: 10;}
     .password-toggle.active { color: var(--primary-blue); }
-
-    .reset-btn {
-        width: 100%; padding: 14px; border-radius: 12px; border: none;
-        background-color: var(--primary-blue); color: #fff; font-weight: 700;
-        font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;
-    }
+    .reset-btn {width: 100%; padding: 14px; border-radius: 12px; border: none;background-color: var(--primary-blue); color: #fff; font-weight: 700;font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;}
     .reset-btn:hover { background-color: var(--accent-orange); transform: translateY(-1px); }
-
-    /* RIGHT SECTION (SLIDER) */
-    .reset-right {
-        flex: 1.2; background-color: var(--primary-blue);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        position: relative; color: #fff; padding: 40px;
-    }
+    .reset-right {flex: 1.2; background-color: var(--primary-blue);display: flex; flex-direction: column; align-items: center; justify-content: center;position: relative; color: #fff; padding: 40px;}
     .slider-container { width: 100%; max-width: 500px; text-align: center; position: relative; }
     .slide { display: none; }
     .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }
-    
     @keyframes fadeEffect { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-
-    .lottie-box { height: 320px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
-    .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
-    .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
-
+    .lottie-box { height: 400px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
+    .slide-content h3 { font-size: 26px;margin-bottom: 15px; }
     .dots-container { margin-top: 40px; display: flex; justify-content: center; gap: 8px; }
     .dot { height: 10px; width: 10px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .dot.active { background-color: #fff; width: 30px; border-radius: 5px; }
-
     @media (max-width: 992px) { .reset-right { display: none; } .reset-left { max-width: 100%; padding: 40px 25px; } }
 </style>
 @endsection
@@ -139,7 +98,12 @@
         <div class="slider-container">
             <div class="slide active">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_m6cu96.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/signin-data.json') }}" 
+                    background="transparent" speed="1" 
+                    
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Secure Your Account</h3>
@@ -149,8 +113,12 @@
 
             <div class="slide">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_G9pWpx.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-                </div>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
                 <div class="slide-content">
                     <h3>Almost There!</h3>
                     <p>Just one more step to regain access to your comprehensive HR management dashboard.</p>

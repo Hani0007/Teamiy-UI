@@ -7,78 +7,44 @@
 
 <style>
     .split-reg-container { display: flex; min-height: 100vh; background: #fff; }
-
-    /* LEFT SECTION (FORM) */
-    .reg-left {
-        flex: 1; display: flex; flex-direction: column; justify-content: center;
-        padding: 40px 60px; max-width: 650px; overflow-y: auto;
-    }
-
+    .reg-left {flex: 1; display: flex; flex-direction: column; justify-content: center;padding: 40px 60px; max-width: 650px; overflow-y: auto;}
     .reg-logo { text-align: center; margin-bottom: 20px; }
     .reg-header { text-align: center; margin-bottom: 25px; }
     .reg-header h2 { font-weight: 800; color: var(--text-dark); font-size: 26px; margin-bottom: 8px; }
     .reg-header p { color: #64748b; font-size: 14px; }
-
-    /* Form Styles */
     .reg-row { display: flex; gap: 14px; flex-wrap: wrap; }
     .reg-field { margin-bottom: 16px; text-align: left; width: 100%; }
     .reg-field.half { width: calc(50% - 7px); }
-    
     .reg-label { font-weight: 600; color:#fb8233; margin-bottom: 6px; display: block; font-size: 13px; }
-    
-    .reg-input, .phone-wrap select {
-        width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
-        background: #f8fafc; color: var(--text-dark); font-size: 14px; transition: 0.3s; box-sizing: border-box;
-    }
+    .reg-input, .phone-wrap select {width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;background: #f8fafc; color: var(--text-dark); font-size: 14px; transition: 0.3s; box-sizing: border-box;}
     .reg-input:focus, .phone-wrap select:focus { outline: none; border-color: #057db0; box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
-
     .password-wrapper { position: relative; }
-    .password-toggle { 
-        position: absolute; right: 14px; top: 50%; transform: translateY(-50%); 
-        width: 18px; cursor: pointer; color: #94a3b8; 
-    }
+    .password-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; cursor: pointer; color: #94a3b8; }
     .password-toggle.active { color: #057db0; }
-
     .phone-wrap { display: flex; gap: 10px; }
     .phone-wrap select { max-width: 140px; }
-
-    /* Buttons */
-    .reg-btn, .reg-btn-outline {
-        padding: 12px 30px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s;
-    }
+    .reg-btn, .reg-btn-outline {padding: 12px 30px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s;}
     .reg-btn { background: #057db0; border: none; color: #fff; flex: 1; }
     .reg-btn:hover { background:#fb8233; transform: translateY(-1px); }
     .reg-btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
     .reg-btn-outline:hover { background: #f1f5f9; }
-
-    /* Step Display */
     .reg-step { display: none; }
     .reg-step.active { display: block; animation: slideIn 0.4s ease-out; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
     .error-text { color: #dc2626; font-size: 12px; margin-top: 4px; font-weight: 500; }
     .reg-links { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
     .reg-links a { color: #057db0; text-decoration: none; font-weight: 700; }
-
-    /* RIGHT SECTION (SLIDER) */
-    .reg-right {
-        flex: 1.2; background-color: #057db0;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        position: relative; color: #fff; padding: 40px;
-    }
+    .reg-right {flex: 1.2; background-color: #057db0;display: flex; flex-direction: column; align-items: center; justify-content: center;position: relative; color: #fff; padding: 40px;}
     .slider-container { width: 100%; max-width: 500px; text-align: center; }
     .slide { display: none; }
     .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }
     @keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }
-
-    .lottie-box { height: 300px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
-    .slide-content h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
-    .slide-content p { font-size: 15px; opacity: 0.8; line-height: 1.6; }
-
+    .lottie-box { height: 400px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
+    .slide-content h3 { font-size: 24px; margin-bottom: 12px; }
+    /*.slide-content p { font-size: 15px; opacity: 0.8; line-height: 1.6; }*/
     .dots-container { margin-top: 30px; display: flex; justify-content: center; gap: 8px; }
     .dot { height: 8px; width: 8px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .dot.active { background-color: #fff; width: 25px; border-radius: 4px; }
-
     @media (max-width: 992px) { .reg-right { display: none; } .reg-left { max-width: 100%; padding: 40px 20px; } }
 </style>
 @endsection
@@ -94,7 +60,7 @@
         </div>
 
         <div class="reg-header">
-            <h3>{{ __('signup_free_heading') }}</h3>
+            <h3 style="color: #057db0;">{{ __('signup_free_heading') }}</h3>
             <p>{{ __('trial_message') }}</p>
         </div>
 
@@ -412,7 +378,12 @@
         <div class="slider-container">
             <div class="slide active">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_m6cu9t9c.json" background="transparent" speed="1" style="width: 280px; height: 280px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/signin-data.json') }}" 
+                    background="transparent" speed="1" 
+                    
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Empower Your Team</h3>
@@ -422,7 +393,12 @@
 
             <div class="slide">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_q5pk6p1k.json" background="transparent" speed="1" style="width: 280px; height: 280px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Data Driven Insights</h3>

@@ -1,7 +1,8 @@
 <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small">
     <!-- Left side: copyright -->
     <p class="text-muted mb-1 mb-md-0">
-        {!! __('copyright_text', ['year' => date("Y")]) !!}
+        &copy; Copyright <?php echo date("Y"); ?>
+       - <a href="https://teamiy.com/" target="_blank">Teamiy </a> by <a href="https://www.techverdi.com/" target="_blank">TechVerdi</a>
     </p>
 
     <!-- Right side: Privacy & Terms -->
