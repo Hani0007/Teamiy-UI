@@ -600,7 +600,7 @@
                             <div class="position-relative border p-2 rounded">
 
                                 <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
-                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;">
+                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;" alt="image">
 
                                 <button type="button" class="btn  btn-sm remove-doc"
                                     data-file="{{ $doc }}" data-user="{{ $userDetail->id }}">
@@ -753,7 +753,7 @@
 </button>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(document).on('click', '.remove-doc', function() {
 
@@ -769,29 +769,31 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            $.ajax({
-                url: "{{ route('admin.employee.document.delete') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    file: file,
-                    user_id: userId
-                },
-                success: function(response) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('admin.employee.document.delete') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        file: file,
+                        user_id: userId
+                    },
+                    success: function(response) {
 
-                    if (response.success) {
+                        if (response.success) {
 
-                        button.closest('.document-preview').remove();
+                            button.closest('.document-preview').remove();
 
-                    } else {
-                        alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+
+                    },
+                    error: function() {
+                        alert("Something went wrong.");
                     }
-
-                },
-                error: function() {
-                    alert("Something went wrong.");
-                }
-            });
+                });
+            }
         });
 
 
@@ -811,28 +813,30 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            $.ajax({
-                url: "{{ route('admin.employee.contract.delete') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    user_id: userId
-                },
-                success: function(response) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('admin.employee.contract.delete') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        user_id: userId
+                    },
+                    success: function(response) {
 
-                    if (response.success) {
+                        if (response.success) {
 
-                        button.closest('.contract-preview').remove();
+                            button.closest('.contract-preview').remove();
 
-                    } else {
-                        alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+
+                    },
+                    error: function() {
+                        alert("Something went wrong.");
                     }
-
-                },
-                error: function() {
-                    alert("Something went wrong.");
-                }
-            });
+                });
+            }
         });
 
 
