@@ -26,9 +26,8 @@
     .slide { display: none; }
     .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }    
     @keyframes fadeEffect { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-    .lottie-box { height: 320px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
-    .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
-    .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
+    .lottie-box { height: 400px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
+    .slide-content h3 { font-size: 26px; margin-bottom: 15px; }
     .dots-container { margin-top: 40px; display: flex; justify-content: center; gap: 8px; }
     .dot { height: 10px; width: 10px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .dot.active { background-color: #fff; width: 30px; border-radius: 5px; }
@@ -95,7 +94,12 @@
         <div class="slider-container">
             <div class="slide active">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_hp6reunx.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/signin-data.json') }}" 
+                    background="transparent" speed="1" 
+                    
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Secure Reset Process</h3>
@@ -105,7 +109,12 @@
 
             <div class="slide">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_ai769uun.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Keep Your Account Safe</h3>

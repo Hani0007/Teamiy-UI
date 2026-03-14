@@ -218,11 +218,11 @@ sup {
 }
 
 a {
-  color: var(--primary-color);
+  color: #057db0;
   text-decoration: none;
 }
 a:hover {
-  color: var(--primary-color);
+  color: #fff;
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -3371,13 +3371,13 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 }
 
 .btn-outline-primary, .fc .fc-button-primary {
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+  color: #057db0;
+  border-color: #057db0;
 }
 .btn-outline-primary:hover, .fc .fc-button-primary:hover {
   color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: #fb8233;
+  border-color: #057db0;
 }
 .btn-check:focus + .btn-outline-primary, .fc .btn-check:focus + .fc-button-primary, .btn-outline-primary:focus, .fc .fc-button-primary:focus {
   box-shadow: 0 0 0 0 rgba(101, 113, 255, 0.5);
@@ -26411,13 +26411,13 @@ canvas#tasksChart {
 }
 
 .imageuploadify .imageuploadify-images-list span.imageuploadify-message{
-    color:var(--primary-color)!important;
+    color: #057db0 !important;
 }
 
 .imageuploadify .imageuploadify-images-list button.btn-default{
-    border-color:var(--primary-color)!important;
-    background-color: var(--primary-color)!important;
-    color: #fff!important;
+    border-color: #057db0 !important;
+    background-color: #057db0 !important;
+    color: #fff !important;
 }
 
 a.replyicon{
@@ -26729,6 +26729,9 @@ p#date {
 }
 #nav-search-listing > li.highlight {
     background-color: #057db0 !important;
+}
+#nav-search-listing > li.highlight a{
+    color: #fff !important;
 }
 #nav-search-listing > li:hover {
     background-color: #fb8233 !important;

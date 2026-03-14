@@ -6,13 +6,6 @@
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 <style>
-    :root {
-        --primary-blue: #057db0;
-        --accent-orange: #fb8233;
-        --text-dark: #1e293b;
-    }
-
-    body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; height: 100%;}
     .split-login-container { display: flex; min-height: 100vh; background: #fff; }
     .login-left {flex: 1; display: flex; flex-direction: column; justify-content: center;padding: 60px; max-width: 600px; overflow-y: auto;}
     .logo-area { align-self: center; margin-bottom: 25px; }
@@ -39,9 +32,9 @@
     .slide { display: none; }
     .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }
     @keyframes fadeEffect { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-    .lottie-box { height: 320px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
-    .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
-    .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
+    .lottie-box { height: 400px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
+    .slide-content h3 { font-size: 26px;margin-bottom: 15px; }
+    /*.slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }*/
     .dots-container { margin-top: 40px; display: flex; justify-content: center; gap: 8px; }
     .dot {height: 12px;width: 12px;background-color: rgba(255,255,255,0.3);border-radius: 50%;cursor: pointer;display: inline-block;transition: all 0.3s ease;margin: 0 5px; position: relative;z-index: 999; /* Taake koi overlay isay block na kare */}
     .dot.active {background-color: #fff;width: 30px;border-radius: 5px;}
@@ -117,7 +110,7 @@
         <div class="slide active">
             <div class="lottie-box">
                 <lottie-player 
-                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    src="{{ asset('assets/lottie/signin-data.json') }}" 
                     background="transparent" speed="1" 
                     
                     loop autoplay>
@@ -144,7 +137,7 @@
             </div>
         </div>
 
-        <div class="slide">
+        <!--<div class="slide">
             <div class="lottie-box">
                 <lottie-player 
                     src="{{ asset('assets/lottie/newstart.json') }}" 
@@ -157,12 +150,12 @@
                 <h3>Secure & Reliable</h3>
                 <p>Your data is protected with enterprise-grade security. Focus on growing your team while we handle the safety.</p>
             </div>
-        </div>
+        </div>-->
 
         <div class="dots-container">
             <span class="dot active" data-index="0"></span>
             <span class="dot" data-index="1"></span>
-            <span class="dot" data-index="2"></span>
+            <!--<span class="dot" data-index="2"></span>-->
         </div>
     </div>
 </div>
