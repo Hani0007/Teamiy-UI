@@ -11,7 +11,7 @@
             <h2>{{ __('index.office_time') }} {{ __('index.edit') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge">Editing</span>
+                    <span class="status-badge" style="position: relative;top: 0;right: 0;">Editing</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-clock"></i> Update Schedule

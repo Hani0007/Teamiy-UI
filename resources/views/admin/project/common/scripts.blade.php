@@ -38,6 +38,9 @@
                 denyButtonColor: '#FB8233',
                 padding: '10px 50px 10px 50px',
                 allowOutsideClick: false,
+                  customClass: {
+        denyButton: 'no-outline-deny' 
+    }
                 
             }).then((result) => {
                 if (result.isConfirmed) {

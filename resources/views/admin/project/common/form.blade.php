@@ -158,7 +158,7 @@
             </span>
         </label>
             
-                <input id="image-uploadify"  type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple >
+                    <input id="image-uploadify"   type="file" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.txt,.zip" multiple >
             
         </div>
 

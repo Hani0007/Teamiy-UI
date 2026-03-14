@@ -1,4 +1,4 @@
-<div class="col-lg-4 sidebar-list position-relative">
+<div class=" sidebar-list position-relative">
     <div class="position-sticky top-0">
         <div class="card mb-4">
             <div class="card-header">
@@ -52,7 +52,7 @@
             <div class="card-header d-flex w-100 align-items-center justify-content-between">
                 <h5>{{ __('index.task_members') }}</h5>
 
-                <a class="btn btn-primary btn-sm open-employee-modal"
+                <a class="btn branch-back-btn btn-sm open-employee-modal"
                    href="#"
                    data-href="{{ route('admin.tasks.update-member-data') }}"
                    data-task-id="{{ $taskDetail->id }}">
