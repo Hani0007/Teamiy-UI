@@ -265,30 +265,34 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.5/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.5.5/build/js/intlTelInput.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var group = document.querySelector(".phone-group");
         if (!group) return;
         var input = group.querySelector('input[type="tel"]');
         var select = group.querySelector('.phone-country');
-        if (!input || !select || !window.intlTelInput) return;
-        var iti = window.intlTelInput(input, {
-            nationalMode: false
-        });
-        var data = iti.getCountryData();
-        select.innerHTML = "";
-        data.forEach(function(country) {
-            var option = document.createElement("option");
-            option.value = country.dialCode;
-            option.text = "+" + country.dialCode;
-            option.setAttribute("data-country", country.iso2);
-            select.appendChild(option);
-        });
-        select.value = "92";
-        select.addEventListener("change", function() {
-            iti.setCountry(this.options[this.selectedIndex].getAttribute("data-country"));
-        });
+        if (!input || !select) return;
+        var defaultCountry = select.getAttribute('data-current') || '92';
+        
+        // Wait for the select to be populated by master layout script
+        var waitForSelect = setInterval(function() {
+            if (select.options.length > 50) {  // Check if select has been populated
+                clearInterval(waitForSelect);
+                select.value = defaultCountry;
+                
+                // Trigger change event if Select2 is initialized
+                if (window.jQuery && jQuery(select).data('select2')) {
+                    jQuery(select).trigger('change');
+                }
+            }
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(function() {
+            clearInterval(waitForSelect);
+        }, 5000);
     });
 </script>
 
@@ -747,7 +751,7 @@
 </button>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(document).on('click', '.remove-doc', function() {
 
