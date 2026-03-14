@@ -22,7 +22,7 @@
             <h2>{{ __('index.users') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">{{ __('index.add') }}</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">{{ __('index.add') }}</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-user-plus"></i> Register a new system user

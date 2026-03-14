@@ -20,7 +20,7 @@
             <h2>{{ __('index.leave_request') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">Admin Panel</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">Admin Panel</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-plus-circle"></i> {{ __('index.create') }}

@@ -28,7 +28,7 @@
         <div>
             <h2>{{ __('index.event') }}</h2>
             <div class="header-info-row">
-                <span class="status-badge"  style="background: #eef2ff; color: #6366f1;">{{ __('index.create') }}</span>
+                <span class="status-badge"  style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">{{ __('index.create') }}</span>
                 <small style="color:#C1DFEC"><i class="fa fa-calendar-alt"></i> Event Management</small>
             </div>
         </div>
