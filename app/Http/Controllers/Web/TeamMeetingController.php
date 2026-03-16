@@ -25,38 +25,51 @@ class TeamMeetingController extends Controller
     use CustomAuthorizesRequests;
     private $view = 'admin.teamMeeting.';
 
-    public function __construct(protected CompanyRepository  $companyRepo,
-                                protected UserRepository     $userRepo,
-                                protected TeamMeetingService $teamMeetingService,
-                                protected DepartmentRepository $departmentRepository,
-    protected BranchRepository $branchRepository)
-    {}
+    public function __construct(
+        protected CompanyRepository  $companyRepo,
+        protected UserRepository     $userRepo,
+        protected TeamMeetingService $teamMeetingService,
+        protected DepartmentRepository $departmentRepository,
+        protected BranchRepository $branchRepository
+    ) {}
 
     public function index(Request $request)
     {
         $this->authorize('list_team_meeting');
+
         try {
+
             $filterParameters = [
-                'company_id' => AppHelper::getWebAdminCompanyId(),
+                'company_id'   => AppHelper::getWebAdminCompanyId(),
                 'participator' => $request->participator ?? null,
                 'meeting_from' => $request->meeting_from ?? null,
-                'meeting_to' => $request->meeting_to ?? null,
-                'branch_id' => $request->branch_id ?? null,
+                'meeting_to'   => $request->meeting_to ?? null,
+                'branch_id'    => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
             ];
-            if(!auth('admin')->check() && auth()->check()){
+          
+
+            // If normal user login → force branch filter
+            if (auth()->check() && !auth('admin')->check()) {
                 $filterParameters['branch_id'] = auth()->user()->branch_id;
             }
+
             $select = ['*'];
             $with = ['teamMeetingParticipator'];
 
-            $teamMeetings = $this->teamMeetingService->getAllCompanyTeamMeetings($filterParameters,$select, $with);
+            $teamMeetings = $this->teamMeetingService
+                ->getAllCompanyTeamMeetings($filterParameters, $select, $with);
 
             $with = ['branches:id,name'];
             $select = ['id', 'name'];
+
             $companyDetail = $this->companyRepo->getCompanyDetail($select, $with);
 
-            return view($this->view . 'index', compact('teamMeetings','filterParameters','companyDetail'));
+            return view($this->view . 'index', compact(
+                'teamMeetings',
+                'filterParameters',
+                'companyDetail'
+            ));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
@@ -65,12 +78,13 @@ class TeamMeetingController extends Controller
     public function create()
     {
         $this->authorize('create_team_meeting');
-        try{
+        try {
             $with = ['branches:id,name'];
             $select = ['id', 'name'];
             $companyDetail = $this->companyRepo->getCompanyDetail($select, $with);
 
-            return view($this->view . 'create',
+            return view(
+                $this->view . 'create',
                 compact('companyDetail')
             );
         } catch (Exception $exception) {
@@ -90,8 +104,8 @@ class TeamMeetingController extends Controller
                 $userIds = $this->getUserIdsForTeamMeetingNotification($validatedData['participator']);
                 $this->sendTeamMeetingNotification(
                     ucfirst($validatedData['title']),
-                    'You are invited for team meeting at '. ($validatedData['venue']).' on '.
-                    ( \App\Helpers\AppHelper::formatDateForView($validatedData['meeting_date']) .' at ' .AttendanceHelper::changeTimeFormatForAttendanceView($validatedData['meeting_start_time'])),
+                    'You are invited for team meeting at ' . ($validatedData['venue']) . ' on ' .
+                        (\App\Helpers\AppHelper::formatDateForView($validatedData['meeting_date']) . ' at ' . AttendanceHelper::changeTimeFormatForAttendanceView($validatedData['meeting_start_time'])),
                     $userIds,
                     $teamMeeting->id
                 );
@@ -115,7 +129,7 @@ class TeamMeetingController extends Controller
             $teamMeeting->title = ucfirst($teamMeeting->title);
             $teamMeeting->venue = ucfirst($teamMeeting->venue);
             $teamMeeting->meeting_date = AppHelper::formatDateForView($teamMeeting->meeting_date);
-            $teamMeeting->image = $teamMeeting->image ? asset(TeamMeeting::UPLOAD_PATH.$teamMeeting->image):'';
+            $teamMeeting->image = $teamMeeting->image ? asset(TeamMeeting::UPLOAD_PATH . $teamMeeting->image) : '';
             $teamMeeting->time = AttendanceHelper::changeTimeFormatForAttendanceView($teamMeeting->meeting_start_time);
             $teamMeeting->description = removeHtmlTags($teamMeeting->description);
             $teamMeeting->meeting_published_at = convertDateTimeFormat($teamMeeting->meeting_published_at);
@@ -137,12 +151,12 @@ class TeamMeetingController extends Controller
             $with = ['teamMeetingParticipator'];
             $selectMeeting = ['*'];
             $teamMeetingDetail = $this->teamMeetingService->findOrFailTeamMeetingDetailById($id, $selectMeeting, $with);
-            if((AppHelper::ifDateInBsEnabled())){
+            if ((AppHelper::ifDateInBsEnabled())) {
                 $teamMeetingDetail->meeting_date =  AppHelper::dateInYmdFormatEngToNep($teamMeetingDetail->meeting_date);
             }
             $participatorIds = [];
             foreach ($teamMeetingDetail->teamMeetingParticipator as $key => $value) {
-                $participatorIds[] = $value->meeting_participator_id ;
+                $participatorIds[] = $value->meeting_participator_id;
             }
 
             $with = ['branches:id,name'];
@@ -154,9 +168,9 @@ class TeamMeetingController extends Controller
             }
             // Fetch users by selected departments
             $filteredDepartment = isset($teamMeetingDetail->branch_id)
-                ? $this->departmentRepository->getAllActiveDepartmentsByBranchId($teamMeetingDetail->branch_id,[], ['id','dept_name'])
+                ? $this->departmentRepository->getAllActiveDepartmentsByBranchId($teamMeetingDetail->branch_id, [], ['id', 'dept_name'])
                 : [];
-            return view($this->view . 'edit', compact('teamMeetingDetail', 'participatorIds','companyDetail','filteredDepartment','departmentIds'));
+            return view($this->view . 'edit', compact('teamMeetingDetail', 'participatorIds', 'companyDetail', 'filteredDepartment', 'departmentIds'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
@@ -169,10 +183,10 @@ class TeamMeetingController extends Controller
             $validatedData = $request->validated();
 
             $teamMeetingDetail = $this->teamMeetingService->findOrFailTeamMeetingDetailById($id);
-            $previousEmployee = MeetingParticipatorDetail::where('team_meeting_id',$id)->get('meeting_participator_id')->toArray();
+            $previousEmployee = MeetingParticipatorDetail::where('team_meeting_id', $id)->get('meeting_participator_id')->toArray();
 
             DB::beginTransaction();
-                $updateTeamMeeting = $this->teamMeetingService->update($teamMeetingDetail, $validatedData);
+            $updateTeamMeeting = $this->teamMeetingService->update($teamMeetingDetail, $validatedData);
             DB::commit();
 
             $previousEmployeeIds = array_column($previousEmployee, 'meeting_participator_id');
@@ -183,18 +197,18 @@ class TeamMeetingController extends Controller
 
             $remainingEmployeeIds = array_intersect($previousEmployeeIds, $userIds);
 
-            if($updateTeamMeeting && $validatedData['notification'] == 1){
+            if ($updateTeamMeeting && $validatedData['notification'] == 1) {
 
                 $today = date('Y-m-d H:i');
-                $start = $updateTeamMeeting['meeting_date'].' '. $updateTeamMeeting['meeting_start_time'] ;
+                $start = $updateTeamMeeting['meeting_date'] . ' ' . $updateTeamMeeting['meeting_start_time'];
 
-                if(strtotime($today) <= strtotime($start)) {
+                if (strtotime($today) <= strtotime($start)) {
 
                     // for invitation
                     $this->sendTeamMeetingNotification(
                         ucfirst($teamMeetingDetail->title),
-                        'You are invited for team meeting at '. ($teamMeetingDetail->venue).' on '.
-                        ( \App\Helpers\AppHelper::formatDateForView($teamMeetingDetail->meeting_date) .' at ' .AttendanceHelper::changeTimeFormatForAttendanceView($teamMeetingDetail->meeting_start_time)),
+                        'You are invited for team meeting at ' . ($teamMeetingDetail->venue) . ' on ' .
+                            (\App\Helpers\AppHelper::formatDateForView($teamMeetingDetail->meeting_date) . ' at ' . AttendanceHelper::changeTimeFormatForAttendanceView($teamMeetingDetail->meeting_start_time)),
                         $addedEmployeeIds,
                         $updateTeamMeeting->id
                     );
@@ -203,8 +217,8 @@ class TeamMeetingController extends Controller
                     // remove notification
                     $this->sendTeamMeetingNotification(
                         ucfirst($teamMeetingDetail->title),
-                        'Sorry, we have cancelled your participation in team meeting at '. ($teamMeetingDetail->venue).' on '.
-                        ( \App\Helpers\AppHelper::formatDateForView($teamMeetingDetail->meeting_date) .' at ' .AttendanceHelper::changeTimeFormatForAttendanceView($teamMeetingDetail->meeting_start_time)),
+                        'Sorry, we have cancelled your participation in team meeting at ' . ($teamMeetingDetail->venue) . ' on ' .
+                            (\App\Helpers\AppHelper::formatDateForView($teamMeetingDetail->meeting_date) . ' at ' . AttendanceHelper::changeTimeFormatForAttendanceView($teamMeetingDetail->meeting_start_time)),
                         $removedIds,
                         $updateTeamMeeting->id
                     );
@@ -216,7 +230,6 @@ class TeamMeetingController extends Controller
                         $remainingEmployeeIds,
                         $updateTeamMeeting->id
                     );
-
                 }
             }
 
@@ -247,7 +260,7 @@ class TeamMeetingController extends Controller
         $this->authorize('delete_team_meeting');
         try {
             DB::beginTransaction();
-                $this->teamMeetingService->removeMeetingImage($id);
+            $this->teamMeetingService->removeMeetingImage($id);
             DB::commit();
             return redirect()->back()->with('success',  __('message.image_delete'));
         } catch (Exception $exception) {
@@ -266,8 +279,8 @@ class TeamMeetingController extends Controller
         return $userIds;
     }
 
-    private function sendTeamMeetingNotification($title,$message,$userIds,$teamMeetingId)
+    private function sendTeamMeetingNotification($title, $message, $userIds, $teamMeetingId)
     {
-        SMPushHelper::sendNoticeNotification($title,$message,$userIds,true,$teamMeetingId);
+        SMPushHelper::sendNoticeNotification($title, $message, $userIds, true, $teamMeetingId);
     }
 }
