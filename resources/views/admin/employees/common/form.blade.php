@@ -241,11 +241,7 @@
         var input = group.querySelector('input[type="tel"]');
         var select = group.querySelector('.phone-country');
         if (!input || !select) return;
-<<<<<<< HEAD
         var defaultCountry = select.getAttribute('data-current') ;
-=======
-        var defaultCountry = select.getAttribute('data-current') || '92';
->>>>>>> 61927872060f7c463f74059777c154f8f401724e
         
         // Wait for the select to be populated by master layout script
         var waitForSelect = setInterval(function() {
@@ -589,10 +585,6 @@
                         <div class="col-md-2 mb-3 document-preview">
                             <div class="position-relative border p-2 rounded">
 
-<<<<<<< HEAD
-                                <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
-                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;">
-=======
                                 @if (in_array(strtolower(pathinfo($doc, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
                                     <div class="document-preview-container" style="height:120px;width:100%;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;">
                                         <i class="fas fa-file-pdf" style="font-size:48px;color:#dc3545;"></i>
@@ -601,7 +593,6 @@
                                     <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
                                         class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;" alt="image">
                                 @endif
->>>>>>> 61927872060f7c463f74059777c154f8f401724e
 
                                 <button type="button" class="btn  btn-sm remove-doc"
                                     data-file="{{ $doc }}" data-user="{{ $userDetail->id }}">
