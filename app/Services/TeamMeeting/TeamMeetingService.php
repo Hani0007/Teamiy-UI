@@ -5,6 +5,7 @@ namespace App\Services\TeamMeeting;
 use App\Helpers\AppHelper;
 use App\Repositories\TeamMeetingRepository;
 use Exception;
+use App\Models\TeamMeeting;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
@@ -19,13 +20,48 @@ class TeamMeetingService
 
     public function getAllCompanyTeamMeetings($filterParameters, $select = ['*'], $with = [])
     {
-        if(AppHelper::ifDateInBsEnabled()){
+        if (AppHelper::ifDateInBsEnabled()) {
             $filterParameters['meeting_from'] = isset($filterParameters['meeting_from']) ?
-                AppHelper::dateInYmdFormatNepToEng($filterParameters['meeting_from']): null;
+                AppHelper::dateInYmdFormatNepToEng($filterParameters['meeting_from']) : null;
             $filterParameters['meeting_to'] = isset($filterParameters['meeting_to']) ?
-                AppHelper::dateInYmdFormatNepToEng($filterParameters['meeting_to']): null;
+                AppHelper::dateInYmdFormatNepToEng($filterParameters['meeting_to']) : null;
         }
-        return $this->teamMeetingRepo->getAllCompanyTeamMeetings($filterParameters, $select, $with);
+
+        $query = TeamMeeting::select($select)->with($with);
+
+        // Company filter
+        if (!empty($filterParameters['company_id'])) {
+            $query->whereIn('company_id', $filterParameters['company_id']);
+        }
+
+        // Branch filter
+        if (!empty($filterParameters['branch_id'])) {
+            $query->where('branch_id', $filterParameters['branch_id']);
+        }
+
+        // Department filter
+        if (!empty($filterParameters['department_id'])) {
+            $query->whereHas('meetingDepartment', function ($q) use ($filterParameters) {
+                $q->whereIn('department_id', $filterParameters['department_id']);
+            });
+        }
+
+        // Participator filter
+        if (!empty($filterParameters['participator'])) {
+            $query->whereHas('teamMeetingParticipator', function ($q) use ($filterParameters) {
+                $q->whereIn('participator_id', $filterParameters['participator']);
+            });
+        }
+
+        // Date range filter
+        if (!empty($filterParameters['meeting_from'])) {
+            $query->whereDate('meeting_date', '>=', $filterParameters['meeting_from']);
+        }
+        if (!empty($filterParameters['meeting_to'])) {
+            $query->whereDate('meeting_date', '<=', $filterParameters['meeting_to']);
+        }
+
+        return $query->latest('meeting_date')->paginate(TeamMeeting::RECORDS_PER_PAGE);
     }
 
 
@@ -60,7 +96,6 @@ class TeamMeetingService
             if ($teamMeeting) {
                 $this->createManyTeamMeetingParticipator($teamMeeting, $validatedData);
                 $this->createManyTeamMeetingDepartment($teamMeeting, $validatedData);
-
             }
             DB::commit();
             return $teamMeeting;
@@ -80,20 +115,19 @@ class TeamMeetingService
     {
 
 
-            $teamMeeting = $this->teamMeetingRepo->update($teamMeetingDetail, $validatedData);
-            if ($teamMeeting) {
-                $deleteParticipatorDetail = $this->teamMeetingRepo->deleteTeamMeetingParticipatorsDetail($teamMeeting);
-                if ($deleteParticipatorDetail) {
-                    $this->createManyTeamMeetingParticipator($teamMeeting, $validatedData);
-                }
-                $deleteDepartmentDetail = $this->teamMeetingRepo->deleteTeamMeetingDepartmentsDetail($teamMeeting);
-                if ($deleteDepartmentDetail) {
-                    $this->createManyTeamMeetingDepartment($teamMeeting, $validatedData);
-                }
+        $teamMeeting = $this->teamMeetingRepo->update($teamMeetingDetail, $validatedData);
+        if ($teamMeeting) {
+            $deleteParticipatorDetail = $this->teamMeetingRepo->deleteTeamMeetingParticipatorsDetail($teamMeeting);
+            if ($deleteParticipatorDetail) {
+                $this->createManyTeamMeetingParticipator($teamMeeting, $validatedData);
             }
+            $deleteDepartmentDetail = $this->teamMeetingRepo->deleteTeamMeetingDepartmentsDetail($teamMeeting);
+            if ($deleteDepartmentDetail) {
+                $this->createManyTeamMeetingDepartment($teamMeeting, $validatedData);
+            }
+        }
 
-            return $teamMeeting;
-
+        return $teamMeeting;
     }
 
     /**
@@ -106,8 +140,8 @@ class TeamMeetingService
     {
         try {
             DB::beginTransaction();
-                $teamMeetingDetail = $this->findOrFailTeamMeetingDetailById($id);
-                $this->teamMeetingRepo->delete($teamMeetingDetail);
+            $teamMeetingDetail = $this->findOrFailTeamMeetingDetailById($id);
+            $this->teamMeetingRepo->delete($teamMeetingDetail);
             DB::commit();
             return;
         } catch (Exception $exception) {
@@ -121,7 +155,7 @@ class TeamMeetingService
         try {
             DB::beginTransaction();
             $teamMeetingDetail = $this->findOrFailTeamMeetingDetailById($id);
-            if($teamMeetingDetail->image){
+            if ($teamMeetingDetail->image) {
                 $this->teamMeetingRepo->deleteMeetingImage($teamMeetingDetail);
             }
             DB::commit();
@@ -135,15 +169,11 @@ class TeamMeetingService
     public function createManyTeamMeetingParticipator($teamMeetingDetail, $validatedData)
     {
 
-        $this->teamMeetingRepo->createManyTeamMeetingParticipator($teamMeetingDetail,$validatedData['participator']);
-
+        $this->teamMeetingRepo->createManyTeamMeetingParticipator($teamMeetingDetail, $validatedData['participator']);
     }
     public function createManyTeamMeetingDepartment($teamMeetingDetail, $validatedData)
     {
 
-        $this->teamMeetingRepo->createManyTeamMeetingDepartment($teamMeetingDetail,$validatedData['department']);
-
+        $this->teamMeetingRepo->createManyTeamMeetingDepartment($teamMeetingDetail, $validatedData['department']);
     }
-
 }
-

@@ -129,6 +129,8 @@ class AppHelper
         return $companyId;
     }
     
+    
+
 
     public static function getAuthUserCode()
     {
@@ -204,18 +206,17 @@ class AppHelper
     public static function getWebAdminCompanyId()
     {
         $user = auth()->user();
-
         $roleName = $user->getRoleNames()->first();
 
         if ($roleName !== 'super-admin') {
-            $company = Company::where('admin_id', $user->parent_id)->first();
-            $companyId = $company?->id;
+            // Normal user → get all companies related to parent_id
+            $companyIds = Company::where('admin_id', $user->parent_id)->pluck('id')->toArray();
         } else {
-            $user->load('company');
-            $companyId = $user->company->id;
+            // Super-admin → get all company IDs
+            $companyIds = Company::pluck('id')->toArray();
         }
 
-        return $companyId;
+        return $companyIds; // always return array of IDs
     }
 
     public static function getPackageModules()
