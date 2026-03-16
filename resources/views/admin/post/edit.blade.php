@@ -23,7 +23,7 @@
             <h2>{{ __('index.edit_post_title') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">{{ __('index.edit') }}</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">{{ __('index.edit') }}</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-user-tag"></i> {{ $postDetail->post_name ?? 'Update Designation' }}

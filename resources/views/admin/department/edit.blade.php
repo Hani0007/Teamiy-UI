@@ -18,7 +18,7 @@
             <h2>{{ __('index.edit_department') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">Edit</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">Edit</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-edit"></i> Update Department
