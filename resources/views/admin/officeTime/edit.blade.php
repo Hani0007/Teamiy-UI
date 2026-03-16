@@ -33,7 +33,7 @@
                     <i class="fa fa-edit"></i>
                 </div>
                 <div class="section-heading-text">
-                    <h4>{{ __('index.office_schedule') }} {{ __('index.details') }}</h4>
+                    <h4>{{ __('index.office_schedule') }} {{ __('details') }}</h4>
                     <p>Modify existing shift timings and rules</p>
                 </div>
             </div>
