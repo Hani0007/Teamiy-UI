@@ -129,14 +129,6 @@ class AppHelper
         return $companyId;
     }
     
-<<<<<<< HEAD
-    public static function getAuthUserCode()
-    {
-        $user = Auth::user();
-        return $user;
-    }
-
-=======
 
     public static function getAuthUserCode()
     {
@@ -145,7 +137,6 @@ class AppHelper
         // $user = User::where('created_by', $admin->id)->get();
         return $user;
     }
->>>>>>> 61927872060f7c463f74059777c154f8f401724e
 
     public static function getAuthUserId(): int
     {
