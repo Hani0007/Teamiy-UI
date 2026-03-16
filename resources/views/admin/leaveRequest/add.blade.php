@@ -81,6 +81,13 @@
                     <label for="requestedBy" class="form-label">{{ __('index.requested_for') }}<span style="color: red">*</span></label>
                     <select class="form-select select2-input" id="requestedBy" name="requested_by" required>
                         <option selected disabled>{{ __('index.select_employee') }}</option>
+
+                        @if(isset($companyDetail))
+                            @foreach($companyDetail->employee()->get() as $key => $employee)
+                                <option value="{{$employee->id}}">{{ucfirst($employee->name)}}</option>
+                            @endforeach
+                        @endif
+
                     </select>
                 </div>
             </div>

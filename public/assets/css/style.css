@@ -26730,8 +26730,14 @@ p#date {
 #nav-search-listing > li.highlight {
     background-color: #057db0 !important;
 }
+<<<<<<< HEAD
+#nav-search-listing > li.highlight a {
+    color: #fff !important;
+
+=======
 #nav-search-listing > li.highlight a{
     color: #fff !important;
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
 }
 #nav-search-listing > li:hover {
     background-color: #fb8233 !important;

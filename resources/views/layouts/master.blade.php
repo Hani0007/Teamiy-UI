@@ -1,10 +1,16 @@
 @php
     $locale = \Illuminate\Support\Facades\App::getLocale();
     $themeColor = \App\Helpers\AppHelper::getThemeColor();
+<<<<<<< HEAD
+    $user = \App\Helpers\AppHelper::getAuthUser();
+    $defaulcountrycode = $user->company->country_code;
+@endphp
+=======
     $user = \App\Helpers\AppHelper::getAuthUserCode();
     $defaultCountryCode = $user->company->country_code;
 @endphp
 {{-- @dd($defaultCountryCode) --}}
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
 
 <!DOCTYPE html>
 <html lang="{{ $locale ?? 'en' }}">
@@ -156,7 +162,13 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe("{{ config('services.stripe.key') }}");
+<<<<<<< HEAD
+    
+    
+
+=======
    var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
     (function () {
         function formatFlagWithNameAndCode(state) {
             if (!state.id) return state.text;
@@ -310,7 +322,11 @@
             ensureLibraryData();
 
             document.querySelectorAll('.phone-group').forEach(function (group) {
+<<<<<<< HEAD
+                var defaultCountryCode = "{{ $defaulcountrycode }}";
+=======
                 var defaultCountryCode = "{{ $defaultCountryCode }}";
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
                 var select = group.querySelector('.phone-country');
                 var input = group.querySelector('input[type="tel"]');
                 var form = group.closest('form');

@@ -46,12 +46,12 @@
     <div class="card-body pb-2 ">
         <div class="profile-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-3">
-                <div class="section-icon"><i class="fa fa-user"></i></div>
-                <div class="section-heading-text ">
-                    <h4>{{ __('index.personal_detail') }}</h4>
-                    <p>Basic identity and contact information</p>
-                </div>
-            </div>
+        <div class="section-icon"><i class="fa fa-user"></i></div>
+        <div class="section-heading-text ">
+            <h4>{{ __('index.personal_detail') }}</h4>
+            <p>Basic identity and contact information</p>
+        </div>
+    </div>
             <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.personal_detail') }}</h5> -->
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3 @if (isset($userDetail) && $userDetail->role_id == 1) d-none @endif">
@@ -107,7 +107,7 @@
                     <label for="number" class="form-label">{{ __('index.phone_no') }}</label>
                     <div class="input-group phone-group">
                         <select class="form-select phone-country" id="company_phone_code" style="max-width: 140px"
-                            data-current="{{ $companyDetail->country_code ?? '92' }}"></select>
+                            data-current="971"></select>
                         <input type="tel" class="form-control" id="phone" name="phone"
                             value="{{ isset($userDetail) ? $userDetail->phone : old('phone') }}" autocomplete="off"
                             placeholder="{{ __('index.phone_no') }}">
@@ -274,7 +274,11 @@
         var input = group.querySelector('input[type="tel"]');
         var select = group.querySelector('.phone-country');
         if (!input || !select) return;
+<<<<<<< HEAD
+        var defaultCountry = select.getAttribute('data-current') ;
+=======
         var defaultCountry = select.getAttribute('data-current') || '92';
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
         
         // Wait for the select to be populated by master layout script
         var waitForSelect = setInterval(function() {
@@ -300,14 +304,14 @@
     <div class="card-body pb-2">
         <div class="company-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-4">
-                <div class="section-icon">
-                    <i class="fa fa-building"></i>
-                </div>
-                <div class="section-heading-text">
-                    <h4>{{ __('index.company_detail') }}</h4>
-                    <p>Define the employee's role, department, and work timings</p>
-                </div>
-            </div>
+        <div class="section-icon">
+            <i class="fa fa-building"></i>
+        </div>
+        <div class="section-heading-text">
+            <h4>{{ __('index.company_detail') }}</h4>
+            <p>Define the employee's role, department, and work timings</p>
+        </div>
+    </div>
             <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.company_detail') }}</h5> -->
             <div class="row">
                 @if (!isset(auth()->user()->branch_id))
@@ -456,15 +460,15 @@
     <div class="card-body pb-2 teamy-main-card px-5">
         <div class="profile-detail">
             <div class="section-title-wrapper border-bottom w-100 pb-4">
-                <div class="section-icon"><i class="fa fa-file-contract"></i></div>
-                <div class="section-heading-text">
-                    <h4>Employee Contract & Documents</h4>
-                    <p>Manage tenure, pay grade, and legal documents</p>
-
-                </div>
-
-            </div>
-
+        <div class="section-icon"><i class="fa fa-file-contract"></i></div>
+        <div class="section-heading-text">
+            <h4>Employee Contract & Documents</h4>
+            <p>Manage tenure, pay grade, and legal documents</p>
+            
+        </div>
+        
+    </div>
+    
             <!-- <h5 class="mb-3 border-bottom pb-3">Employee Contract</h5> -->
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3">
@@ -525,10 +529,7 @@
                 </div>
 
                 <div class="col-lg-6 col-md-6 mb-3">
-                    <label for="upload_contract" class="form-label">Upload Contract <i data-feather="image" class="text-primary" style="width: 18px; height: 18px;"></i>
-        <span class="text-muted fw-normal" style="font-size: 0.8rem;">
-            ( .jpg, .jpeg, .png )
-        </span></label>
+                    <label for="upload_contract" class="form-label">Upload Contract</label>
                     <input type="file" class="form-control" id="upload_contract" name="upload_contract"
                         value="{{ old('upload_contract') }}" autocomplete="off">
                     {{-- <p>{{ $userDetail->employeeDocuments->employee_contract ?? '' }}</p> --}}
@@ -566,27 +567,24 @@
     <div class="card-body pb-2 teamy-main-card px-5">
         <div class="profile-detail">
             <!-- <h5 class="mb-3 border-bottom pb-3">Employee Document</h5> -->
-            <div class="section-title-wrapper mb-4 border-bottom w-100 pb-4">
-                <div class="d-flex align-items-center">
-                    <div class="section-icon bg-light-primary text-primary p-2 rounded-circle me-3">
-                        <i class="fa fa-file-text"></i>
-                    </div>
-                    <div class="section-heading-text">
-                        <h4>Employee Document</h4>
-                        <p class="text-muted small mb-0">Identity proofs and employment related files</p>
-                    </div>
-
-                </div>
-
-            </div>
-
+<div class="section-title-wrapper mb-4 border-bottom w-100 pb-4">
+    <div class="d-flex align-items-center">
+        <div class="section-icon bg-light-primary text-primary p-2 rounded-circle me-3">
+            <i class="fa fa-file-text"></i>
+        </div>
+        <div class="section-heading-text">
+            <h4  >Employee Document</h4>
+            <p class="text-muted small mb-0">Identity proofs and employment related files</p>
+        </div>
+        
+    </div>
+    
+</div>
+            
             <div class="row" id="document-container">
 
                 <div class="col-lg-6 col-md-6 mb-3 document-field">
-                    <label class="form-label">Upload Document <span><i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>
-<span class="text-muted fw-normal" style="font-size: 0.8rem;">
-                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
-</span></span></label>
+                    <label class="form-label">Upload Document</label>
                     <input type="file" class="form-control" name="employee_document[]"
                         accept="application/pdf,
                     application/msword,
@@ -609,6 +607,10 @@
                         <div class="col-md-2 mb-3 document-preview">
                             <div class="position-relative border p-2 rounded">
 
+<<<<<<< HEAD
+                                <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
+                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;">
+=======
                                 @if (in_array(strtolower(pathinfo($doc, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
                                     <div class="document-preview-container" style="height:120px;width:100%;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;">
                                         <i class="fas fa-file-pdf" style="font-size:48px;color:#dc3545;"></i>
@@ -617,6 +619,7 @@
                                     <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
                                         class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;" alt="image">
                                 @endif
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
 
                                 <button type="button" class="btn  btn-sm remove-doc"
                                     data-file="{{ $doc }}" data-user="{{ $userDetail->id }}">
@@ -702,16 +705,16 @@
         <div class="card mb-4 w-100 teamy-main-card">
             <div class="card-body pb-0">
                 <div class="bank-detail ">
-                    <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.bank_detail') }}</h5> -->
-                    <div class="section-title-wrapper border-bottom w-100 pb-4">
-                        <div class="section-icon"><i class="fa fa-university"></i></div>
-                        <div class="section-heading-text ">
-                            <h4>{{ __('index.bank_detail') }}</h4>
-                            <p>Salary disbursement and banking information</p>
-                        </div>
-
-                    </div>
-
+                    <!-- <h5 class="mb-3 border-bottom pb-3">{{ __('index.bank_detail')}}</h5> -->
+                     <div class="section-title-wrapper border-bottom w-100 pb-4">
+        <div class="section-icon"><i class="fa fa-university"></i></div>
+        <div class="section-heading-text ">
+            <h4>{{ __('index.bank_detail') }}</h4>
+            <p>Salary disbursement and banking information</p>
+        </div>
+        
+    </div>
+    
                     <div class="row">
                         <div class="col-lg-6 col-md-6 mb-4">
                             <label for="bank_name" class="form-label">{{ __('index.bank_name') }} </label>
@@ -785,31 +788,29 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ route('admin.employee.document.delete') }}",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        file: file,
-                        user_id: userId
-                    },
-                    success: function(response) {
+            $.ajax({
+                url: "{{ route('admin.employee.document.delete') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    file: file,
+                    user_id: userId
+                },
+                success: function(response) {
 
-                        if (response.success) {
+                    if (response.success) {
 
-                            button.closest('.document-preview').remove();
+                        button.closest('.document-preview').remove();
 
-                        } else {
-                            alert(response.message);
-                        }
-
-                    },
-                    error: function() {
-                        alert("Something went wrong.");
+                    } else {
+                        alert(response.message);
                     }
-                });
-            }
+
+                },
+                error: function() {
+                    alert("Something went wrong.");
+                }
+            });
         });
 
 
@@ -820,6 +821,7 @@
 
         let button = $(this);
         let userId = button.data('user');
+        let file = button.data('file');
 
         Swal.fire({
             title: `{{ __('index.image_delete_confirmation') }}`,
@@ -829,30 +831,29 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ route('admin.employee.contract.delete') }}",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        user_id: userId
-                    },
-                    success: function(response) {
+            $.ajax({
+                url: "{{ route('admin.employee.contract.delete') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    user_id: userId,
+                    file: file
+                },
+                success: function(response) {
 
-                        if (response.success) {
+                    if (response.success) {
 
-                            button.closest('.contract-preview').remove();
+                        button.closest('.contract-preview').remove();
 
-                        } else {
-                            alert(response.message);
-                        }
-
-                    },
-                    error: function() {
-                        alert("Something went wrong.");
+                    } else {
+                        alert(response.message);
                     }
-                });
-            }
+
+                },
+                error: function() {
+                    alert("Something went wrong.");
+                }
+            });
         });
 
 

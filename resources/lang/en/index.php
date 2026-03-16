@@ -319,6 +319,7 @@ return [
     'personal_email' => 'Personal Email',
     'place_of_birth' => 'Place of Birth',
     'nationality' => 'Nationality',
+    'basic_information_and_branding' => 'Basic information and branding',
 
 
     /** logout requests */

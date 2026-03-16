@@ -116,4 +116,9 @@ class Company extends Model
     public function LeaveTypes(){
         return $this->hasManyThrough(LeaveType::class, Branch::class);
     }
+
+    public function industry()
+    {
+        return $this->belongsTo(IndustryType::class, 'industry_type', 'id');
+    }
 }
