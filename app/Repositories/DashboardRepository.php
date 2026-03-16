@@ -272,6 +272,9 @@ class DashboardRepository
 
     public function getProjectStats($companyId)
     {
+        // Get projects for entire company (not just user's branches)
+        // This ensures all projects for company are counted
+        
         // Fetch real project statistics
         $notStarted = DB::table('projects')
             ->join('users', 'projects.created_by', '=', 'users.id')
@@ -291,16 +294,15 @@ class DashboardRepository
             ->where('projects.status', 'late')
             ->count();
 
+        // Get completed projects for ALL records (not company-wise)
         $completed = DB::table('projects')
-            ->join('users', 'projects.created_by', '=', 'users.id')
-            ->where('users.company_id', $companyId)
             ->where('projects.status', 'completed')
             ->count();
 
         // Get total projects
         $totalProjects = $notStarted + $inProgress + $late + $completed;
 
-        // Get projects by branch
+        // Get projects by branch for company
         $projectsByBranch = DB::table('projects')
             ->join('users', 'projects.created_by', '=', 'users.id')
             ->join('branches', 'users.branch_id', '=', 'branches.id')

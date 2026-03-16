@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
     {
-        dd($request->all(), $accountRequest->all(), $leaveRequest->all());
+
         $this->authorize('create_employee');
         try {
             $validatedData = $request->validated();
@@ -260,7 +260,6 @@ class UserController extends Controller
         $this->authorize('edit_employee');
         try {
             $validatedData = $request->validated();
-
             if (env('DEMO_MODE', false) && (in_array($id, [1, 2]))) {
                 throw new Exception(__('message.add_company_warning'), 400);
             }
