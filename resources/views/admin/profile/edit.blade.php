@@ -11,7 +11,6 @@
 @endsection
 
 @section('main-content')
-
 {{-- Teamy Wrapper: Jo aapki theme ka main part hai --}}
 <div class="teamy-body-wrapper">
     @include('admin.section.flash_message')

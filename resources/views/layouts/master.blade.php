@@ -1,9 +1,11 @@
 @php
     $locale = \Illuminate\Support\Facades\App::getLocale();
     $themeColor = \App\Helpers\AppHelper::getThemeColor();
-    $user = \App\Helpers\AppHelper::getAuthUser();
-    $defaulcountrycode = $user->company->country_code;
+    $user = \App\Helpers\AppHelper::getAuthUserCode();
+    $defaultCountryCode = $user->company->country_code;
 @endphp
+{{-- @dd($defaultCountryCode) --}}
+
 <!DOCTYPE html>
 <html lang="{{ $locale ?? 'en' }}">
 <head>
@@ -154,7 +156,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe("{{ config('services.stripe.key') }}");
-
+   var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
     (function () {
         function formatFlagWithNameAndCode(state) {
             if (!state.id) return state.text;

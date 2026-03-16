@@ -43,7 +43,6 @@ a.dropdown-item:hover {
             <h3 class="fw-bold mb-1" style="color: #057db0; font-size: 24px;">Dashboard</h3>
             <p class="text-muted small">Key HR metrics, employee and Project activity insights.</p>
         </div>
-        
     </div>
 
     <div class="row g-3">
@@ -91,7 +90,15 @@ a.dropdown-item:hover {
             <div class="stat-card h-100">
                 <div class="stat-header">
                     <div class="stat-icon-box"><i class="{{ $ts['icon'] }} text-dark small"></i></div>
-                    <button class="btn-details-orange">Details ></button>
+                    @if($ts['label'] == 'Total Employees')
+                        <a href="{{ route('admin.employees.index') }}" class="btn-details-orange">Details ></a>
+                    @elseif($ts['label'] == 'Branches')
+                        <a href="{{ route('admin.branch.index') }}" class="btn-details-orange">Details ></a>
+                    @elseif(in_array($ts['label'], ['Today Presents', 'Today Absents', 'Today Lates']))
+                        <a href="{{ route('admin.attendances.index') }}" class="btn-details-orange">Details ></a>
+                    @else
+                        <button class="btn-details-orange">Details ></button>
+                    @endif
                 </div>
                 <div class="stat-label">{{ $ts['label'] }}</div>
                 <span class="stat-subtext">{{ $ts['description'] }}</span>
@@ -298,14 +305,6 @@ a.dropdown-item:hover {
                                         <a class="dropdown-item" href="{{ route('admin.projects.edit', $project->id) }}">
                                             Edit
                                         </a>
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                Delete
-                                            </button>
-                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -614,6 +613,154 @@ a.dropdown-item:hover {
             </div>
         </div>
     </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="tab-leave">
+            <div class="table-responsive">
+                <table class="table mb-0 mt-3 align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID Employee</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Leave Type</th>
+                            <th>Reason</th>
+                            <th>Date/Time</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="activity-tbody">
+                        @if(isset($recentLeaveRequests) && $recentLeaveRequests->count() > 0)
+                            @foreach($recentLeaveRequests as $leave)
+                            <tr class="activity-row" data-date="{{ \Carbon\Carbon::parse($leave->leave_requested_date)->format('Y-m-d') }}">
+                                <td>{{ $leave->employee->employee_code ?? 'N/A' }}</td>
+                                <td><strong>{{ $leave->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ $leave->department->dept_name ?? 'N/A' }}</td>
+                                <td>{{ $leave->leaveType->name ?? 'N/A' }}</td>
+                                <td>{{ \Illuminate\Support\Str::limit($leave->reason ?? 'No reason provided', 30) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($leave->leave_requested_date)->format('M d, Y') }}</td>
+                                <td>
+                                    <span class="status-pill 
+                                        @if($leave->status == 'approved') sp-approved bg-soft-success text-success
+                                        @elseif($leave->status == 'pending') sp-theme-pending
+                                        @else sp-rejected bg-soft-danger text-danger
+                                        @endif">
+                                        {{ ucfirst($leave->status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ route('admin.leaves.index') }}?id={{ $leave->id }}" class="btn btn-sm px-3 shadow-sm" style="color:#057db0;">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr class="no-data-msg"><td colspan="8" class="text-center py-4 text-muted">No records found.</td></tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-attendance">
+            <div class="table-responsive">
+                <table class="table mb-0 mt-3 align-middle">
+                    <thead>
+                        <tr><th>Employee name</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Shift</th></tr>
+                    </thead>
+                    <tbody class="activity-tbody">
+                        @if(isset($recentAttendance) && $recentAttendance->count() > 0)
+                            @foreach($recentAttendance as $attendance)
+                            <tr class="activity-row" data-date="{{ \Carbon\Carbon::parse($attendance->check_in_at ?? now())->format('Y-m-d') }}">
+                                <td><strong>{{ $attendance->employee->name ?? 'N/A' }}</strong></td>
+                                <td>{{ $attendance->check_in_at ? \Carbon\Carbon::parse($attendance->check_in_at)->format('h:i A') : 'N/A' }}</td>
+                                <td>{{ $attendance->check_out_at ? \Carbon\Carbon::parse($attendance->check_out_at)->format('h:i A') : 'N/A' }}</td>
+                                <td>
+                                    <span class="status-pill @if($attendance->attendance_status == 'present' || $attendance->attendance_status == '1') bg-soft-success text-success @else sp-theme-pending @endif">
+                                        {{ $attendance->attendance_status == '1' ? 'Present' : ucfirst($attendance->attendance_status ?? 'Unknown') }}
+                                    </span>
+                                </td>
+                                <td>{{ $attendance->officeTime->shift ?? 'General Shift' }}</td>
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-meetings">
+            <div class="table-responsive">
+                <table class="table mb-0 mt-3 align-middle">
+                    <thead>
+                        <tr><th>Title</th><th>Date</th><th>Start Time</th><th>Participators</th><th>Status</th><th class="text-end">Action</th></tr>
+                    </thead>
+                    <tbody class="activity-tbody">
+                        @if(isset($recentTeamMeetings) && $recentTeamMeetings->count() > 0)
+                            @foreach($recentTeamMeetings as $meeting)
+                            <tr class="activity-row" data-date="{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('Y-m-d') }}">
+                                <td><strong>{{ $meeting->title ?? 'N/A' }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->meeting_start_time)->format('h:i A') }}</td>
+                                <td>{{ $meeting->teamMeetingParticipator->count() }} members</td>
+                                <td><span class="status-pill bg-light text-theme-primary border">Scheduled</span></td>
+                                <td class="text-end">
+                                    <a href="{{ route('admin.team-meetings.index') }}" class="btn btn-sm px-3 shadow-sm" style="color:#057db0;">View</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterSelect = document.getElementById('activity-filter');
+    
+    filterSelect.addEventListener('change', function() {
+        const filterVal = this.value; 
+        const rows = document.querySelectorAll('.activity-row');
+        
+        // Today's date (reset time)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        rows.forEach(row => {
+            if (filterVal === 'all') {
+                row.style.display = '';
+                return;
+            }
+
+            const rowDateAttr = row.getAttribute('data-date');
+            if(!rowDateAttr) return;
+
+            const rowDate = new Date(rowDateAttr);
+            rowDate.setHours(0, 0, 0, 0);
+
+            // Difference calculation
+            const diffTime = today.getTime() - rowDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            // Show if within selected days
+            if (diffDays >= 0 && diffDays <= parseInt(filterVal)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Default trigger (sets to All Days)
+    filterSelect.dispatchEvent(new Event('change'));
+});
+</script>
+    
 </div>
 
 <script>

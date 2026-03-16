@@ -170,6 +170,9 @@
     @endcanany
 </div>
 
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmV0MY4lYqAzB6QkWW4ENqZEuD2O4qTlc&libraries=places">
+</script>
 <script>
     // Phone Setup - Use existing dropdown without intl-tel-input
     const input = document.querySelector("#contact_number");
