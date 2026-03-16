@@ -94,54 +94,6 @@ class ProjectRepository
             ->toArray();
     }
 
-    public function getProjectStats($companyId)
-    {
-        // Get current user's branch ID
-        $userBranchId = auth()->user()->branch_id;
-        
-        // Simple query on projects table filtered by branch_id
-        $notStarted = DB::table('projects')
-            ->where('branch_id', $userBranchId)
-            ->where('status', 'not_started')
-            ->count();
-
-        $inProgress = DB::table('projects')
-            ->where('branch_id', $userBranchId)
-            ->where('status', 'in_progress')
-            ->count();
-
-        $late = DB::table('projects')
-            ->where('branch_id', $userBranchId)
-            ->where('status', 'late')
-            ->count();
-
-        $completed = DB::table('projects')
-            ->where('branch_id', $userBranchId)
-            ->where('status', 'completed')
-            ->count();
-
-        // Get total projects for this branch
-        $totalProjects = $notStarted + $inProgress + $late + $completed;
-
-        // Get projects by branch (for this branch only)
-        $projectsByBranch = DB::table('projects')
-            ->join('branches', 'projects.branch_id', '=', 'branches.id')
-            ->where('projects.branch_id', $userBranchId)
-            ->select('branches.name as branch_name', DB::raw('COUNT(projects.id) as project_count'))
-            ->groupBy('branches.id', 'branches.name')
-            ->orderBy('project_count', 'desc')
-            ->get();
-
-        return [
-            'not_started' => $notStarted,
-            'in_progress' => $inProgress,
-            'late' => $late,
-            'completed' => $completed,
-            'total_projects' => $totalProjects,
-            'projects_by_branch' => $projectsByBranch
-        ];
-    }
-
     public function getRecentProjectListsForDashboard($select=['*'],$with=[])
     {
         return Project::query()
