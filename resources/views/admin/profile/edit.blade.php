@@ -11,7 +11,6 @@
 @endsection
 
 @section('main-content')
-
 {{-- Teamy Wrapper: Jo aapki theme ka main part hai --}}
 <div class="teamy-body-wrapper">
     @include('admin.section.flash_message')
@@ -29,7 +28,7 @@
             <h2>{{ __('index.edit_user_detail') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">@yield('action')</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">@yield('action')</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-user-circle"></i> {{ $userDetail->name }}

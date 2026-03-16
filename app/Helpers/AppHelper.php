@@ -102,6 +102,8 @@ class AppHelper
     /**
      * @throws Exception
      */
+
+    
     public static function getAuthUserCompanyId(): int
     {
         if (Auth::guard('admin')->check()) {
@@ -127,12 +129,23 @@ class AppHelper
         return $companyId;
     }
     
+<<<<<<< HEAD
     public static function getAuthUserCode()
     {
         $user = Auth::user();
         return $user;
     }
 
+=======
+
+    public static function getAuthUserCode()
+    {
+        $user = Auth::user();
+        // $admin = Auth::user();
+        // $user = User::where('created_by', $admin->id)->get();
+        return $user;
+    }
+>>>>>>> 61927872060f7c463f74059777c154f8f401724e
 
     public static function getAuthUserId(): int
     {

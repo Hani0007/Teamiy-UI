@@ -351,7 +351,7 @@
     .attendance-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;margin-top: 25px;}
     .clean-card {background: white;border-radius: 20px;padding: 20px;position: relative;border: 1px solid #edf2f7;transition: all 0.3s ease;box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04);}
     .clean-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08); }
-    .status-badge {position: absolute;top: 20px;right: 20px;font-size: 10px;padding: 4px 12px;border-radius: 20px;font-weight: 700;text-transform: uppercase;}
+    .status-badge {top: 20px;right: 20px;font-size: 10px;padding: 4px 12px;border-radius: 20px;font-weight: 700;text-transform: uppercase;}
     .date-circle {width: 50px;height: 50px;background: #e0f2fe;color: #0369a1;border-radius: 12px;display: flex;align-items: center;justify-content: center;font-weight: 800;font-size: 14px;flex-direction: column;line-height: 1.2;}
     .time-container {display: flex;justify-content: space-between;background: #f8fafc;border-radius: 12px;padding: 12px;margin: 15px 0;}
     .time-box small { display: block; font-size: 10px; color: #94a3b8; text-transform: uppercase; }
@@ -378,7 +378,7 @@
     .text-end { text-align: center !important; }}
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\role\index.blade.php code end*/
 
-     /*D:\laragon\www\Teamiy-UI\resources\views\admin\permission\index.blade.php code*/   
+    /*D:\laragon\www\Teamiy-UI\resources\views\admin\permission\index.blade.php code*/   
     .permission-grid {display: grid;grid-template-columns: 80px 1fr 150px 150px;}
     .permission-item-row {background: #fff;border: 1px solid #edf2f9;border-radius: 12px;transition: all 0.2s ease;}
     .permission-item-row:hover {transform: translateY(-2px);border-color: #fb8233;box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
@@ -403,7 +403,6 @@
     .permission-grid {grid-template-columns: 1fr 1fr; gap: 10px; }
     .permission-grid div:first-child {display: none; }}
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\permission\index.blade.php code end*/
-
 
     /*D:\laragon\www\Teamiy-UI\resources\views\admin\notification\index.blade.php code*/
     .filter-card {background: white;border-radius: 15px;border: none;box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);margin-bottom: 2rem;padding: 20px;}

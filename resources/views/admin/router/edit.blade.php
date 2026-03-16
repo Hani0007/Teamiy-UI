@@ -12,7 +12,7 @@
             <h2>{{ __('index.router') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #fff7ed; color: #f97316;">{{ __('index.edit') }}</span>
+                    <span class="status-badge" style="background: #fff7ed; color: #f97316;position: relative;top: 0;right: 0;">{{ __('index.edit') }}</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-tools"></i> Configuration for: {{ $routerDetail->router_ssid }}

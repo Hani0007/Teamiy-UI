@@ -304,6 +304,123 @@
         </div>
     </section>
 
+    <!-- Employee Documents & Contract Section -->
+    <section class="content">
+        <div class="detail-header-wrapper">
+            <div class="header-text-box">
+                <h3 style="color:#057db0;">Employee Documents & Contract</h3>
+                <p>Identity proofs, employment files, and contract documents</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Employee Documents Column -->
+            <div class="col-lg-6 mb-4">
+                <div class="info-card-modern">
+                    <div class="card-header">
+                        <h6 class="card-title">Employee Documents</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        @php
+                            $documents = $userDetail->employeeDocuments->employee_document ?? [];
+                            if (is_string($documents)) {
+                                $documents = json_decode($documents, true);
+                            }
+                        @endphp
+                        
+                        @if (empty($documents))
+                            <p class="text-muted text-center py-4">No documents uploaded</p>
+                        @else
+                            <div class="row">
+                                @foreach ($documents as $doc)
+                                    <div class="col-lg-6 col-md-4 col-sm-6 col-12 mb-3">
+                                        <div class="document-card">
+                                            @if (in_array(strtolower(pathinfo($doc, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
+                                                <div class="document-preview-container" style="height:120px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;">
+                                                    <i class="fas fa-file-pdf" style="font-size:36px;color:#dc3545;"></i>
+                                                </div>
+                                            @else
+                                                <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
+                                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;border-radius:8px;" alt="Document">
+                                            @endif
+                                            
+                                            <div class="document-actions mt-2">
+                                                <a href="{{ asset('uploads/user/emp-documents/' . $doc) }}" download="{{ $doc }}" class="btn btn-sm btn-success w-100">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Contract Column -->
+            <div class="col-lg-6 mb-4">
+                <div class="info-card-modern">
+                    <div class="card-header">
+                        <h6 class="card-title">Contract Document</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        @if (!empty($userDetail->employeeDocuments->employee_contract))
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div class="document-card">
+                                        @if (in_array(strtolower(pathinfo($userDetail->employeeDocuments->employee_contract, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
+                                            <div class="document-preview-container" style="height:120px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;">
+                                                <i class="fas fa-file-contract" style="font-size:36px;color:#28a745;"></i>
+                                            </div>
+                                        @else
+                                            <img src="{{ asset('uploads/user/emp-documents/' . $userDetail->employeeDocuments->employee_contract) }}"
+                                                class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;border-radius:8px;" alt="Contract">
+                                        @endif
+                                        
+                                        <div class="document-actions mt-2">
+                                            <a href="{{ asset('uploads/user/emp-documents/' . $userDetail->employeeDocuments->employee_contract) }}" download="{{ $userDetail->employeeDocuments->employee_contract }}" class="btn btn-sm btn-success w-100">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-muted text-center py-4">No contract document uploaded</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+    .document-card {
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .document-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .document-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .document-actions .btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    </style>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof feather !== 'undefined') {

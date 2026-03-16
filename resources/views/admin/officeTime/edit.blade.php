@@ -11,7 +11,7 @@
             <h2>{{ __('index.office_time') }} {{ __('index.edit') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge">Editing</span>
+                    <span class="status-badge" style="position: relative;top: 0;right: 0;">Editing</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-clock"></i> Update Schedule
@@ -33,7 +33,7 @@
                     <i class="fa fa-edit"></i>
                 </div>
                 <div class="section-heading-text">
-                    <h4>{{ __('index.office_schedule') }} {{ __('index.details') }}</h4>
+                    <h4>{{ __('index.office_schedule') }} {{ __('details') }}</h4>
                     <p>Modify existing shift timings and rules</p>
                 </div>
             </div>

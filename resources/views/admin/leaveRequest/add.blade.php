@@ -20,7 +20,7 @@
             <h2>{{ __('index.leave_request') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">Admin Panel</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">Admin Panel</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-plus-circle"></i> {{ __('index.create') }}
@@ -134,7 +134,9 @@
 
                 {{-- Avatar/Document Upload --}}
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <label for="avatar" class="form-label">{{ __('index.upload_avatar') }} </label>
+                    <label for="avatar" class="form-label"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_avatar') }} <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
                     <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*">
                 </div>
 

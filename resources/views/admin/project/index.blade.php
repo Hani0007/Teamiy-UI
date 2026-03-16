@@ -7,7 +7,12 @@
 @section('title', __('index.project'))
 
 @section('main-content')
-
+<style>
+    .no-outline-deny {
+    border: none !important;    /* removes outline/border */
+    box-shadow: none !important; /* removes any shadow if present */
+    outline: none !important;   /* removes focus outline */
+}
 </style>
 <section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')

@@ -78,7 +78,9 @@
 
     {{-- Attachment & Color --}}
     <div class="col-lg-6 mb-4">
-        <label for="image" class="form-label">{{ __('index.upload_attachment') }}</label>
+        <label for="image" class="form-label"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_attachment') }}<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
         <input class="form-control" type="file" accept="image/*" id="image" name="attachment" />
         @if(isset($eventDetail) && $eventDetail->attachment)
             <div class="img-wrap mt-3">

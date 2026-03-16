@@ -88,6 +88,7 @@ class ProjectRepository
     {
         return Project::selectRaw('status, count(*) as count')
             ->where('is_active', 1)
+            ->whereIn('branch_id', AppHelper::getCompanyBranches())
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();

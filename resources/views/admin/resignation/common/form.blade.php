@@ -77,7 +77,9 @@
     </div>
 
     <div class="col-lg-6 mb-4">
-        <label for="document" class="form-label">{{ __('index.document') }}</label>
+        <label for="document" class="form-label"><i data-feather="paperclip" class="text-secondary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.document') }}<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+                ( .pdf, .docx, .zip, .jpg, .jpeg, .png )
+</span></label>
         <input class="form-control" type="file" id="document" name="document">
         
         @if(isset($resignationDetail->document))
