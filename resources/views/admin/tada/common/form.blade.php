@@ -205,7 +205,7 @@
         </div>
 
         <div class="col-lg-6 mb-4">
-            <p class="mb-2">{{ __('index.uploaded_attachment') }} <span style="color: red">*</span></p>
+            <p class="mb-2">        <i data-feather="paperclip" class="text-secondary" style="width: 18px; height: 18px;"></i>{{ __('index.uploaded_attachment') }} <span style="color: red">*</span>        ( .pdf, .docx, .zip, .jpg, .jpeg, .png )</p>
             
             {{-- Existing Attachments Preview --}}
             @if(isset($attachments) && count($attachments) > 0)
