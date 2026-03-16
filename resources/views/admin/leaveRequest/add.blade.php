@@ -127,7 +127,9 @@
 
                 {{-- Avatar/Document Upload --}}
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <label for="avatar" class="form-label">{{ __('index.upload_avatar') }} </label>
+                    <label for="avatar" class="form-label"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_avatar') }} <span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
                     <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*">
                 </div>
 

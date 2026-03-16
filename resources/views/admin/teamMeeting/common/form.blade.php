@@ -93,7 +93,9 @@
 
     {{-- Image Upload & Preview --}}
     <div class="col-lg-5 mb-4">
-        <label for="image" class="form-label fw-bold small">{{ __('index.upload_image') }}</label>
+        <label for="image" class="form-label fw-bold small"> <i data-feather="image" class="text-primary me-1" style="width: 18px; height: 18px;"></i>{{ __('index.upload_image') }}<span class="text-muted fw-normal" style="font-size: 0.8rem;">
+     ( .jpg, .jpeg, .png )
+</span></label>
     <div class="image-upload-wrapper border-2 rounded-4 p-4 text-center bg-white" style="border: 2px dashed #e9ecef;">
         <input class="form-control mb-3 shadow-none border-0 bg-light" type="file" id="image" name="image" accept="image/*" />
         
