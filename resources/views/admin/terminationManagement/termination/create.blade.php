@@ -17,7 +17,7 @@
             <h2>{{ __('index.termination') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;">{{ __('index.create') }}</span>
+                    <span class="status-badge" style="background: #eef2ff; color: #6366f1;position: relative;top: 0;right: 0;">{{ __('index.create') }}</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-plus-circle"></i> Add New Record
