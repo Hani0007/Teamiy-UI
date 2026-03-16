@@ -126,6 +126,13 @@ class AppHelper
 
         return $companyId;
     }
+    
+    public static function getAuthUserCode()
+    {
+        $user = Auth::user();
+        return $user;
+    }
+
 
     public static function getAuthUserId(): int
     {

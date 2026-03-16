@@ -35,7 +35,9 @@ class CompanyController extends Controller
         $this->authorize('view_company');
         try {
             $rec = Auth::guard('admin')->user();
-            $companyDetail = Company::where('admin_id', $rec->id)->first();
+            $companyDetail = Company::where('admin_id', $rec->id)->with('industry')->first();
+            // $industritype =$companyDetail->industry_type;
+            // $industries = IndustryType::where('id', $industritype)->get();
             
             if (!$companyDetail) {
                 // If no company exists, redirect to create form

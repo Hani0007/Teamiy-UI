@@ -7,7 +7,7 @@
 {{-- Buttons ko section se hata kar seedha content mein heading ke saath rakha hai --}}
 @section('button')
 @endsection
-
+{{-- @dd($userDetail) --}}
 @section('main-content')
     {{-- @dd($userDetail->officeTime) --}}
 
@@ -99,8 +99,16 @@
                             </div>
                         </div>
                         <div class="detail-item-row">
-                            <div class="detail-split-col"><label class="label-muted">{{ __('index.nationality') }}</label>
-                                <p class="value-dark">{{ $userDetail->nationality }}</p>
+                            <div class="detail-split-col">
+                                <label class="label-muted">{{ __('index.nationality') }}</label>
+
+                                @php
+                                    $country = App\Helpers\AppHelper::getCountries()
+                                        ->where('id', $userDetail->nationality)
+                                        ->first();
+                                @endphp
+
+                                <p class="value-dark">{{ $country->name ?? '' }}</p>
                             </div>
                             <div class="detail-split-col"><label
                                     class="label-muted">{{ __('index.place_of_birth') }}</label>

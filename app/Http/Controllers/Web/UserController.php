@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
     {
-        dd($request->all(), $accountRequest->all(), $leaveRequest->all());
+        // dd($request->all(), $accountRequest->all(), $leaveRequest->all());
         $this->authorize('create_employee');
         try {
             $validatedData = $request->validated();
@@ -229,7 +229,7 @@ class UserController extends Controller
         $this->authorize('edit_employee');
         try {
             $with = ['branches:id,name'];
-            $select = ['id', 'name'];
+            $select = ['id', 'name','country_code'];
             $companyDetail = $this->companyRepo->getCompanyDetail($select, $with);
             $userSelect = ['*'];
             $roles = $this->roleRepo->getAllActiveRoles($userSelect, 'web');
@@ -571,6 +571,7 @@ class UserController extends Controller
     }
     public function deleteContract(Request $request)
     {
+        log::info($request->all());
         
         $employeeDoc = EmployeeDocument::where('employee_id', $request->user_id)->first();
         if (!$employeeDoc) {
@@ -588,6 +589,7 @@ class UserController extends Controller
             $employeeDoc->employee_contract = null;
             $employeeDoc->save();
         }
+        Log::info('Contract deletion attempted for user_id: ' . $request->user_id . ' with file: ' . $request->file);
 
         return response()->json(['success' => true]);
     }

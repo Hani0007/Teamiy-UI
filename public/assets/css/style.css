@@ -26730,6 +26730,10 @@ p#date {
 #nav-search-listing > li.highlight {
     background-color: #057db0 !important;
 }
+#nav-search-listing > li.highlight a {
+    color: #fff !important;
+
+}
 #nav-search-listing > li:hover {
     background-color: #fb8233 !important;
 }

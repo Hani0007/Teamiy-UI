@@ -1,7 +1,10 @@
 @php
     $locale = \Illuminate\Support\Facades\App::getLocale();
     $themeColor = \App\Helpers\AppHelper::getThemeColor();
+    $user = \App\Helpers\AppHelper::getAuthUser();
+    $defaulcountrycode = $user->company->country_code;
 @endphp
+
 <!DOCTYPE html>
 <html lang="{{ $locale ?? 'en' }}">
 <head>
@@ -152,6 +155,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe("{{ config('services.stripe.key') }}");
+    
+    
 
     (function () {
         function formatFlagWithNameAndCode(state) {
@@ -306,6 +311,7 @@
             ensureLibraryData();
 
             document.querySelectorAll('.phone-group').forEach(function (group) {
+                var defaultCountryCode = "{{ $defaulcountrycode }}";
                 var select = group.querySelector('.phone-country');
                 var input = group.querySelector('input[type="tel"]');
                 var form = group.closest('form');
@@ -331,7 +337,7 @@
 
                 if (select && input) {
                     // Use the data-current attribute for preselected country code
-                    var currentCode = select.dataset.current || '92';
+                    var currentCode = select.dataset.current || defaultCountryCode;
                     select.value = currentCode;
 
                     // If select2 is used, update it

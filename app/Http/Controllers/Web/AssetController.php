@@ -217,6 +217,7 @@ class AssetController extends Controller
 
     public function assignAsset(Request $request)
     {
+        dd($request->all());
        try{
             $validatedData = $request->validate([
                 'asset_id'        => 'required|integer|exists:assets,id',
