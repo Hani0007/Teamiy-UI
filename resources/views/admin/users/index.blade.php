@@ -267,6 +267,9 @@
 @include('admin.users.common.password')
 
 <style>
+     .swal2-deny {
+    border-color: transparent !important;
+   }
     .hover-card:hover { 
         transform: translateX(5px); 
         box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; 

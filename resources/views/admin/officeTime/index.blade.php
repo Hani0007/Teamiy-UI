@@ -1,5 +1,11 @@
 @extends('layouts.master')
-
+@section('styles')
+<style>
+    .swal2-deny {
+    border-color: transparent !important;
+   }
+</style>
+@endsection
 @section('title', __('index.office_time'))
 
 @section('main-content')

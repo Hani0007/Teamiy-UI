@@ -30,6 +30,8 @@
                 confirmButtonText: `{{ __('index.yes') }}`,
                 denyButtonText: `{{ __('index.no') }}`,
                 padding: '10px 50px 10px 50px',
+                confirmButtonColor: '#057db0', 
+                denyButtonColor: '#FB8233',
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.isConfirmed) {
