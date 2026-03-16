@@ -329,6 +329,9 @@
 </section>
 
 <style>
+   .swal2-deny {
+       border-color: transparent !important;
+    }
     /* Card Hover Style */
     .hover-card:hover { 
         transform: translateY(-3px); 
@@ -347,4 +350,58 @@
     /* Custom Transitions */
     .hover-card { transition: all 0.3s ease; border-left: 5px solid transparent; }
 </style>
+@endsection
+@section('scripts')
+<script>
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+
+        // Toggle Status
+        $('.toggleStatus').change(function (event) {
+            event.preventDefault();
+            var status = $(this).prop('checked') === true ? 1 : 0;
+            var href = $(this).attr('href');
+            Swal.fire({
+                title: 'Are you sure you want to change status?',
+                showDenyButton: true,
+                confirmButtonText: `Yes`,
+                denyButtonText: `No`,
+                padding:'10px 50px 10px 50px',
+                allowOutsideClick: false,
+                confirmButtonColor: '#057db0', 
+                denyButtonColor: '#FB8233',
+                icon:'warning'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                } else if (result.isDenied) {
+                    $(this).prop('checked', !status);
+                }
+            });
+        });
+
+        // Delete Router
+        $('.deleteRouter').click(function (event) {
+            event.preventDefault();
+            let href = $(this).data('href');
+            Swal.fire({
+                title: 'Are you sure you want to delete this router?',
+                showDenyButton: true,
+                confirmButtonText: `Yes`,
+                denyButtonText: `No`,
+                padding:'10px 50px 10px 50px',
+                confirmButtonColor: '#057db0', 
+                denyButtonColor: '#FB8233',
+                icon:'warning',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+            });
+        });
+    });
+</script>
 @endsection

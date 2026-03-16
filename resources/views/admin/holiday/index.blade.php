@@ -59,7 +59,7 @@
             </div>
 
             <div class="col-lg col-md-6">
-                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">@lang('index.month')</label>
+                <label class="form-label fw-bold text-muted small" style="letter-spacing: 0.5px; text-transform: uppercase;">@lang('month')</label>
                 <select class="form-select shadow-none modern-select" name="month" id="month" style="height: 48px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px;">
                     <option value="" {{ !isset($filterParameters['month']) ? 'selected' : '' }}>@lang('index.all_month')</option>
                     @foreach($months as $key => $value)

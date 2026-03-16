@@ -2,7 +2,13 @@
 @extends('layouts.master')
 
 @section('title', __('index.resignation'))
-
+@section('styles')
+<style>
+    .swal2-deny {
+    border-color: transparent !important;
+   }
+</style>
+@endsection
 @section('main-content')
 <section class="content" style="padding: 10px 20px; background-color: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif;">
     @include('admin.section.flash_message')

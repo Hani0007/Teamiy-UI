@@ -1,7 +1,13 @@
 @extends('layouts.master')
 
 @section('title', __('index.department'))
-
+@section('styles')
+<style>
+    .swal2-deny {
+    border: none !important;
+}
+</style>
+@endsection
 @section('main-content')
 <section class="content" style="padding: 10px 20px;">
     @include('admin.section.flash_message')
@@ -176,6 +182,7 @@
                 icon:'warning',
                 confirmButtonColor: `#057DB0`,
                 denyButtonColor: `#E1752E`,
+                
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.isConfirmed) {

@@ -262,4 +262,45 @@
         @endforelse
     </div>
 </section>
+@include('admin.assetManagement.assetDetail.common.assignment')
+@include('admin.assetManagement.assetDetail.show')
+@endsection
+@section('scripts')
+
+<script>
+function showAssetDetails(url) {
+    $.get(url, function (response) {
+        if (response && response.data) {
+            const data = response.data;
+
+            var daysUsed = data.used_for;
+            $('.assetTitle').html('Asset Detail');
+            $('.name').text(data.name);
+            $('.type').text(data.assetType);
+            $('.asset_code').text(data.asset_code);
+            $('.asset_serial_no').text(data.asset_serial_no);
+            $('.is_working').text(data.is_working);
+            $('.purchased_date').text(data.purchased_date);
+            $('.is_available').text(data.is_available);
+            $('.note').text(data.note);
+
+            if (daysUsed > 0) {
+                $('.used_for').text(daysUsed+ ' days');
+            } else {
+                $('.used_for').parent().hide();
+            }
+
+            if (data.image) {
+                $('.image').attr('src', data.image).show();
+            } else {
+                $('.image').parent().hide();
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('assetDetail'));
+            modal.show();
+        }
+    });
+}
+</script>
+
 @endsection

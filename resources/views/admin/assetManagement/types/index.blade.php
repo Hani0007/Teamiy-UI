@@ -473,7 +473,7 @@
             @forelse($assetTypeLists as $key => $value)
                 <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
                     <div class="branch-master-card" style="background: #fff; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04); overflow: hidden; transition: 0.3s; border: 1px solid #f1f5f9;">
-                        <div class="card-glossy-header" style="padding: 20px; background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); position: relative;">
+                        <div class="card-glossy-header" style="padding: 20px;  position: relative;">
                             <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
                                 <div class="branch-icon-square" style="background: #057db0; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                                     <i data-feather="package" style="width: 20px;"></i>
@@ -485,8 +485,8 @@
                                 </label>
                             </div>
                             
-                            <h4 class="text-truncate mt-3 mb-1" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">{{ ucfirst($value->name) }}</h4>
-                            <span class="badge" style="background: rgba(5, 125, 176, 0.1); color: #057db0; border-radius: 6px; font-size: 11px;">Type ID: #{{ $value->id }}</span>
+                            <h4 class=" mt-3 mb-1 branch-name-display" >{{ ucfirst($value->name) }}</h4>
+                            <span class="branch-ref-pill" style=" border-radius: 6px; font-size: 11px;">Type ID: #{{ $value->id }}</span>
                         </div>
 
                         <div class="card-white-body" style="padding: 20px; border-top: 1px solid #f1f5f9;">
@@ -581,6 +581,9 @@
 </div>
 
 <style>
+     .swal2-deny {
+    border-color: transparent !important;
+   }
     .branch-master-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important; }
     .action-btn { 
         width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; 
@@ -632,8 +635,8 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, keep it',
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#64748b' 
+                confirmButtonColor: '#057db0', 
+                denyButtonColor: '#FB8233',
             }).then((result) => {
                 if (result.isConfirmed) window.location.href = href;
             });

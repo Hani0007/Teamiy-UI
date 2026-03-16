@@ -67,7 +67,7 @@
             <h2>{{ __('index.edit') }} TADA</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge bg-warning text-dark">Editing</span>
+                    <span class="status-badge bg-warning text-dark text-white" style="position: relative;top: 0;right: 0;background:#E3823F !important">Editing</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-file-invoice-dollar"></i> TADA ID: #{{$tadaDetail->id}}

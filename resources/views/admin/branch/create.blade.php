@@ -30,7 +30,7 @@
             <h2>{{ __('index.branch_create') }}</h2>
             <div class="header-info-row">
                 <div class="header-info-item">
-                    <span class="status-badge">New</span>
+                    <span class="status-badge" style="position: relative;top: 0;right: 0;">New</span>
                 </div>
                 <div class="header-info-item">
                     <i class="fa fa-code-branch"></i> Branch Setup

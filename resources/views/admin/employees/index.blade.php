@@ -1,6 +1,12 @@
 @php use App\Models\User; @endphp
 @extends('layouts.master')
-
+@section('styles')
+<style>
+    .swal2-deny {
+    border-color: transparent !important;
+   }
+</style>
+@endsection
 @section('title', __('index.employees_title'))
 
 @section('main-content')
