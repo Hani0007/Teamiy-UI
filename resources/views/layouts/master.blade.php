@@ -310,7 +310,7 @@
             ensureLibraryData();
 
             document.querySelectorAll('.phone-group').forEach(function (group) {
-                var defaultCountryCode = "{{ $defaulcountrycode }}";
+                var defaultCountryCode = "{{ $defaultCountryCode }}";
                 var select = group.querySelector('.phone-country');
                 var input = group.querySelector('input[type="tel"]');
                 var form = group.closest('form');
