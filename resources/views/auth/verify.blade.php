@@ -14,55 +14,28 @@
     .email-display-card {background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;padding: 15px; margin-bottom: 25px; text-align: center;}
     .email-label { color: #fb8233; font-weight: 700; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; display: block; }
     .email-value { color: var(--text-dark); font-weight: 600; font-size: 15px; }
-
-    /* OTP Input Style */
-    .verify-input {
-        width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;
-        background: #fff; font-size: 24px; font-weight: 700; letter-spacing: 8px;
-        text-align: center; transition: 0.3s; box-sizing: border-box; color: #057db0;
-    }
+    .verify-input {width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;background: #fff; font-size: 24px; font-weight: 700; letter-spacing: 8px;text-align: center; transition: 0.3s; box-sizing: border-box; color: #057db0;}
     .verify-input:focus { outline: none; border-color: #057db0; box-shadow: 0 0 0 4px rgba(5, 125, 176, 0.1); }
     .verify-input::placeholder { letter-spacing: normal; font-size: 16px; font-weight: 400; opacity: 0.5; }
-
-    .verify-btn {
-        width: 100%; padding: 14px; border-radius: 12px; border: none;
-        background-color: #057db0; color: #fff; font-weight: 700;
-        font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 20px;
-    }
+    .verify-btn {width: 100%; padding: 14px; border-radius: 12px; border: none;background-color: #057db0; color: #fff; font-weight: 700;font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
     .verify-btn:hover { background-color: #fb8233; transform: translateY(-1px); }
-
-    /* Timer & Resend Section */
     .resend-box { margin-top: 20px; text-align: center; padding: 15px; border-radius: 12px; background: #f0f9ff; }
     #expiry-text { font-size: 13px; color: #0369a1; font-weight: 600; margin-bottom: 8px; }
-    #resend-btn { 
-        background: none; border: none; color: #057db0; 
-        font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 14px;
-    }
+    #resend-btn { background: none; border: none; color: #057db0; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 14px;}
     #resend-btn:disabled { color: #94a3b8; cursor: not-allowed; text-decoration: none; }
-
     .back-link { text-align: center; margin-top: 25px; }
     .back-link a { color: #64748b; font-size: 14px; text-decoration: none; font-weight: 600; }
     .back-link a:hover { color: #057db0; }
-
-    /* RIGHT SECTION (SLIDER) */
-    .verify-right {
-        flex: 1.2; background-color: #057db0;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        position: relative; color: #fff; padding: 40px;
-    }
+    .verify-right {flex: 1.2; background-color: #057db0;display: flex; flex-direction: column; align-items: center; justify-content: center;position: relative; color: #fff; padding: 40px;}
     .slider-container { width: 100%; max-width: 500px; text-align: center; }
     .slide { display: none; }
     .slide.active { display: block; animation: fadeEffect 0.6s ease-in-out; }
     @keyframes fadeEffect { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-
-    .lottie-box { height: 320px; margin-bottom: 30px; display: flex; justify-content: center; }
-    .slide-content h3 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
-    .slide-content p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
-
+    .lottie-box { height: 400px; margin-bottom: 30px; display: flex; justify-content: center; }
+    .slide-content h3 { font-size: 26px; margin-bottom: 15px; }
     .dots-container { margin-top: 40px; display: flex; justify-content: center; gap: 8px; }
     .dot { height: 10px; width: 10px; background-color: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; }
     .dot.active { background-color: #fff; width: 30px; border-radius: 5px; }
-
     @media (max-width: 992px) { .verify-right { display: none; } .verify-left { max-width: 100%; padding: 40px 25px; } }
 </style>
 @endsection
@@ -116,7 +89,12 @@
         <div class="slider-container">
             <div class="slide active">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_m6cu9t9c.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/signin-data.json') }}" 
+                    background="transparent" speed="1" 
+                    
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>One Step Away!</h3>
@@ -126,7 +104,12 @@
 
             <div class="slide">
                 <div class="lottie-box">
-                    <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_ai769uun.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    <lottie-player 
+                    src="{{ asset('assets/lottie/newstart.json') }}" 
+                    background="transparent" speed="1" 
+                     
+                    loop autoplay>
+                </lottie-player>
                 </div>
                 <div class="slide-content">
                     <h3>Secure Onboarding</h3>

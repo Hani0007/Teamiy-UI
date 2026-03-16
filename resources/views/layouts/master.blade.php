@@ -309,96 +309,55 @@
             }
             ensureLibraryData();
 
-            // add default country code
+            document.querySelectorAll('.phone-group').forEach(function (group) {
+                var defaultCountryCode = "{{ $defaulcountrycode }}";
+                var select = group.querySelector('.phone-country');
+                var input = group.querySelector('input[type="tel"]');
+                var form = group.closest('form');
+                // if (select && input) {
+                //     var digits = (input.value || '').replace(/[^0-9]/g, '');
+                //     var codes = ['971','966','92','91','44','49','39','41','33','1', '48'];
+                //     var raw = (input.value || '').replace(/^\+/, '');
+                //     for (var i = 0; i < codes.length; i++) {
+                //         var c = codes[i];
+                //         if (raw.startsWith(c)) {
+                //             select.value = c;
+                //             if (window.jQuery && jQuery.fn.select2) {
+                //                 jQuery(select).trigger('change.select2');
+                //             }
+                //             input.value = raw.slice(c.length);
+                //             break;
+                //         }
+                //     }
+                //     if (!raw) {
+                //         input.value = digits;
+                //     }
+                // }
 
-            // document.querySelectorAll('.phone-group').forEach(function (group) {
-            //     var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
-            //     console.log("Default country code:", DEFAULT_COUNTRY_CODE);
-            //     var select = group.querySelector('.phone-country');
-            //     var input = group.querySelector('input[type="tel"]');
-            //     var form = group.closest('form');
-            //     // if (select && input) {
-            //     //     var digits = (input.value || '').replace(/[^0-9]/g, '');
-            //     //     var codes = ['971','966','92','91','44','49','39','41','33','1', '48'];
-            //     //     var raw = (input.value || '').replace(/^\+/, '');
-            //     //     for (var i = 0; i < codes.length; i++) {
-            //     //         var c = codes[i];
-            //     //         if (raw.startsWith(c)) {
-            //     //             select.value = c;
-            //     //             if (window.jQuery && jQuery.fn.select2) {
-            //     //                 jQuery(select).trigger('change.select2');
-            //     //             }
-            //     //             input.value = raw.slice(c.length);
-            //     //             break;
-            //     //         }
-            //     //     }
-            //     //     if (!raw) {
-            //     //         input.value = digits;
-            //     //     }
-            //     // }
+                if (select && input) {
+                    // Use the data-current attribute for preselected country code
+                    var currentCode = select.dataset.current || defaultCountryCode;
+                    select.value = currentCode;
 
-            //    if (!select) return;
+                    // If select2 is used, update it
+                    if (window.jQuery && jQuery.fn.select2) {
+                        jQuery(select).trigger('change.select2');
+                    }
+                }
 
-            //     // Set default company country code
-            //     if (DEFAULT_COUNTRY_CODE) {
+                if (select && input && form) {
+                    form.addEventListener('submit', function () {
+                        var digits = (input.value || '').replace(/[^0-9]/g, '');
+                        var selectedCode = select.value;
 
-            //         select.value = DEFAULT_COUNTRY_CODE;
+                        if (digits.startsWith(selectedCode)) {
+                            digits = digits.slice(selectedCode.length);
+                        }
 
-            //         if (window.jQuery && jQuery.fn.select2) {
-            //             jQuery(select).val(DEFAULT_COUNTRY_CODE).trigger('change.select2');
-            //         }
-
-            //     }
-
-            //     if (select && input && form) {
-            //         form.addEventListener('submit', function () {
-            //             var digits = (input.value || '').replace(/[^0-9]/g, '');
-            //             var selectedCode = select.value;
-
-            //             if (digits.startsWith(selectedCode)) {
-            //                 digits = digits.slice(selectedCode.length);
-            //             }
-
-            //             input.value = '+' + selectedCode + ' ' + digits;
-            //         });
-            //     }
-            // });
-            // $(document).ready(function () {
-
-            //     var DEFAULT_COUNTRY_CODE = "{{ $defaultCountryCode }}";
-            //     console.log("Default country code:", DEFAULT_COUNTRY_CODE);
-
-            //     $('.phone-group').each(function () {
-
-            //         var select = $(this).find('.phone-country');
-            //         var input = $(this).find('input[type="tel"]');
-            //         var form = $(this).closest('form');
-
-            //         if (!select.length) return;
-
-            //         // set default country code
-            //         if (DEFAULT_COUNTRY_CODE) {
-            //             select.val(DEFAULT_COUNTRY_CODE).trigger('change');
-            //         }
-
-            //         // on form submit combine country code + phone
-            //         if (form.length) {
-            //             form.on('submit', function () {
-
-            //                 var digits = (input.val() || '').replace(/[^0-9]/g, '');
-            //                 var selectedCode = select.val();
-
-            //                 if (digits.startsWith(selectedCode)) {
-            //                     digits = digits.slice(selectedCode.length);
-            //                 }
-
-            //                 input.val('+' + selectedCode + ' ' + digits);
-            //             });
-            //         }
-
-            //     });
-
-            // });
+                        input.value = '+' + selectedCode + ' ' + digits;
+                    });
+                }
+            });
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initPhoneSelects);

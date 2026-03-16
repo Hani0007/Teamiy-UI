@@ -25,7 +25,7 @@
     </div>
 
     <div class="sidebar-body">
-        <ul class="nav">
+        <ul class="nav sidebar-menu">
             {{-- @if (isset($user) && $user->plan_id == 1 && $remainingDays != 0) --}}
             @if ($isTrialExpired && $user->plan_id > 1 || !$isTrialExpired && $user->plan_id == 1)
                 

@@ -139,6 +139,12 @@ class AppHelper
     }
 
 
+    public static function getAuthUserCode()
+    {
+        $user = Auth::user();
+        return $user;
+    }
+
     public static function getAuthUserId(): int
     {
         if (Auth::guard('admin')->check()) {

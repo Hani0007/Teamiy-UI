@@ -1,4 +1,4 @@
-
+{{--
 @extends('layouts.master')
 
 @section('title',__('index.tada'))
@@ -37,6 +37,73 @@
         </div>
 
     </section>
+@endsection
+
+@section('scripts')
+    @include('admin.tada.common.scripts')
+@endsection
+--}}
+
+@extends('layouts.master')
+
+@section('title', __('index.tada'))
+
+@section('button')
+    <a href="{{ route('admin.tadas.index') }}">
+        <button class="btn btn-sm btn-primary"><i class="link-icon" data-feather="arrow-left"></i> {{ __('index.back') }}</button>
+    </a>
+@endsection
+
+@section('styles')
+    <link rel="stylesheet" href="{{asset('assets/css/imageuploadify.min.css')}}">
+@endsection
+
+@section('main-content')
+<div class="teamy-body-wrapper">
+
+    <div class="teamy-top-header">
+        <div>
+            <h2>{{ __('index.create_tada') }}</h2>
+            <div class="header-info-row">
+                <div class="header-info-item">
+                    <span class="status-badge">New</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fa fa-file-invoice-dollar"></i> TADA Management
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @include('admin.section.flash_message')
+
+    <form action="{{ route('admin.tadas.store') }}" method="POST" enctype="multipart/form-data" id="createForm">
+        @csrf
+
+        <div class="teamy-main-card">
+            <div class="section-title-wrapper">
+                <div class="section-icon">
+                    <i class="fa fa-plus-circle"></i>
+                </div>
+                <div class="section-heading-text">
+                    <h4>{{ __('index.create_tada') }}</h4>
+                    <p>Enter the TADA and expense details below</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            @include('admin.tada.common.form')
+        </div>
+
+        <div class="branch-footer-actions">
+            <a href="{{ route('admin.tadas.index') }}" class="branch-back-btn">
+                <i class="fa fa-arrow-left"></i> {{ __('index.back') }}
+            </a>
+            <button type="submit" class="btn btn-primary"> {{ __('index.create') }} </button>
+        </div>
+    </form>
+</div>
 @endsection
 
 @section('scripts')
