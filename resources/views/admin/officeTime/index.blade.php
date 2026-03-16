@@ -111,7 +111,7 @@
                                     <i data-feather="log-in" style="width: 16px;"></i>
                                 </div>
                                 <div class="text-content">
-                                    <small class="text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">{{ __('index.shift_start') }}</small>
+                                    <small class="text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">{{ __('shift_start_time') }}</small>
                                     <p class="fw-bold mb-0" style="color: #1e293b;">{{\App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceView($value->opening_time)}}</p>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                                     <i data-feather="log-out" style="width: 16px;"></i>
                                 </div>
                                 <div class="text-content">
-                                    <small class="text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">{{ __('index.shift_end') }}</small>
+                                    <small class="text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">{{ __('shift_end_time') }}</small>
                                     <p class="fw-bold mb-0" style="color: #1e293b;">{{\App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceView($value->closing_time)}}</p>
                                 </div>
                             </div>

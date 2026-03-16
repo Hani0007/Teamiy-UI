@@ -252,14 +252,14 @@
     {{-- Dates --}}
     <div class="col-lg-3 col-md-6 mb-4">
         <label class="form-label">@lang('index.task_start_date') <span style="color: red">*</span></label>
-        <input type="text" class="form-control {{ $isBsEnabled ? 'startNpDate' : '' }}" 
+        <input type="datetime-local" class="form-control {{ $isBsEnabled ? 'startNpDate' : '' }}" 
                {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="start_date" required 
                value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->start_date) : $taskDetail->start_date) : old('start_date') }}">
     </div>
 
     <div class="col-lg-3 col-md-6 mb-4">
         <label class="form-label">@lang('index.task_end_date') <span style="color: red">*</span></label>
-        <input type="text" class="form-control {{ $isBsEnabled ? 'npDeadline' : '' }}" 
+        <input type="datetime-local" class="form-control {{ $isBsEnabled ? 'npDeadline' : '' }}" 
                {{ !$isBsEnabled ? 'type=datetime-local' : '' }} name="end_date" required 
                value="{{ isset($taskDetail) ? ($isBsEnabled ? \App\Helpers\AppHelper::taskDate($taskDetail->end_date) : $taskDetail->end_date) : old('end_date') }}">
     </div>

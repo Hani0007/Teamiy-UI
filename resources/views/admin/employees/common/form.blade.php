@@ -534,9 +534,15 @@
                     {{-- <p>{{ $userDetail->employeeDocuments->employee_contract ?? '' }}</p> --}}
                     @if (!empty($userDetail->employeeDocuments->employee_contract))
                         <div class="contract-preview position-relative mt-2" style="display:inline-block;">
-                            <img src="{{ asset('uploads/user/emp-documents/' . $userDetail->employeeDocuments->employee_contract) }}"
-                                class="img-fluid rounded"
-                                style="height:120px;width:auto;object-fit:cover; margin-top:10px;">
+                            @if (in_array(strtolower(pathinfo($userDetail->employeeDocuments->employee_contract, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
+                                <div class="document-preview-container" style="height:120px;width:auto;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;padding:20px;">
+                                    <i class="fas fa-file-contract" style="font-size:48px;color:#28a745;"></i>
+                                </div>
+                            @else
+                                <img src="{{ asset('uploads/user/emp-documents/' . $userDetail->employeeDocuments->employee_contract) }}"
+                                    class="img-fluid rounded"
+                                    style="height:120px;width:auto;object-fit:cover; margin-top:10px;">
+                            @endif
                             <button type="button" class="btn  btn-sm remove-contract"
                                 data-file="{{ $userDetail->employeeDocuments->employee_contract }}"
                                 data-user="{{ $userDetail->id }}">
@@ -603,8 +609,14 @@
                         <div class="col-md-2 mb-3 document-preview">
                             <div class="position-relative border p-2 rounded">
 
-                                <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
-                                    class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;">
+                                @if (in_array(strtolower(pathinfo($doc, PATHINFO_EXTENSION)), ['pdf', 'doc', 'docx']))
+                                    <div class="document-preview-container" style="height:120px;width:100%;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;">
+                                        <i class="fas fa-file-pdf" style="font-size:48px;color:#dc3545;"></i>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('uploads/user/emp-documents/' . $doc) }}"
+                                        class="img-fluid rounded" style="height:120px;width:100%;object-fit:cover;" alt="image">
+                                @endif
 
                                 <button type="button" class="btn  btn-sm remove-doc"
                                     data-file="{{ $doc }}" data-user="{{ $userDetail->id }}">
@@ -773,29 +785,31 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            $.ajax({
-                url: "{{ route('admin.employee.document.delete') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    file: file,
-                    user_id: userId
-                },
-                success: function(response) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('admin.employee.document.delete') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        file: file,
+                        user_id: userId
+                    },
+                    success: function(response) {
 
-                    if (response.success) {
+                        if (response.success) {
 
-                        button.closest('.document-preview').remove();
+                            button.closest('.document-preview').remove();
 
-                    } else {
-                        alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+
+                    },
+                    error: function() {
+                        alert("Something went wrong.");
                     }
-
-                },
-                error: function() {
-                    alert("Something went wrong.");
-                }
-            });
+                });
+            }
         });
 
 
@@ -815,28 +829,30 @@
             padding: '10px 50px 10px 50px',
             allowOutsideClick: false
         }).then((result) => {
-            $.ajax({
-                url: "{{ route('admin.employee.contract.delete') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    user_id: userId
-                },
-                success: function(response) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('admin.employee.contract.delete') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        user_id: userId
+                    },
+                    success: function(response) {
 
-                    if (response.success) {
+                        if (response.success) {
 
-                        button.closest('.contract-preview').remove();
+                            button.closest('.contract-preview').remove();
 
-                    } else {
-                        alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+
+                    },
+                    error: function() {
+                        alert("Something went wrong.");
                     }
-
-                },
-                error: function() {
-                    alert("Something went wrong.");
-                }
-            });
+                });
+            }
         });
 
 

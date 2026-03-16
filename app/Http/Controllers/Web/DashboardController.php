@@ -68,6 +68,9 @@ class DashboardController extends Controller
                 // Get project statistics
                 $projectStats = $this->dashboardRepo->getProjectStats($companyId);
 
+                // dd($projectStats);
+
+
                 $projectSelect = ['id', 'name', 'start_date', 'deadline', 'status', 'priority', 'client_id'];
                 $withProject = [
                     'projectLeaders.user:id,name,avatar',
@@ -76,8 +79,9 @@ class DashboardController extends Controller
                     'completedTask:id,project_id'
                 ];
 
-                $recentProjects = $this->projectService
+                    $recentProjects = $this->projectService
                     ->getRecentProjectListsForDashboard($projectSelect, $withProject);
+                    // dd($recentProjects);
 
                 // Get recent leave requests
                 $recentLeaveRequests = $this->dashboardRepo->getRecentLeaveRequests($companyId);
